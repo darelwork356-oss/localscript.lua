@@ -201,7 +201,7 @@ local function createHawkinsSchool()
                 tile.Material = Enum.Material.Plastic
                 tile.Color = Color3.fromRGB(160, 100, 50)
                 tile.Parent = floor
-                applyStudsToAllFaces(tile, Color3.fromRGB(225, 140, 75))
+                applyStudsToAllFaces(tile, Color3.fromRGB(160, 100, 50))
             end
         end
     end
@@ -371,12 +371,13 @@ local function createHawkinsSchool()
     for z = -65, 65, 12 do
         local lightFixture = Instance.new("Part")
         lightFixture.Size = Vector3.new(4, 0.35, 10)
-        lightFixture.Position = Vector3.new(0, 15.2, z)  -- Bajado para no traspasar techo
+        lightFixture.Position = Vector3.new(0, 15.2, z)
         lightFixture.Anchored = true
-        lightFixture.Material = Enum.Material.Neon
+        lightFixture.Material = Enum.Material.Plastic
         lightFixture.Color = Color3.fromRGB(255, 252, 240)
         lightFixture.Transparency = 0.3
         lightFixture.Parent = schoolFolder
+        applyStudsToAllFaces(lightFixture, Color3.fromRGB(255, 252, 240))
         
         local light = Instance.new("PointLight")
         light.Brightness = 2
@@ -422,10 +423,11 @@ local function createVecnaGrandfatherClock(position)
     bodyGlass.Size = Vector3.new(2.6, 9.5, 0.3)
     bodyGlass.Position = body.Position + Vector3.new(0, 0, -1.4)
     bodyGlass.Anchored = true
-    bodyGlass.Material = Enum.Material.Glass
+    bodyGlass.Material = Enum.Material.Plastic
     bodyGlass.Color = Color3.fromRGB(80, 70, 50)
     bodyGlass.Transparency = 0.65
     bodyGlass.Parent = body
+    applyStudsToAllFaces(bodyGlass, Color3.fromRGB(80, 70, 50))
     
     local function createPendulum(xOffset, length, weightSize)
         local pendulum = Instance.new("Part")
@@ -479,10 +481,11 @@ local function createVecnaGrandfatherClock(position)
     clockFace.Position = goldBackground.Position + Vector3.new(0, 0, -0.25)
     clockFace.Anchored = true
     clockFace.Shape = Enum.PartType.Cylinder
-    clockFace.Material = Enum.Material.SmoothPlastic
+    clockFace.Material = Enum.Material.Plastic
     clockFace.Color = Color3.fromRGB(215, 205, 185)
     clockFace.Orientation = Vector3.new(0, 0, 90)
     clockFace.Parent = clockFaceBase
+    applyStudsToAllFaces(clockFace, Color3.fromRGB(215, 205, 185))
     
     local outerRing = Instance.new("Part")
     outerRing.Size = Vector3.new(0.3, 3.9, 3.9)
@@ -550,9 +553,10 @@ local function createVecnaGrandfatherClock(position)
     handCenter.Position = clockFace.Position + Vector3.new(0, 0, -0.28)
     handCenter.Anchored = true
     handCenter.Shape = Enum.PartType.Ball
-    handCenter.Material = Enum.Material.Metal
+    handCenter.Material = Enum.Material.Plastic
     handCenter.Color = Color3.fromRGB(15, 15, 15)
     handCenter.Parent = clockFace
+    applyStudsToAllFaces(handCenter, Color3.fromRGB(15, 15, 15))
     
     local top = Instance.new("Part")
     top.Size = Vector3.new(3.5, 2.5, 3)
@@ -583,22 +587,24 @@ local function createVecnaGrandfatherClock(position)
         applyStudsToAllFaces(spikeBase, Color3.fromRGB(15, 15, 17))
         
         local spikeTop = Instance.new("Part")
-        spikeTop.Size = Vector3.new(0.35, 0.7, 0.35)  -- Reducido de 0.9 a 0.7
-        spikeTop.Position = spikeBase.Position + Vector3.new(0, 1.1, 0)  -- Ajustado
+        spikeTop.Size = Vector3.new(0.35, 0.7, 0.35)
+        spikeTop.Position = spikeBase.Position + Vector3.new(0, 1.1, 0)
         spikeTop.Anchored = true
         spikeTop.Shape = Enum.PartType.Ball
-        spikeTop.Material = Enum.Material.Metal
+        spikeTop.Material = Enum.Material.Plastic
         spikeTop.Color = Color3.fromRGB(15, 15, 17)
         spikeTop.Parent = spikeBase
+        applyStudsToAllFaces(spikeTop, Color3.fromRGB(15, 15, 17))
         
         local ball = Instance.new("Part")
-        ball.Size = Vector3.new(0.5, 0.5, 0.5)  -- Reducido de 0.7 a 0.5
-        ball.Position = spikeTop.Position + Vector3.new(0, 0.5, 0)  -- Ajustado
+        ball.Size = Vector3.new(0.5, 0.5, 0.5)
+        ball.Position = spikeTop.Position + Vector3.new(0, 0.5, 0)
         ball.Anchored = true
         ball.Shape = Enum.PartType.Ball
-        ball.Material = Enum.Material.Metal
+        ball.Material = Enum.Material.Plastic
         ball.Color = Color3.fromRGB(12, 12, 14)
         ball.Parent = spikeTop
+        applyStudsToAllFaces(ball, Color3.fromRGB(12, 12, 14))
     end
     
     createSpike(-1.3)
@@ -667,10 +673,11 @@ local function createGroundCrack(startPos, endPos, width, depth)
     crack.Position = (startPos + endPos) / 2
     crack.CFrame = CFrame.new(crack.Position, endPos)
     crack.Anchored = true
-    crack.Material = Enum.Material.Slate
+    crack.Material = Enum.Material.Plastic
     crack.Color = Color3.fromRGB(30, 30, 35)
     crack.Parent = workspace
     registerEffect(crack)
+    applyStudsToAllFaces(crack, Color3.fromRGB(30, 30, 35))
     
     -- ✅ LUZ ROJA BRILLANTE EN CADA GRIETA
     local crackGlow = Instance.new("PointLight")
@@ -911,7 +918,7 @@ local function startVecnaClockScene()
     
     print("🎬 FASE 4: RELOJ APARECE")
     
-    local clockPosition = Vector3.new(0, 0.5, 73.5)
+    local clockPosition = Vector3.new(0, 0.5, 68)
     local clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, darkParticles, darkAura = createVecnaGrandfatherClock(clockPosition)
     
     for _, part in pairs(clockModel:GetDescendants()) do
@@ -925,7 +932,7 @@ local function startVecnaClockScene()
             for _, part in pairs(clockModel:GetDescendants()) do
                 if part:IsA("BasePart") then
                     local targetTransparency = 0
-                    if part.Material == Enum.Material.Glass then
+                    if part.Material == Enum.Material.Plastic and part.Transparency > 0.5 then
                         targetTransparency = 0.65
                     end
                     part.Transparency = 1 - (i / 60) * (1 - targetTransparency)
