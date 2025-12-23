@@ -305,6 +305,15 @@ local function createHawkinsSchool()
     frontOrangeStripe.Parent = schoolFolder
     applyStudsToAllFaces(frontOrangeStripe, Color3.fromRGB(220, 130, 60))
     
+    local frontGreenStripe = Instance.new("Part")
+    frontGreenStripe.Size = Vector3.new(30, 2.2, 0.9)
+    frontGreenStripe.Position = Vector3.new(0, 8.2, 74.55)
+    frontGreenStripe.Anchored = true
+    frontGreenStripe.Material = Enum.Material.Plastic
+    frontGreenStripe.Color = Color3.fromRGB(115, 145, 95)
+    frontGreenStripe.Parent = schoolFolder
+    applyStudsToAllFaces(frontGreenStripe, Color3.fromRGB(115, 145, 95))
+    
     local ceiling = Instance.new("Part")
     ceiling.Size = Vector3.new(30, 0.8, 150)
     ceiling.Position = Vector3.new(0, 16, 0)
@@ -979,11 +988,13 @@ local function startVecnaClockScene()
     root.Anchored = false
     hum.WalkSpeed = 4
     
-    local walkToClockTarget = Vector3.new(0, 1.5, 65)
-    hum:MoveTo(walkToClockTarget)
+    local walkToClockTarget = Vector3.new(0, 1.5, 62)
     
     followConnection = RunService.RenderStepped:Connect(function()
         if not cinematicActive or not root or not root.Parent or not hum then return end
+        
+        hum:MoveTo(walkToClockTarget)
+        
         local behindPos = root.Position + Vector3.new(0, 2, -8)
         local targetCF = CFrame.new(behindPos, clockPosition + Vector3.new(0, 5, 0))
         cam.CFrame = cam.CFrame:Lerp(targetCF, 0.04)
@@ -997,18 +1008,19 @@ local function startVecnaClockScene()
                 lastStepTime = tick()
             end
         end
+        
+        if (root.Position - walkToClockTarget).Magnitude < 4 then
+            hum.WalkSpeed = 0
+            if followConnection then followConnection:Disconnect() end
+        end
     end)
     
-    -- Esperar hasta que llegue cerca del reloj
     repeat
         task.wait(0.1)
-    until not root or not root.Parent or (root.Position - walkToClockTarget).Magnitude < 3
+    until not root or not root.Parent or (root.Position - walkToClockTarget).Magnitude < 4
     
     task.wait(0.5)
-    
-    hum.WalkSpeed = 0
     root.Anchored = true
-    if followConnection then followConnection:Disconnect() end
     
     task.wait(1)
     
@@ -1022,36 +1034,53 @@ local function startVecnaClockScene()
     
     task.wait(2)
     
-    print("💥 GRÁFICOS")
+    print("💥 EXPLOSIÓN ÉPICA DE GRÁFICOS")
     
-    for i = 1, 20 do
-        local vfxPart = Instance.new("Part")
-        vfxPart.Size = Vector3.new(2, 2, 2)
-        vfxPart.Position = clockPosition + Vector3.new(
-            math.random(-15, 15),
-            math.random(-5, 10),
-            math.random(-8, 8)
-        )
-        vfxPart.Anchored = true
-        vfxPart.CanCollide = false
-        vfxPart.Material = Enum.Material.Plastic
-        vfxPart.Color = Color3.fromRGB(150, 30, 30)
-        vfxPart.Transparency = 0.4
-        vfxPart.Parent = workspace
-        registerEffect(vfxPart)
-        applyStudsToAllFaces(vfxPart, Color3.fromRGB(150, 30, 30))
-        
-        local vfxLight = Instance.new("PointLight")
-        vfxLight.Brightness = 2
-        vfxLight.Range = 12
-        vfxLight.Color = Color3.fromRGB(255, 50, 50)
-        vfxLight.Parent = vfxPart
-        
-        TweenService:Create(vfxPart, TweenInfo.new(2.5), {
-            Size = Vector3.new(8, 8, 8),
-            Transparency = 1
-        }):Play()
-        Debris:AddItem(vfxPart, 3)
+    for wave = 1, 3 do
+        task.spawn(function()
+            for i = 1, 40 do
+                local vfxPart = Instance.new("Part")
+                vfxPart.Size = Vector3.new(3, 3, 3)
+                vfxPart.Position = clockPosition + Vector3.new(
+                    math.random(-20, 20),
+                    math.random(-8, 15),
+                    math.random(-12, 12)
+                )
+                vfxPart.Anchored = true
+                vfxPart.CanCollide = false
+                vfxPart.Material = Enum.Material.Neon
+                vfxPart.Color = Color3.fromRGB(255, math.random(20, 80), math.random(20, 80))
+                vfxPart.Transparency = 0.2
+                vfxPart.Parent = workspace
+                registerEffect(vfxPart)
+                
+                local vfxLight = Instance.new("PointLight")
+                vfxLight.Brightness = 5
+                vfxLight.Range = 25
+                vfxLight.Color = Color3.fromRGB(255, 50, 50)
+                vfxLight.Parent = vfxPart
+                
+                local smoke = Instance.new("ParticleEmitter")
+                smoke.Texture = "rbxassetid://6102449224"
+                smoke.Rate = 50
+                smoke.Lifetime = NumberRange.new(2, 4)
+                smoke.Speed = NumberRange.new(8, 15)
+                smoke.SpreadAngle = Vector2.new(180, 180)
+                smoke.Size = NumberSequence.new(3, 8)
+                smoke.Transparency = NumberSequence.new(0, 1)
+                smoke.Color = ColorSequence.new(Color3.fromRGB(255, 60, 60))
+                smoke.LightEmission = 1
+                smoke.Parent = vfxPart
+                
+                TweenService:Create(vfxPart, TweenInfo.new(3), {
+                    Size = Vector3.new(12, 12, 12),
+                    Transparency = 1
+                }):Play()
+                Debris:AddItem(vfxPart, 3.5)
+                task.wait(0.03)
+            end
+        end)
+        task.wait(0.5)
     end
     
     local bigFlash = Instance.new("Frame", screenGui)
@@ -1076,35 +1105,60 @@ local function startVecnaClockScene()
     
     task.wait(1)
     
-    print("⚡ ✅ GRIETAS VISIBLES CON LUCES")
+    print("⚡ TERREMOTO ÉPICO CON GRIETAS MASIVAS")
     
     local crackOrigin = Vector3.new(0, 0.5, 68)
     
     task.spawn(function()
-        for angle = 0, 360, 30 do
+        for angle = 0, 360, 20 do
             local rad = math.rad(angle)
             local endPos = crackOrigin + Vector3.new(
-                math.cos(rad) * 25,
+                math.cos(rad) * 35,
                 0,
-                math.sin(rad) * 25
+                math.sin(rad) * 35
             )
-            createGroundCrack(crackOrigin, endPos, 0.8, 2)
-            task.wait(0.15)
+            createGroundCrack(crackOrigin, endPos, 1.2, 3)
+            
+            for debris = 1, 5 do
+                local debrisPart = Instance.new("Part")
+                debrisPart.Size = Vector3.new(math.random(2, 4), math.random(1, 3), math.random(2, 4))
+                debrisPart.Position = (crackOrigin + endPos) / 2 + Vector3.new(
+                    math.random(-5, 5),
+                    math.random(2, 8),
+                    math.random(-5, 5)
+                )
+                debrisPart.Anchored = false
+                debrisPart.Material = Enum.Material.Plastic
+                debrisPart.Color = Color3.fromRGB(math.random(100, 150), math.random(80, 120), math.random(80, 120))
+                debrisPart.Parent = workspace
+                registerEffect(debrisPart)
+                applyStudsToAllFaces(debrisPart, debrisPart.Color)
+                
+                local debrisLight = Instance.new("PointLight")
+                debrisLight.Brightness = 3
+                debrisLight.Range = 15
+                debrisLight.Color = Color3.fromRGB(255, 80, 80)
+                debrisLight.Parent = debrisPart
+                
+                Debris:AddItem(debrisPart, 8)
+            end
+            
+            task.wait(0.1)
         end
         
-        for i = 1, 15 do
+        for i = 1, 30 do
             local startPos = crackOrigin + Vector3.new(
+                math.random(-25, 25),
+                0,
+                math.random(-25, 25)
+            )
+            local endPos = startPos + Vector3.new(
                 math.random(-15, 15),
                 0,
                 math.random(-15, 15)
             )
-            local endPos = startPos + Vector3.new(
-                math.random(-10, 10),
-                0,
-                math.random(-10, 10)
-            )
-            createGroundCrack(startPos, endPos, 0.6, 1.5)
-            task.wait(0.08)
+            createGroundCrack(startPos, endPos, 0.9, 2.5)
+            task.wait(0.05)
         end
     end)
     
