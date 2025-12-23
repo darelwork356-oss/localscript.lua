@@ -38,13 +38,13 @@ lobbyFolder.Parent = workspace
 -- CREAR MUELLE DE SUPERVIVENCIA DETALLADO
 -- ========================================
 local function createSurvivalDock()
-    print("🏗️ Construyendo muelle de supervivencia...")
+    print("🏗️ Construyendo muelle elevado sobre el océano...")
     
-    -- Plataforma principal desgastada
+    -- Plataforma principal ELEVADA
     local mainDock = Instance.new("Part")
     mainDock.Name = "MainDock"
     mainDock.Size = Vector3.new(50, 1.2, 70)
-    mainDock.Position = Vector3.new(0, 0.6, 0)
+    mainDock.Position = Vector3.new(0, 20, 0)  -- ELEVADO
     mainDock.Anchored = true
     mainDock.Material = Enum.Material.Wood
     mainDock.Color = Color3.fromRGB(90, 65, 45)
@@ -55,7 +55,7 @@ local function createSurvivalDock()
         for x = -23, 23, 46 do
             local plank = Instance.new("Part")
             plank.Size = Vector3.new(48, 0.4, 3)
-            plank.Position = Vector3.new(0, 1.4, z)
+            plank.Position = Vector3.new(0, 20.8, z)  -- ELEVADO
             plank.Anchored = true
             plank.Material = Enum.Material.Wood
             plank.Color = Color3.fromRGB(math.random(70, 100), math.random(50, 70), math.random(35, 50))
@@ -74,30 +74,32 @@ local function createSurvivalDock()
         end
     end
     
-    -- Pilares de soporte con detalles
-    for x = -20, 20, 20 do
-        for z = -30, 30, 30 do
+    -- Pilares LARGOS que llegan al océano
+    for x = -20, 20, 10 do
+        for z = -30, 30, 15 do
             local pillar = Instance.new("Part")
-            pillar.Size = Vector3.new(1.8, 12, 1.8)
-            pillar.Position = Vector3.new(x, -5.4, z)
+            pillar.Size = Vector3.new(1.8, 40, 1.8)  -- MÁS LARGOS
+            pillar.Position = Vector3.new(x, 0, z)  -- Desde el océano hasta el muelle
             pillar.Anchored = true
             pillar.Material = Enum.Material.Wood
             pillar.Color = Color3.fromRGB(70, 50, 35)
             pillar.Parent = mainDock
             
-            -- Algas y musgo
-            local moss = Instance.new("Part")
-            moss.Size = Vector3.new(2, 3, 2)
-            moss.Position = pillar.Position + Vector3.new(0, -4, 0)
-            moss.Anchored = true
-            moss.Material = Enum.Material.Grass
-            moss.Color = Color3.fromRGB(40, 60, 35)
-            moss.Parent = pillar
+            -- Algas en la parte sumergida
+            for i = 1, 3 do
+                local moss = Instance.new("Part")
+                moss.Size = Vector3.new(2.2, 2, 2.2)
+                moss.Position = pillar.Position + Vector3.new(0, -15 + (i * 3), 0)
+                moss.Anchored = true
+                moss.Material = Enum.Material.Grass
+                moss.Color = Color3.fromRGB(40, 60, 35)
+                moss.Parent = pillar
+            end
             
-            -- Cuerdas atadas
+            -- Cuerdas y refuerzos
             local rope = Instance.new("Part")
-            rope.Size = Vector3.new(0.2, 8, 0.2)
-            rope.Position = pillar.Position + Vector3.new(0.8, 2, 0)
+            rope.Size = Vector3.new(0.25, 35, 0.25)
+            rope.Position = pillar.Position + Vector3.new(0.9, 0, 0)
             rope.Anchored = true
             rope.Material = Enum.Material.Fabric
             rope.Color = Color3.fromRGB(100, 80, 50)
@@ -105,13 +107,51 @@ local function createSurvivalDock()
         end
     end
     
-    -- Barandas rotas y desgastadas
+    -- PAREDES INVISIBLES para evitar caídas
+    local wallLeft = Instance.new("Part")
+    wallLeft.Name = "InvisibleWall"
+    wallLeft.Size = Vector3.new(1, 10, 70)
+    wallLeft.Position = Vector3.new(-25, 25, 0)
+    wallLeft.Anchored = true
+    wallLeft.Transparency = 1
+    wallLeft.CanCollide = true
+    wallLeft.Parent = mainDock
+    
+    local wallRight = Instance.new("Part")
+    wallRight.Name = "InvisibleWall"
+    wallRight.Size = Vector3.new(1, 10, 70)
+    wallRight.Position = Vector3.new(25, 25, 0)
+    wallRight.Anchored = true
+    wallRight.Transparency = 1
+    wallRight.CanCollide = true
+    wallRight.Parent = mainDock
+    
+    local wallFront = Instance.new("Part")
+    wallFront.Name = "InvisibleWall"
+    wallFront.Size = Vector3.new(50, 10, 1)
+    wallFront.Position = Vector3.new(0, 25, 35)
+    wallFront.Anchored = true
+    wallFront.Transparency = 1
+    wallFront.CanCollide = true
+    wallFront.Parent = mainDock
+    
+    local wallBack = Instance.new("Part")
+    wallBack.Name = "InvisibleWall"
+    wallBack.Size = Vector3.new(50, 10, 1)
+    wallBack.Position = Vector3.new(0, 25, -35)
+    wallBack.Anchored = true
+    wallBack.Transparency = 1
+    wallBack.CanCollide = true
+    wallBack.Parent = mainDock
+    
+    -- Barandas decorativas (visibles pero no funcionales)
     for z = -32, 32, 4 do
         if math.random(1, 3) ~= 1 then
             local railLeft = Instance.new("Part")
             railLeft.Size = Vector3.new(0.4, 2.5, 3.5)
-            railLeft.Position = Vector3.new(-24, 2.5, z)
+            railLeft.Position = Vector3.new(-24, 22, z)
             railLeft.Anchored = true
+            railLeft.CanCollide = false
             railLeft.Material = Enum.Material.Wood
             railLeft.Color = Color3.fromRGB(80, 60, 45)
             railLeft.Orientation = Vector3.new(0, 0, math.random(-5, 5))
@@ -121,8 +161,9 @@ local function createSurvivalDock()
         if math.random(1, 3) ~= 1 then
             local railRight = Instance.new("Part")
             railRight.Size = Vector3.new(0.4, 2.5, 3.5)
-            railRight.Position = Vector3.new(24, 2.5, z)
+            railRight.Position = Vector3.new(24, 22, z)
             railRight.Anchored = true
+            railRight.CanCollide = false
             railRight.Material = Enum.Material.Wood
             railRight.Color = Color3.fromRGB(80, 60, 45)
             railRight.Orientation = Vector3.new(0, 0, math.random(-5, 5))
@@ -130,14 +171,14 @@ local function createSurvivalDock()
         end
     end
     
-    -- Cajas de suministros
+    -- Cajas de suministros ELEVADAS
     local boxPositions = {
-        Vector3.new(-20, 2, 25),
-        Vector3.new(-18, 2, 28),
-        Vector3.new(18, 2, 25),
-        Vector3.new(20, 2, 28),
-        Vector3.new(-20, 2, -28),
-        Vector3.new(20, 2, -28)
+        Vector3.new(-20, 21.5, 25),
+        Vector3.new(-18, 21.5, 28),
+        Vector3.new(18, 21.5, 25),
+        Vector3.new(20, 21.5, 28),
+        Vector3.new(-20, 21.5, -28),
+        Vector3.new(20, 21.5, -28)
     }
     
     for _, pos in ipairs(boxPositions) do
@@ -162,12 +203,12 @@ local function createSurvivalDock()
         end
     end
     
-    -- Linternas colgantes
+    -- Linternas colgantes ELEVADAS
     for z = -25, 25, 25 do
         for x = -15, 15, 30 do
             local lanternPost = Instance.new("Part")
             lanternPost.Size = Vector3.new(0.3, 4, 0.3)
-            lanternPost.Position = Vector3.new(x, 4, z)
+            lanternPost.Position = Vector3.new(x, 23.5, z)
             lanternPost.Anchored = true
             lanternPost.Material = Enum.Material.Metal
             lanternPost.Color = Color3.fromRGB(60, 55, 50)
@@ -191,17 +232,29 @@ local function createSurvivalDock()
         end
     end
     
-    -- Agua oscura y profunda
-    local water = Instance.new("Part")
-    water.Name = "Water"
-    water.Size = Vector3.new(300, 1, 300)
-    water.Position = Vector3.new(0, -11, 0)
-    water.Anchored = true
-    water.Material = Enum.Material.Water
-    water.Color = Color3.fromRGB(30, 50, 60)
-    water.Transparency = 0.4
-    water.CanCollide = false
-    water.Parent = lobbyFolder
+    -- OCÉANO ABAJO del muelle
+    local ocean = Instance.new("Part")
+    ocean.Name = "Ocean"
+    ocean.Size = Vector3.new(500, 1, 500)
+    ocean.Position = Vector3.new(0, -20, 0)  -- MUY ABAJO
+    ocean.Anchored = true
+    ocean.Material = Enum.Material.Water
+    ocean.Color = Color3.fromRGB(20, 40, 55)
+    ocean.Transparency = 0.3
+    ocean.CanCollide = false
+    ocean.Parent = lobbyFolder
+    
+    -- Olas y movimiento del agua
+    local waterParticles = Instance.new("ParticleEmitter")
+    waterParticles.Texture = "rbxasset://textures/particles/smoke_main.dds"
+    waterParticles.Rate = 5
+    waterParticles.Lifetime = NumberRange.new(3, 5)
+    waterParticles.Speed = NumberRange.new(1, 2)
+    waterParticles.SpreadAngle = Vector2.new(180, 0)
+    waterParticles.Size = NumberSequence.new(8, 12)
+    waterParticles.Transparency = NumberSequence.new(0.7, 1)
+    waterParticles.Color = ColorSequence.new(Color3.fromRGB(30, 50, 65))
+    waterParticles.Parent = ocean
     
     -- Niebla ambiental
     local fog = Instance.new("Atmosphere")
@@ -223,11 +276,11 @@ local function createFloorCircles()
     print("✨ Creando círculos de spawn en el piso...")
     
     local positions = {
-        Vector3.new(-15, 1.3, -10),
-        Vector3.new(-7.5, 1.3, -10),
-        Vector3.new(0, 1.3, -10),
-        Vector3.new(7.5, 1.3, -10),
-        Vector3.new(15, 1.3, -10)
+        Vector3.new(-15, 20.7, -10),  -- ELEVADOS
+        Vector3.new(-7.5, 20.7, -10),
+        Vector3.new(0, 20.7, -10),
+        Vector3.new(7.5, 20.7, -10),
+        Vector3.new(15, 20.7, -10)
     }
     
     for i, pos in ipairs(positions) do
@@ -290,7 +343,7 @@ local function createFloorCircles()
         
         table.insert(spawnCircles, {
             circle = circle,
-            position = pos + Vector3.new(0, 2, 0),
+            position = pos + Vector3.new(0, 3, 0),  -- Spawn arriba del círculo
             occupied = false,
             number = i
         })
@@ -303,12 +356,12 @@ end
 local function createSurvivalProps()
     print("🛡️ Colocando props de supervivencia...")
     
-    -- Bolsas de arena apiladas
+    -- Bolsas de arena apiladas ELEVADAS
     local sandbagGroups = {
-        {base = Vector3.new(-22, 1.5, 18), count = 6},
-        {base = Vector3.new(22, 1.5, 18), count = 6},
-        {base = Vector3.new(-22, 1.5, -30), count = 4},
-        {base = Vector3.new(22, 1.5, -30), count = 4}
+        {base = Vector3.new(-22, 21, 18), count = 6},
+        {base = Vector3.new(22, 21, 18), count = 6},
+        {base = Vector3.new(-22, 21, -30), count = 4},
+        {base = Vector3.new(22, 21, -30), count = 4}
     }
     
     for _, group in ipairs(sandbagGroups) do
@@ -341,13 +394,13 @@ local function createSurvivalProps()
         end
     end
     
-    -- Barriles oxidados
+    -- Barriles oxidados ELEVADOS
     for i = 1, 8 do
         local barrel = Instance.new("Part")
         barrel.Size = Vector3.new(2, 3, 2)
         barrel.Position = Vector3.new(
             math.random(-23, 23),
-            2.5,
+            22,
             math.random(20, 32)
         )
         barrel.Anchored = true
