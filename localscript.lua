@@ -456,13 +456,11 @@ local function createVecnaGrandfatherClock(position)
     
     local clockFace = Instance.new("Part")
     clockFace.Name = "ClockFace"
-    clockFace.Size = Vector3.new(0.35, 3.1, 3.1)
+    clockFace.Size = Vector3.new(3.1, 0.35, 3.1)
     clockFace.Position = goldBackground.Position + Vector3.new(0, 0, -0.25)
     clockFace.Anchored = true
-    clockFace.Shape = Enum.PartType.Cylinder
     clockFace.Material = Enum.Material.Plastic
     clockFace.Color = Color3.fromRGB(215, 205, 185)
-    clockFace.Orientation = Vector3.new(0, 0, 90)
     clockFace.Parent = clockFaceBase
     applyStudsToAllFaces(clockFace, Color3.fromRGB(215, 205, 185))
     
@@ -772,12 +770,19 @@ local function startVecnaClockScene()
     local stepInterval = 0.5
     
     local followConnection = RunService.RenderStepped:Connect(function()
-        if not cinematicActive or not root or not root.Parent then return end
+        if not cinematicActive or not root or not root.Parent or not hum then return end
         local targetCamPos = root.Position + Vector3.new(-7, 2.5, -12)
         local targetCamCF = CFrame.new(targetCamPos, root.Position + Vector3.new(0, 1.5, 0))
         cam.CFrame = cam.CFrame:Lerp(targetCamCF, 0.06)
         
-        if hum.WalkSpeed > 0 and hum.MoveVector and hum.MoveVector.Magnitude > 0.1 then
+        local moving = false
+        if hum.MoveVector then
+            moving = hum.MoveVector.Magnitude > 0.1
+        elseif hum.MoveDirection then
+            moving = hum.MoveDirection.Magnitude > 0.1
+        end
+        
+        if hum.WalkSpeed > 0 and moving then
             if tick() - lastStepTime >= stepInterval then
                 playAudio("Footstep", soundIds.footsteps, 0.4, false, root)
                 lastStepTime = tick()
@@ -942,7 +947,7 @@ local function startVecnaClockScene()
             for _, part in pairs(clockModel:GetDescendants()) do
                 if part:IsA("BasePart") then
                     local targetTransparency = 0
-                    if part.Material == Enum.Material.Plastic and part.Transparency > 0.5 then
+                    if part.Transparency > 0.5 then
                         targetTransparency = 0.65
                     end
                     part.Transparency = 1 - (i / 60) * (1 - targetTransparency)
@@ -953,7 +958,6 @@ local function startVecnaClockScene()
         darkParticles.Enabled = true
         darkAura.Enabled = true
         
-        -- Sonido tic-tac del reloj
         playAudio("ClockTick", soundIds.clockTick, 0.6, true, clockFace)
     end)
     
@@ -997,13 +1001,20 @@ local function startVecnaClockScene()
     hum:MoveTo(walkToClockTarget)
     
     followConnection = RunService.RenderStepped:Connect(function()
-        if not cinematicActive or not root or not root.Parent then return end
+        if not cinematicActive or not root or not root.Parent or not hum then return end
         local behindPos = root.Position + Vector3.new(0, 2, -8)
         local targetCF = CFrame.new(behindPos, clockPosition + Vector3.new(0, 5, 0))
         cam.CFrame = cam.CFrame:Lerp(targetCF, 0.04)
         cam.FieldOfView = 58
         
-        if hum.WalkSpeed > 0 and hum.MoveVector and hum.MoveVector.Magnitude > 0.1 then
+        local moving = false
+        if hum.MoveVector then
+            moving = hum.MoveVector.Magnitude > 0.1
+        elseif hum.MoveDirection then
+            moving = hum.MoveDirection.Magnitude > 0.1
+        end
+        
+        if hum.WalkSpeed > 0 and moving then
             if tick() - lastStepTime >= 0.6 then
                 playAudio("Footstep", soundIds.footsteps, 0.4, false, root)
                 lastStepTime = tick()
@@ -1047,16 +1058,16 @@ local function startVecnaClockScene()
         vfxPart.Anchored = true
         vfxPart.CanCollide = false
         vfxPart.Material = Enum.Material.Plastic
-        vfxPart.Color = Color3.fromRGB(240, 70, 70)
-        vfxPart.Transparency = 0.1
+        vfxPart.Color = Color3.fromRGB(200, 50, 50)
+        vfxPart.Transparency = 0.2
         vfxPart.Parent = workspace
         registerEffect(vfxPart)
-        applyStudsToAllFaces(vfxPart, Color3.fromRGB(240, 70, 70))
+        applyStudsToAllFaces(vfxPart, Color3.fromRGB(200, 50, 50))
         
         local vfxLight = Instance.new("PointLight")
-        vfxLight.Brightness = 6
-        vfxLight.Range = 25
-        vfxLight.Color = Color3.fromRGB(255, 80, 80)
+        vfxLight.Brightness = 4
+        vfxLight.Range = 20
+        vfxLight.Color = Color3.fromRGB(255, 60, 60)
         vfxLight.Parent = vfxPart
         
         TweenService:Create(vfxPart, TweenInfo.new(3.5), {
