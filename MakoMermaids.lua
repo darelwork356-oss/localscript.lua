@@ -1,471 +1,427 @@
 --[[
-🧜♀️ MAKO MERMAIDS - JUEGO ÉPICO
+🧜♀️ MAKO MERMAIDS - JUEGO DE SUPERVIVENCIA EN BALSA
 Colocar en: ServerScriptService
 ]]
 
-print("🌊 Iniciando Mako Mermaids ÉPICO...")
+print("🌊 Iniciando Mako Mermaids - Supervivencia...")
 
 local terrain = workspace.Terrain
 terrain:Clear()
 
 -- ========================================
--- OCÉANO MASIVO Y PROFUNDO
+-- OCÉANO INFINITO
 -- ========================================
-print("💧 Creando océano MASIVO...")
+print("💧 Creando océano infinito...")
 
--- Océano GIGANTE: 3000x3000 studs, profundidad 150
 terrain:FillRegion(
-    Region3.new(Vector3.new(-1500, 0, -1500), Vector3.new(1500, 150, 1500)):ExpandToGrid(4),
+    Region3.new(Vector3.new(-2000, 0, -2000), Vector3.new(2000, 100, 2000)):ExpandToGrid(4),
     4,
     Enum.Material.Water
 )
 
--- Fondo oceánico profundo (arena)
 terrain:FillRegion(
-    Region3.new(Vector3.new(-1500, -50, -1500), Vector3.new(1500, 0, 1500)):ExpandToGrid(4),
+    Region3.new(Vector3.new(-2000, -50, -2000), Vector3.new(2000, 0, 2000)):ExpandToGrid(4),
     4,
     Enum.Material.Sand
 )
 
--- Zonas rocosas submarinas
-for i = 1, 15 do
-    local x = math.random(-1400, 1400)
-    local z = math.random(-1400, 1400)
-    terrain:FillRegion(
-        Region3.new(Vector3.new(x-30, -40, z-30), Vector3.new(x+30, -10, z+30)):ExpandToGrid(4),
-        4,
-        Enum.Material.Rock
-    )
-end
-
-print("✅ Océano MASIVO: 3000x3000 studs, profundidad 150")
+print("✅ Océano infinito creado")
 
 -- ========================================
--- ISLA DE MAKO ÉPICA Y REALISTA
+-- BALSA INICIAL
 -- ========================================
-print("🏝️ Construyendo Isla de Mako ÉPICA...")
+print("🛟 Construyendo balsa inicial...")
 
--- Base submarina MASIVA (350x350)
-terrain:FillRegion(
-    Region3.new(Vector3.new(-175, -50, -175), Vector3.new(175, 140, 175)):ExpandToGrid(4),
-    4,
-    Enum.Material.Rock
-)
+local raftFolder = Instance.new("Folder")
+raftFolder.Name = "Raft"
+raftFolder.Parent = workspace
 
--- Superficie de la isla con forma irregular
-terrain:FillRegion(
-    Region3.new(Vector3.new(-160, 140, -160), Vector3.new(160, 155, 160)):ExpandToGrid(4),
-    4,
-    Enum.Material.Grass
-)
+-- Base de la balsa (madera)
+local raftBase = Instance.new("Part")
+raftBase.Name = "RaftBase"
+raftBase.Size = Vector3.new(20, 2, 20)
+raftBase.Position = Vector3.new(0, 51, 0)
+raftBase.Anchored = false
+raftBase.Material = Enum.Material.Wood
+raftBase.Color = Color3.fromRGB(150, 110, 70)
+raftBase.Parent = raftFolder
 
--- Montaña volcánica central (3 niveles)
-terrain:FillRegion(
-    Region3.new(Vector3.new(-80, 155, -80), Vector3.new(80, 200, 80)):ExpandToGrid(4),
-    4,
-    Enum.Material.Rock
-)
-terrain:FillRegion(
-    Region3.new(Vector3.new(-50, 200, -50), Vector3.new(50, 240, 50)):ExpandToGrid(4),
-    4,
-    Enum.Material.Rock
-)
-terrain:FillRegion(
-    Region3.new(Vector3.new(-25, 240, -25), Vector3.new(25, 270, 25)):ExpandToGrid(4),
-    4,
-    Enum.Material.Rock
-)
+-- Mantener la balsa flotando
+local bodyVelocity = Instance.new("BodyVelocity")
+bodyVelocity.MaxForce = Vector3.new(0, math.huge, 0)
+bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+bodyVelocity.Parent = raftBase
 
--- Playas amplias y realistas
-for angle = 0, 360, 30 do
-    local rad = math.rad(angle)
-    local x = math.cos(rad) * 140
-    local z = math.sin(rad) * 140
-    terrain:FillRegion(
-        Region3.new(Vector3.new(x-25, 135, z-25), Vector3.new(x+25, 145, z+25)):ExpandToGrid(4),
-        4,
-        Enum.Material.Sand
-    )
-end
+local bodyGyro = Instance.new("BodyGyro")
+bodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+bodyGyro.CFrame = raftBase.CFrame
+bodyGyro.Parent = raftBase
 
--- Acantilados rocosos
-for i = 1, 8 do
-    local angle = math.rad(i * 45)
-    local x = math.cos(angle) * 150
-    local z = math.sin(angle) * 150
-    terrain:FillRegion(
-        Region3.new(Vector3.new(x-15, 145, z-15), Vector3.new(x+15, 180, z+15)):ExpandToGrid(4),
-        4,
-        Enum.Material.Rock
-    )
-end
-
-print("✅ Isla de Mako ÉPICA: 350x350 studs, altura 270")
-
--- ========================================
--- CUEVA DE LA LUNA DE MAKO (ÉPICA)
--- ========================================
-print("🕳️ Creando Cueva de la Luna...")
-
-local caveFolder = Instance.new("Folder")
-caveFolder.Name = "MoonPoolCave"
-caveFolder.Parent = workspace
-
--- Entrada principal MASIVA
-local entrance = Instance.new("Part")
-entrance.Name = "CaveEntrance"
-entrance.Size = Vector3.new(50, 60, 50)
-entrance.Position = Vector3.new(0, 210, 0)
-entrance.Anchored = true
-entrance.Material = Enum.Material.Rock
-entrance.Color = Color3.fromRGB(40, 40, 45)
-entrance.Parent = caveFolder
-
--- Arco de entrada con cristales
-for i = 1, 12 do
-    local angle = math.rad(i * 30)
-    local crystal = Instance.new("Part")
-    crystal.Size = Vector3.new(3, 15, 3)
-    crystal.Position = Vector3.new(math.cos(angle)*20, 215, math.sin(angle)*20)
-    crystal.Anchored = true
-    crystal.Material = Enum.Material.Neon
-    crystal.Color = Color3.fromRGB(100, 200, 255)
-    crystal.Transparency = 0.3
-    crystal.Parent = caveFolder
-    
-    local light = Instance.new("PointLight")
-    light.Color = Color3.fromRGB(100, 200, 255)
-    light.Brightness = 2
-    light.Range = 30
-    light.Parent = crystal
-end
-
--- Piscina lunar (Moon Pool)
-local moonPool = Instance.new("Part")
-moonPool.Name = "MoonPool"
-moonPool.Size = Vector3.new(40, 5, 40)
-moonPool.Position = Vector3.new(0, 180, 0)
-moonPool.Anchored = true
-moonPool.Material = Enum.Material.Neon
-moonPool.Color = Color3.fromRGB(50, 150, 255)
-moonPool.Transparency = 0.5
-moonPool.Parent = caveFolder
-
-local poolLight = Instance.new("PointLight")
-poolLight.Color = Color3.fromRGB(50, 150, 255)
-poolLight.Brightness = 5
-poolLight.Range = 100
-poolLight.Parent = moonPool
-
-print("✅ Cueva de la Luna ÉPICA creada")
-
--- ========================================
--- DECORACIÓN ÉPICA DE LA ISLA
--- ========================================
-print("🌴 Decorando isla épicamente...")
-
-local islandDecor = Instance.new("Folder")
-islandDecor.Name = "IslandDecoration"
-islandDecor.Parent = workspace
-
--- PALMERAS TROPICALES REALISTAS (150 palmeras)
-for i = 1, 150 do
-    local x = math.random(-150, 150)
-    local z = math.random(-150, 150)
-    if math.sqrt(x*x + z*z) < 140 then
-        local treeModel = Instance.new("Model")
-        treeModel.Name = "PalmTree"
-        treeModel.Parent = islandDecor
+-- Tablas de madera (8 tablas)
+for i = 1, 4 do
+    for j = 1, 2 do
+        local plank = Instance.new("Part")
+        plank.Size = Vector3.new(4.5, 0.5, 9)
+        plank.Position = raftBase.Position + Vector3.new(-7.5 + i*5, 1.5, -5 + j*10)
+        plank.Material = Enum.Material.Wood
+        plank.Color = Color3.fromRGB(140, 100, 60)
+        plank.Parent = raftFolder
         
-        -- Tronco con segmentos curvos
-        for seg = 0, 6 do
+        local weld = Instance.new("WeldConstraint")
+        weld.Part0 = raftBase
+        weld.Part1 = plank
+        weld.Parent = plank
+    end
+end
+
+-- Poste central
+local mast = Instance.new("Part")
+mast.Name = "Mast"
+mast.Size = Vector3.new(1.5, 15, 1.5)
+mast.Position = raftBase.Position + Vector3.new(0, 8.5, 0)
+mast.Material = Enum.Material.Wood
+mast.Color = Color3.fromRGB(100, 70, 40)
+mast.Parent = raftFolder
+
+local mastWeld = Instance.new("WeldConstraint")
+mastWeld.Part0 = raftBase
+mastWeld.Part1 = mast
+mastWeld.Parent = mast
+
+-- Asiento para manejar
+local seat = Instance.new("Seat")
+seat.Name = "DriverSeat"
+seat.Size = Vector3.new(4, 1, 4)
+seat.Position = raftBase.Position + Vector3.new(0, 2, 5)
+seat.Material = Enum.Material.Wood
+seat.Color = Color3.fromRGB(120, 80, 50)
+seat.Parent = raftFolder
+
+local seatWeld = Instance.new("WeldConstraint")
+seatWeld.Part0 = raftBase
+seatWeld.Part1 = seat
+seatWeld.Parent = seat
+
+-- Respaldo del asiento
+local backrest = Instance.new("Part")
+backrest.Size = Vector3.new(4, 3, 0.5)
+backrest.Position = seat.Position + Vector3.new(0, 2, -2)
+backrest.Material = Enum.Material.Wood
+backrest.Color = Color3.fromRGB(120, 80, 50)
+backrest.Parent = raftFolder
+
+local backWeld = Instance.new("WeldConstraint")
+backWeld.Part0 = seat
+backWeld.Part1 = backrest
+backWeld.Parent = backrest
+
+-- Spawn en la balsa
+local spawn = Instance.new("SpawnLocation")
+spawn.Size = Vector3.new(6, 1, 6)
+spawn.Position = raftBase.Position + Vector3.new(-5, 2, 0)
+spawn.Anchored = false
+spawn.Material = Enum.Material.Wood
+spawn.Color = Color3.fromRGB(150, 110, 70)
+spawn.BrickColor = BrickColor.new("Bright blue")
+spawn.TopSurface = Enum.SurfaceType.Smooth
+spawn.CanCollide = false
+spawn.Transparency = 0.5
+spawn.Parent = raftFolder
+
+local spawnWeld = Instance.new("WeldConstraint")
+spawnWeld.Part0 = raftBase
+spawnWeld.Part1 = spawn
+spawnWeld.Parent = spawn
+
+print("✅ Balsa inicial creada")
+
+-- ========================================
+-- SISTEMA DE RECURSOS
+-- ========================================
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local resourcesFolder = Instance.new("Folder")
+resourcesFolder.Name = "PlayerResources"
+resourcesFolder.Parent = ReplicatedStorage
+
+-- ========================================
+-- ALGAS RECOLECTABLES (1000 algas)
+-- ========================================
+print("🌿 Creando algas recolectables...")
+
+local algaeFolder = Instance.new("Folder")
+algaeFolder.Name = "Algae"
+algaeFolder.Parent = workspace
+
+for i = 1, 1000 do
+    local algaeModel = Instance.new("Model")
+    algaeModel.Name = "Algae"
+    algaeModel.Parent = algaeFolder
+    
+    local x = math.random(-1800, 1800)
+    local z = math.random(-1800, 1800)
+    local distance = math.sqrt(x*x + z*z)
+    
+    -- No spawear algas cerca de la balsa
+    if distance > 50 then
+        local height = math.random(10, 30)
+        local segments = math.floor(height / 3)
+        local baseColor = Color3.fromRGB(math.random(30, 60), math.random(120, 180), math.random(30, 60))
+        
+        -- Base del alga (parte recolectable)
+        local algaeBase = Instance.new("Part")
+        algaeBase.Name = "AlgaeBase"
+        algaeBase.Size = Vector3.new(2, 3, 2)
+        algaeBase.Position = Vector3.new(x, 3, z)
+        algaeBase.Anchored = true
+        algaeBase.Material = Enum.Material.Neon
+        algaeBase.Color = baseColor
+        algaeBase.Transparency = 0.2
+        algaeBase.Shape = Enum.PartType.Ball
+        algaeBase.Parent = algaeModel
+        
+        -- Highlight para visibilidad
+        local highlight = Instance.new("Highlight")
+        highlight.FillColor = baseColor
+        highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+        highlight.FillTransparency = 0.5
+        highlight.OutlineTransparency = 0
+        highlight.Parent = algaeBase
+        
+        -- ProximityPrompt para recolectar
+        local prompt = Instance.new("ProximityPrompt")
+        prompt.ActionText = "Arrancar Alga"
+        prompt.ObjectText = "Alga Marina"
+        prompt.HoldDuration = 1
+        prompt.MaxActivationDistance = 10
+        prompt.RequiresLineOfSight = false
+        prompt.Parent = algaeBase
+        
+        -- Segmentos del alga
+        for seg = 1, segments do
             local segment = Instance.new("Part")
-            segment.Size = Vector3.new(2.5, 5, 2.5)
-            segment.Position = Vector3.new(x + math.sin(seg*0.3)*2, 155 + seg*4.5, z + math.cos(seg*0.3)*2)
+            segment.Size = Vector3.new(1, 3, 0.3)
+            segment.Position = Vector3.new(
+                x + math.sin(seg * 0.8) * (seg * 0.4),
+                3 + seg * 3,
+                z + math.cos(seg * 0.8) * (seg * 0.4)
+            )
             segment.Anchored = true
-            segment.Material = Enum.Material.Wood
-            segment.Color = Color3.fromRGB(120, 85, 60)
-            segment.Shape = Enum.PartType.Cylinder
-            segment.Orientation = Vector3.new(0, 0, 90 + seg*3)
-            segment.Parent = treeModel
+            segment.CanCollide = false
+            segment.Material = Enum.Material.Neon
+            segment.Color = baseColor
+            segment.Transparency = 0.3
+            segment.Parent = algaeModel
             
-            -- Textura del tronco
-            local mesh = Instance.new("CylinderMesh")
-            mesh.Scale = Vector3.new(1, 1, 1)
+            local mesh = Instance.new("SpecialMesh")
+            mesh.MeshType = Enum.MeshType.FileMesh
+            mesh.MeshId = "rbxassetid://1290033"
+            mesh.Scale = Vector3.new(1.5, 3, 1)
             mesh.Parent = segment
         end
         
-        -- Hojas de palma (8 hojas)
-        for leafNum = 1, 8 do
-            local angle = math.rad(leafNum * 45)
-            local leafBase = Instance.new("Part")
-            leafBase.Size = Vector3.new(1, 1, 12)
-            leafBase.Position = Vector3.new(x, 185, z) + Vector3.new(math.cos(angle)*6, -2, math.sin(angle)*6)
-            leafBase.Anchored = true
-            leafBase.Material = Enum.Material.Grass
-            leafBase.Color = Color3.fromRGB(40, 140, 40)
-            leafBase.Transparency = 0.1
-            leafBase.Orientation = Vector3.new(math.random(-20, -10), math.deg(angle), 0)
-            leafBase.Parent = treeModel
-            
-            -- Hojas secundarias
-            for side = -1, 1, 2 do
-                for j = 1, 5 do
-                    local subLeaf = Instance.new("Part")
-                    subLeaf.Size = Vector3.new(0.3, 0.3, 3)
-                    subLeaf.Position = leafBase.Position + leafBase.CFrame.LookVector * (j*2) + leafBase.CFrame.RightVector * (side*1.5)
-                    subLeaf.Anchored = true
-                    subLeaf.Material = Enum.Material.Grass
-                    subLeaf.Color = Color3.fromRGB(30, math.random(120, 160), 30)
-                    subLeaf.Transparency = 0.2
-                    subLeaf.Orientation = leafBase.Orientation + Vector3.new(side*20, 0, side*30)
-                    subLeaf.Parent = treeModel
-                end
-            end
-        end
-    end
-end
-
--- Rocas volcánicas (150 rocas)
-for i = 1, 150 do
-    local rock = Instance.new("Part")
-    rock.Size = Vector3.new(math.random(5, 20), math.random(5, 15), math.random(5, 20))
-    rock.Position = Vector3.new(math.random(-155, 155), 155, math.random(-155, 155))
-    rock.Anchored = true
-    rock.Material = Enum.Material.Rock
-    rock.Color = Color3.fromRGB(math.random(50, 80), math.random(50, 80), math.random(50, 80))
-    rock.Orientation = Vector3.new(math.random(-20, 20), math.random(0, 360), math.random(-20, 20))
-    rock.Parent = islandDecor
-end
-
-print("✅ Isla decorada: 200 palmeras, 150 rocas")
-
--- ========================================
--- FONDO MARINO ÉPICO
--- ========================================
-print("🐚 Creando fondo marino detallado...")
-
-local oceanFloor = Instance.new("Folder")
-oceanFloor.Name = "OceanFloor"
-oceanFloor.Parent = workspace
-
--- CONCHAS MARINAS REALISTAS EN ESPIRAL (500 conchas)
-for i = 1, 500 do
-    local shellModel = Instance.new("Model")
-    shellModel.Name = "SeaShell"
-    shellModel.Parent = oceanFloor
-    
-    local x = math.random(-1400, 1400)
-    local z = math.random(-1400, 1400)
-    local shellColors = {
-        Color3.fromRGB(255, 200, 180),
-        Color3.fromRGB(255, 150, 200),
-        Color3.fromRGB(200, 150, 255),
-        Color3.fromRGB(255, 220, 150),
-        Color3.fromRGB(255, 180, 200)
-    }
-    local shellColor = shellColors[math.random(1, #shellColors)]
-    
-    -- Crear espiral de concha (8 segmentos)
-    for spiral = 1, 8 do
-        local angle = math.rad(spiral * 45)
-        local radius = spiral * 0.4
-        local segment = Instance.new("Part")
-        segment.Size = Vector3.new(1 + spiral*0.3, 1 + spiral*0.3, 1.5 + spiral*0.2)
-        segment.Position = Vector3.new(
-            x + math.cos(angle) * radius,
-            -2 + spiral * 0.3,
-            z + math.sin(angle) * radius
-        )
-        segment.Anchored = true
-        segment.Material = Enum.Material.Marble
-        segment.Color = shellColor
-        segment.Shape = Enum.PartType.Ball
-        segment.Orientation = Vector3.new(math.random(-30, 30), math.deg(angle), math.random(-30, 30))
-        segment.Parent = shellModel
-        
-        -- Brillo perlado
-        local mesh = Instance.new("SpecialMesh")
-        mesh.MeshType = Enum.MeshType.Sphere
-        mesh.Scale = Vector3.new(1, 0.8, 1.2)
-        mesh.Parent = segment
-    end
-end
-
--- ALGAS MARINAS ANIMADAS (400 algas)
-for i = 1, 400 do
-    local seaweedModel = Instance.new("Model")
-    seaweedModel.Name = "Seaweed"
-    seaweedModel.Parent = oceanFloor
-    
-    local x = math.random(-1400, 1400)
-    local z = math.random(-1400, 1400)
-    local height = math.random(15, 40)
-    local segments = math.floor(height / 4)
-    local baseColor = Color3.fromRGB(math.random(20, 50), math.random(100, 150), math.random(20, 50))
-    
-    -- Crear alga con segmentos ondulantes
-    for seg = 1, segments do
-        local segment = Instance.new("Part")
-        segment.Size = Vector3.new(1.5, 4, 0.5)
-        segment.Position = Vector3.new(
-            x + math.sin(seg * 0.5) * (seg * 0.3),
-            seg * 4,
-            z + math.cos(seg * 0.5) * (seg * 0.3)
-        )
-        segment.Anchored = false
-        segment.CanCollide = false
-        segment.Material = Enum.Material.Neon
-        segment.Color = baseColor
-        segment.Transparency = 0.3
-        segment.Parent = seaweedModel
-        
-        -- Mesh para forma de hoja
-        local mesh = Instance.new("SpecialMesh")
-        mesh.MeshType = Enum.MeshType.FileMesh
-        mesh.MeshId = "rbxassetid://1290033"  -- Mesh de hoja
-        mesh.Scale = Vector3.new(2, 4, 1)
-        mesh.Parent = segment
-        
         -- Animación ondulante
-        local bodyPos = Instance.new("BodyPosition")
-        bodyPos.MaxForce = Vector3.new(4000, 4000, 4000)
-        bodyPos.Position = segment.Position
-        bodyPos.Parent = segment
-        
-        local bodyGyro = Instance.new("BodyGyro")
-        bodyGyro.MaxTorque = Vector3.new(400, 400, 400)
-        bodyGyro.Parent = segment
-        
-        -- Script de animación
         task.spawn(function()
-            local time = 0
-            while segment.Parent do
+            local time = math.random(0, 100)
+            while algaeModel.Parent do
                 time = time + 0.05
-                local offset = math.sin(time + seg * 0.5) * 2
-                bodyPos.Position = Vector3.new(
-                    x + math.sin(seg * 0.5) * (seg * 0.3) + offset,
-                    seg * 4,
-                    z + math.cos(seg * 0.5) * (seg * 0.3) + math.cos(time) * 1
-                )
-                bodyGyro.CFrame = CFrame.Angles(math.sin(time) * 0.3, 0, math.cos(time) * 0.3)
+                for _, part in pairs(algaeModel:GetChildren()) do
+                    if part:IsA("BasePart") and part.Name ~= "AlgaeBase" then
+                        local offset = math.sin(time + part.Position.Y * 0.1) * 1.5
+                        part.CFrame = part.CFrame * CFrame.Angles(math.sin(time) * 0.1, 0, math.cos(time) * 0.1)
+                    end
+                end
                 task.wait(0.05)
             end
         end)
     end
 end
 
--- CORALES (300 corales)
-for i = 1, 300 do
-    local coral = Instance.new("Part")
-    coral.Name = "Coral"
-    coral.Size = Vector3.new(math.random(5, 15), math.random(8, 20), math.random(5, 15))
-    coral.Position = Vector3.new(math.random(-1400, 1400), 5, math.random(-1400, 1400))
-    coral.Anchored = true
-    coral.Material = Enum.Material.Cobblestone
-    local coralColors = {
-        Color3.fromRGB(255, 100, 150),
-        Color3.fromRGB(150, 100, 255),
-        Color3.fromRGB(255, 150, 50),
-        Color3.fromRGB(100, 255, 200)
-    }
-    coral.Color = coralColors[math.random(1, #coralColors)]
-    coral.Parent = oceanFloor
+print("✅ 1000 algas recolectables creadas")
+
+-- ========================================
+-- SCRIPT DE RECOLECCIÓN
+-- ========================================
+print("📦 Configurando sistema de recolección...")
+
+local Players = game:GetService("Players")
+
+-- Función para dar recursos al jugador
+local function giveResource(player, resourceType, amount)
+    local leaderstats = player:FindFirstChild("leaderstats")
+    if not leaderstats then
+        leaderstats = Instance.new("Folder")
+        leaderstats.Name = "leaderstats"
+        leaderstats.Parent = player
+    end
     
-    -- Luz en corales
-    if math.random(1, 3) == 1 then
-        local coralLight = Instance.new("PointLight")
-        coralLight.Color = coral.Color
-        coralLight.Brightness = 1.5
-        coralLight.Range = 25
-        coralLight.Parent = coral
+    local resource = leaderstats:FindFirstChild(resourceType)
+    if not resource then
+        resource = Instance.new("IntValue")
+        resource.Name = resourceType
+        resource.Value = 0
+        resource.Parent = leaderstats
+    end
+    
+    resource.Value = resource.Value + amount
+end
+
+-- Conectar ProximityPrompts
+for _, algae in pairs(algaeFolder:GetChildren()) do
+    local algaeBase = algae:FindFirstChild("AlgaeBase")
+    if algaeBase then
+        local prompt = algaeBase:FindFirstChild("ProximityPrompt")
+        if prompt then
+            prompt.Triggered:Connect(function(player)
+                -- Dar recursos
+                giveResource(player, "Algas", 1)
+                giveResource(player, "Madera", math.random(1, 3))
+                
+                -- Efecto visual
+                local explosion = Instance.new("Part")
+                explosion.Size = Vector3.new(1, 1, 1)
+                explosion.Position = algaeBase.Position
+                explosion.Anchored = true
+                explosion.CanCollide = false
+                explosion.Material = Enum.Material.Neon
+                explosion.Color = algaeBase.Color
+                explosion.Shape = Enum.PartType.Ball
+                explosion.Transparency = 0
+                explosion.Parent = workspace
+                
+                task.spawn(function()
+                    for i = 1, 20 do
+                        explosion.Size = explosion.Size + Vector3.new(0.5, 0.5, 0.5)
+                        explosion.Transparency = i / 20
+                        task.wait(0.05)
+                    end
+                    explosion:Destroy()
+                end)
+                
+                -- Eliminar alga
+                algae:Destroy()
+                
+                -- Mensaje
+                print(player.Name .. " recolectó un alga!")
+            end)
+        end
     end
 end
 
--- ROCAS SUBMARINAS (200 rocas)
-for i = 1, 200 do
-    local rock = Instance.new("Part")
-    rock.Size = Vector3.new(math.random(10, 30), math.random(10, 25), math.random(10, 30))
-    rock.Position = Vector3.new(math.random(-1400, 1400), 10, math.random(-1400, 1400))
-    rock.Anchored = true
-    rock.Material = Enum.Material.Rock
-    rock.Color = Color3.fromRGB(math.random(60, 100), math.random(60, 100), math.random(60, 100))
-    rock.Parent = oceanFloor
-end
-
-print("✅ Fondo marino: 500 conchas, 400 algas, 300 corales, 200 rocas")
+print("✅ Sistema de recolección configurado")
 
 -- ========================================
--- SPAWN EN LA PLAYA
+-- SISTEMA DE EXPANSIÓN DE BALSA
 -- ========================================
-print("🏊 Creando spawn...")
+print("🔨 Configurando expansión de balsa...")
 
-local spawn = Instance.new("SpawnLocation")
-spawn.Size = Vector3.new(20, 2, 20)
-spawn.Position = Vector3.new(120, 145, 0)
-spawn.Anchored = true
-spawn.Material = Enum.Material.Wood
-spawn.Color = Color3.fromRGB(150, 120, 80)
-spawn.BrickColor = BrickColor.new("Bright blue")
-spawn.TopSurface = Enum.SurfaceType.Smooth
-spawn.Parent = workspace
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        local leaderstats = player:FindFirstChild("leaderstats")
+        if not leaderstats then
+            leaderstats = Instance.new("Folder")
+            leaderstats.Name = "leaderstats"
+            leaderstats.Parent = player
+            
+            local algas = Instance.new("IntValue")
+            algas.Name = "Algas"
+            algas.Value = 0
+            algas.Parent = leaderstats
+            
+            local madera = Instance.new("IntValue")
+            madera.Name = "Madera"
+            madera.Value = 0
+            madera.Parent = leaderstats
+            
+            local velocidad = Instance.new("IntValue")
+            velocidad.Name = "Velocidad"
+            velocidad.Value = 10
+            velocidad.Parent = leaderstats
+        end
+        
+        -- Monitorear recursos para expandir balsa
+        local algas = leaderstats:FindFirstChild("Algas")
+        if algas then
+            algas.Changed:Connect(function(value)
+                local velocidad = leaderstats:FindFirstChild("Velocidad")
+                if velocidad then
+                    -- Cada 10 algas aumenta velocidad
+                    velocidad.Value = 10 + math.floor(value / 10) * 5
+                end
+            end)
+        end
+    end)
+end)
 
-print("✅ Spawn en la playa")
+-- Control de la balsa
+seat:GetPropertyChangedSignal("Occupant"):Connect(function()
+    if seat.Occupant then
+        local player = game.Players:GetPlayerFromCharacter(seat.Occupant.Parent)
+        if player then
+            local leaderstats = player:FindFirstChild("leaderstats")
+            local velocidad = leaderstats and leaderstats:FindFirstChild("Velocidad")
+            local speed = velocidad and velocidad.Value or 10
+            
+            -- Controles
+            local humanoid = seat.Occupant
+            task.spawn(function()
+                while seat.Occupant == humanoid do
+                    local moveDirection = humanoid.Parent:FindFirstChild("Humanoid").MoveDirection
+                    if moveDirection.Magnitude > 0 then
+                        bodyVelocity.Velocity = Vector3.new(moveDirection.X * speed, 0, moveDirection.Z * speed)
+                    else
+                        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    else
+        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+    end
+end)
+
+print("✅ Sistema de expansión configurado")
 
 -- ========================================
--- ILUMINACIÓN ÉPICA
+-- ILUMINACIÓN
 -- ========================================
-print("💡 Configurando iluminación épica...")
+print("💡 Configurando iluminación...")
 
 local Lighting = game:GetService("Lighting")
-Lighting.Ambient = Color3.fromRGB(80, 130, 180)
-Lighting.Brightness = 2.5
+Lighting.Ambient = Color3.fromRGB(100, 150, 200)
+Lighting.Brightness = 2
 Lighting.ColorShift_Top = Color3.fromRGB(150, 200, 255)
-Lighting.OutdoorAmbient = Color3.fromRGB(100, 150, 200)
-Lighting.FogEnd = 800
-Lighting.FogColor = Color3.fromRGB(80, 160, 220)
-Lighting.ClockTime = 15
+Lighting.OutdoorAmbient = Color3.fromRGB(120, 170, 220)
+Lighting.FogEnd = 1000
+Lighting.FogColor = Color3.fromRGB(100, 180, 230)
+Lighting.ClockTime = 14
 
 local atmos = Instance.new("Atmosphere")
-atmos.Density = 0.4
-atmos.Offset = 0.3
-atmos.Color = Color3.fromRGB(130, 180, 255)
-atmos.Decay = Color3.fromRGB(100, 160, 220)
-atmos.Glare = 0.8
-atmos.Haze = 2
+atmos.Density = 0.3
+atmos.Offset = 0.5
+atmos.Color = Color3.fromRGB(150, 200, 255)
+atmos.Decay = Color3.fromRGB(120, 180, 230)
+atmos.Glare = 0.5
+atmos.Haze = 1.5
 atmos.Parent = Lighting
 
 local sun = Instance.new("SunRaysEffect")
-sun.Intensity = 0.2
-sun.Spread = 0.15
+sun.Intensity = 0.15
+sun.Spread = 0.1
 sun.Parent = Lighting
 
-local bloom = Instance.new("BloomEffect")
-bloom.Intensity = 0.5
-bloom.Size = 24
-bloom.Threshold = 0.8
-bloom.Parent = Lighting
-
-local blur = Instance.new("BlurEffect")
-blur.Size = 2
-blur.Parent = Lighting
-
-print("✅ Iluminación épica configurada")
+print("✅ Iluminación configurada")
 
 print("")
 print("🎉 ═══════════════════════════════════════")
-print("🧜♀️ MAKO MERMAIDS - JUEGO ÉPICO COMPLETADO")
+print("🧜♀️ MAKO MERMAIDS - SUPERVIVENCIA EN BALSA")
 print("═══════════════════════════════════════")
-print("🌊 Océano: 3000x3000 studs, profundidad 150")
-print("🏝️ Isla de Mako: 350x350 studs, altura 270")
-print("🌴 Vegetación: 200 palmeras tropicales")
-print("🪨 Rocas: 150 rocas volcánicas")
-print("🐚 Fondo marino: 500 conchas")
-print("🌿 Algas: 400 algas marinas")
-print("🪸 Corales: 300 corales luminosos")
-print("🪨 Rocas submarinas: 200")
-print("🌙 Cueva de la Luna: ÉPICA con cristales")
-print("📍 Spawn: Playa este (X=120, Y=145)")
+print("🛟 Balsa inicial: 20x20 studs")
+print("🌿 Algas recolectables: 1000")
+print("📦 Sistema: ProximityPrompt")
+print("⚡ Velocidad inicial: 10 studs/s")
+print("🚀 +5 velocidad cada 10 algas")
+print("🎯 Objetivo: Recolectar algas para expandir")
 print("═══════════════════════════════════════")
-print("✨ ¡Listo para transformarte en sirena!")
+print("✨ ¡Sobrevive en el océano!")
 print("")
