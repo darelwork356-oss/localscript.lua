@@ -297,8 +297,8 @@ local function createHawkinsSchool()
     applyStudsToAllFaces(frontWall, Color3.fromRGB(190, 170, 150))
     
     local frontOrangeStripe = Instance.new("Part")
-    frontOrangeStripe.Size = Vector3.new(30, 2.2, 0.95)
-    frontOrangeStripe.Position = Vector3.new(0, 10.4, 74.5)
+    frontOrangeStripe.Size = Vector3.new(30, 2.2, 0.9)
+    frontOrangeStripe.Position = Vector3.new(0, 10.4, 74.55)
     frontOrangeStripe.Anchored = true
     frontOrangeStripe.Material = Enum.Material.Plastic
     frontOrangeStripe.Color = Color3.fromRGB(220, 130, 60)
@@ -315,7 +315,7 @@ local function createHawkinsSchool()
     applyStudsToAllFaces(ceiling, Color3.fromRGB(180, 160, 140))
     
     for z = -65, 65, 5.5 do
-        -- Casilleros lado izquierdo
+        -- Casilleros SOLO lado izquierdo
         local lockerLeft = Instance.new("Part")
         lockerLeft.Size = Vector3.new(0.8, 9, 2.3)
         lockerLeft.Position = Vector3.new(-13.6, 4.5, z)
@@ -343,36 +343,6 @@ local function createHawkinsSchool()
             ventLeft.Color = Color3.fromRGB(60, 60, 60)
             ventLeft.Parent = lockerLeft
             applyStudsToAllFaces(ventLeft, Color3.fromRGB(60, 60, 60))
-        end
-        
-        -- Casilleros lado derecho
-        local lockerRight = Instance.new("Part")
-        lockerRight.Size = Vector3.new(0.8, 9, 2.3)
-        lockerRight.Position = Vector3.new(13.6, 4.5, z)
-        lockerRight.Anchored = true
-        lockerRight.Material = Enum.Material.Plastic
-        lockerRight.Color = Color3.fromRGB(180, 160, 140)
-        lockerRight.Parent = schoolFolder
-        applyStudsToAllFaces(lockerRight, Color3.fromRGB(180, 160, 140))
-        
-        local handleRight = Instance.new("Part")
-        handleRight.Size = Vector3.new(0.2, 0.5, 0.2)
-        handleRight.Position = Vector3.new(13.1, 4.5, z)
-        handleRight.Anchored = true
-        handleRight.Material = Enum.Material.Plastic
-        handleRight.Color = Color3.fromRGB(90, 90, 90)
-        handleRight.Parent = lockerRight
-        applyStudsToAllFaces(handleRight, Color3.fromRGB(90, 90, 90))
-        
-        for i = 1, 3 do
-            local ventRight = Instance.new("Part")
-            ventRight.Size = Vector3.new(0.6, 0.08, 0.2)
-            ventRight.Position = Vector3.new(13.1, 3 + (i * 0.4), z)
-            ventRight.Anchored = true
-            ventRight.Material = Enum.Material.Plastic
-            ventRight.Color = Color3.fromRGB(60, 60, 60)
-            ventRight.Parent = lockerRight
-            applyStudsToAllFaces(ventRight, Color3.fromRGB(60, 60, 60))
         end
     end
     
@@ -1030,34 +1000,34 @@ local function startVecnaClockScene()
     
     print("💥 GRÁFICOS MASIVOS")
     
-    for i = 1, 40 do
+    for i = 1, 80 do
         local vfxPart = Instance.new("Part")
-        vfxPart.Size = Vector3.new(3, 3, 3)
+        vfxPart.Size = Vector3.new(4, 4, 4)
         vfxPart.Position = clockPosition + Vector3.new(
-            math.random(-25, 25),
-            math.random(-10, 15),
-            math.random(-10, 10)
+            math.random(-30, 30),
+            math.random(-12, 18),
+            math.random(-12, 12)
         )
         vfxPart.Anchored = true
         vfxPart.CanCollide = false
-        vfxPart.Material = Enum.Material.Neon
+        vfxPart.Material = Enum.Material.Plastic
         vfxPart.Color = Color3.fromRGB(240, 70, 70)
         vfxPart.Transparency = 0.1
         vfxPart.Parent = workspace
         registerEffect(vfxPart)
+        applyStudsToAllFaces(vfxPart, Color3.fromRGB(240, 70, 70))
         
-        -- Luz en cada VFX
         local vfxLight = Instance.new("PointLight")
-        vfxLight.Brightness = 5
-        vfxLight.Range = 20
+        vfxLight.Brightness = 6
+        vfxLight.Range = 25
         vfxLight.Color = Color3.fromRGB(255, 80, 80)
         vfxLight.Parent = vfxPart
         
-        TweenService:Create(vfxPart, TweenInfo.new(3), {
-            Size = Vector3.new(12, 12, 12),
+        TweenService:Create(vfxPart, TweenInfo.new(3.5), {
+            Size = Vector3.new(15, 15, 15),
             Transparency = 1
         }):Play()
-        Debris:AddItem(vfxPart, 3.5)
+        Debris:AddItem(vfxPart, 4)
     end
     
     local bigFlash = Instance.new("Frame", screenGui)
