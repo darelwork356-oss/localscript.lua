@@ -588,23 +588,30 @@ local function createVecnaGrandfatherClock(position)
     createSpike(0)
     createSpike(1.3)
     
-    -- ✅ LUZ ROJA MASIVA - BRIGHTNESS 60, RANGE 250
+    -- ✅ LUZ ROJA MASIVA VISIBLE - BRIGHTNESS 100, RANGE 300
     local clockLight = Instance.new("PointLight")
-    clockLight.Brightness = 0
-    clockLight.Range = 250  -- ENORME
-    clockLight.Color = Color3.fromRGB(255, 50, 50)
-    clockLight.Shadows = false  -- Sin sombras para más luz
+    clockLight.Brightness = 100  -- MÁXIMO DESDE EL INICIO
+    clockLight.Range = 300  -- ENORME
+    clockLight.Color = Color3.fromRGB(255, 0, 0)
+    clockLight.Shadows = false
     clockLight.Parent = clockFace
     registerEffect(clockLight)
     
-    -- Luz adicional del reloj
     local clockLight2 = Instance.new("PointLight")
-    clockLight2.Brightness = 0
-    clockLight2.Range = 200
-    clockLight2.Color = Color3.fromRGB(255, 60, 60)
+    clockLight2.Brightness = 80
+    clockLight2.Range = 250
+    clockLight2.Color = Color3.fromRGB(255, 30, 30)
     clockLight2.Shadows = false
     clockLight2.Parent = body
     registerEffect(clockLight2)
+    
+    local clockLight3 = Instance.new("PointLight")
+    clockLight3.Brightness = 70
+    clockLight3.Range = 200
+    clockLight3.Color = Color3.fromRGB(255, 50, 50)
+    clockLight3.Shadows = false
+    clockLight3.Parent = base
+    registerEffect(clockLight3)
     
     local darkParticles = Instance.new("ParticleEmitter")
     darkParticles.Texture = "rbxassetid://6102449224"
@@ -640,7 +647,7 @@ local function createVecnaGrandfatherClock(position)
     darkAura.Parent = body
     registerEffect(darkAura)
     
-    return clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, darkParticles, darkAura
+    return clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, clockLight3, darkParticles, darkAura
 end
 
 local function createGroundCrack(startPos, endPos, width, depth)
@@ -774,12 +781,7 @@ local function startVecnaClockScene()
         local targetCamCF = CFrame.new(targetCamPos, root.Position + Vector3.new(0, 1.5, 0))
         cam.CFrame = cam.CFrame:Lerp(targetCamCF, 0.06)
         
-        local moving = false
-        if hum.MoveVector then
-            moving = hum.MoveVector.Magnitude > 0.1
-        elseif hum.MoveDirection then
-            moving = hum.MoveDirection.Magnitude > 0.1
-        end
+        local moving = hum.MoveDirection.Magnitude > 0.1
         
         if hum.WalkSpeed > 0 and moving then
             if tick() - lastStepTime >= stepInterval then
@@ -933,54 +935,35 @@ local function startVecnaClockScene()
     print("🎬 FASE 4: RELOJ APARECE")
     
     local clockPosition = Vector3.new(0, 0.5, 68)
-    local clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, darkParticles, darkAura = createVecnaGrandfatherClock(clockPosition)
+    local clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, clockLight3, darkParticles, darkAura = createVecnaGrandfatherClock(clockPosition)
     
+    -- ✅ RELOJ COMPLETAMENTE VISIBLE DESDE EL INICIO
     for _, part in pairs(clockModel:GetDescendants()) do
         if part:IsA("BasePart") then
-            part.Transparency = 1
+            if part.Name == "ClockFace" or part.Parent.Name == "ClockFace" then
+                part.Transparency = 0  -- Cara del reloj 100% visible
+            elseif part.Transparency > 0.5 then
+                part.Transparency = 0.65
+            else
+                part.Transparency = 0
+            end
         end
     end
     
-    task.spawn(function()
-        for i = 1, 60 do
-            for _, part in pairs(clockModel:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    local targetTransparency = 0
-                    if part.Transparency > 0.5 then
-                        targetTransparency = 0.65
-                    end
-                    part.Transparency = 1 - (i / 60) * (1 - targetTransparency)
-                end
-            end
-            task.wait(0.05)
-        end
-        darkParticles.Enabled = true
-        darkAura.Enabled = true
-        
-        playAudio("ClockTick", soundIds.clockTick, 0.6, true, clockFace)
-    end)
+    darkParticles.Enabled = true
+    darkAura.Enabled = true
+    playAudio("ClockTick", soundIds.clockTick, 0.6, true, clockFace)
     
-    -- ✅ LUZ ROJA MASIVA INMEDIATA
-    task.spawn(function()
-        task.wait(2)
-        TweenService:Create(clockLight, TweenInfo.new(4), {
-            Brightness = 60,
-            Range = 250
-        }):Play()
-        TweenService:Create(clockLight2, TweenInfo.new(4), {
-            Brightness = 45,
-            Range = 200
-        }):Play()
-    end)
+    -- ✅ LUZ ROJA YA ESTÁ AL MÁXIMO (no necesita animación)
     
-    -- ✅ AMBIENTE ROJO MUY BRILLANTE - NO OSCURO
+    -- ✅ AMBIENTE ROJO SUPER BRILLANTE - ESTILO STRANGER THINGS
     print("🔴 AMBIENTE ROJO BRILLANTE")
     TweenService:Create(Lighting, TweenInfo.new(6), {
-        Ambient = Color3.fromRGB(150, 40, 40),  -- MUY BRILLANTE
-        Brightness = 2.8,  -- MÁXIMO BRILLO
-        ColorShift_Top = Color3.fromRGB(220, 70, 70),
-        FogEnd = 120,
-        FogColor = Color3.fromRGB(100, 30, 30)
+        Ambient = Color3.fromRGB(200, 60, 60),  -- SUPER BRILLANTE
+        Brightness = 4,  -- MÁXIMO ABSOLUTO
+        ColorShift_Top = Color3.fromRGB(255, 100, 100),
+        FogEnd = 150,
+        FogColor = Color3.fromRGB(150, 40, 40)
     }):Play()
     
     local clockViewCam = clockPosition + Vector3.new(5, 4, -8)
@@ -1006,12 +989,7 @@ local function startVecnaClockScene()
         cam.CFrame = cam.CFrame:Lerp(targetCF, 0.04)
         cam.FieldOfView = 58
         
-        local moving = false
-        if hum.MoveVector then
-            moving = hum.MoveVector.Magnitude > 0.1
-        elseif hum.MoveDirection then
-            moving = hum.MoveDirection.Magnitude > 0.1
-        end
+        local moving = hum.MoveDirection.Magnitude > 0.1
         
         if hum.WalkSpeed > 0 and moving then
             if tick() - lastStepTime >= 0.6 then
@@ -1087,21 +1065,13 @@ local function startVecnaClockScene()
     
     print("💥 ✅ TERREMOTO VISIBLE CON LUZ ROJA BRILLANTE")
     
-    -- ✅ AUMENTAR AÚN MÁS LA LUZ
-    TweenService:Create(clockLight, TweenInfo.new(2), {
-        Brightness = 80,
-        Range = 300
-    }):Play()
-    TweenService:Create(clockLight2, TweenInfo.new(2), {
-        Brightness = 60,
-        Range = 250
-    }):Play()
+    -- ✅ LUZ YA AL MÁXIMO (mantener)
     
-    -- ✅ MANTENER AMBIENTE MUY BRILLANTE
+    -- ✅ INTENSIFICAR AMBIENTE ROJO
     TweenService:Create(Lighting, TweenInfo.new(2), {
-        Ambient = Color3.fromRGB(180, 50, 50),  -- SUPER BRILLANTE
-        Brightness = 3.5,  -- MÁXIMO
-        ColorShift_Top = Color3.fromRGB(255, 80, 80)
+        Ambient = Color3.fromRGB(220, 70, 70),  -- ULTRA BRILLANTE
+        Brightness = 5,  -- MÁXIMO ABSOLUTO
+        ColorShift_Top = Color3.fromRGB(255, 120, 120)
     }):Play()
     
     task.wait(1)
