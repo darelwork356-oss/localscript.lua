@@ -75,8 +75,66 @@ local menuAjustesAbierto = false
 local menuBailesAbierto = false
 
 -- ============================================
--- INTERFAZ PRINCIPAL
+-- GUI DE TIEMPO DÍA/NOCHE
 -- ============================================
+
+local function CrearGUITiempo(screenGui)
+    print("⏰ Creando GUI de tiempo...")
+    
+    -- Frame del tiempo
+    local tiempoFrame = Instance.new("Frame")
+    tiempoFrame.Size = UDim2.new(0.2, 0, 0.08, 0)
+    tiempoFrame.Position = UDim2.new(0.4, 0, 0.02, 0)
+    tiempoFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    tiempoFrame.BackgroundTransparency = 0.3
+    tiempoFrame.Parent = screenGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0.2, 0)
+    corner.Parent = tiempoFrame
+    
+    -- Icono del tiempo
+    local iconoTiempo = Instance.new("TextLabel")
+    iconoTiempo.Size = UDim2.new(0.3, 0, 0.8, 0)
+    iconoTiempo.Position = UDim2.new(0.05, 0, 0.1, 0)
+    iconoTiempo.BackgroundTransparency = 1
+    iconoTiempo.Text = "🌅"
+    iconoTiempo.TextScaled = true
+    iconoTiempo.Parent = tiempoFrame
+    
+    -- Texto del tiempo
+    local textoTiempo = Instance.new("TextLabel")
+    textoTiempo.Name = "TextoTiempo"
+    textoTiempo.Size = UDim2.new(0.6, 0, 0.8, 0)
+    textoTiempo.Position = UDim2.new(0.35, 0, 0.1, 0)
+    textoTiempo.BackgroundTransparency = 1
+    textoTiempo.Text = "DÍA: 3:00"
+    textoTiempo.TextColor3 = COLORES_CUBANOS.Amarillo
+    textoTiempo.TextScaled = true
+    textoTiempo.Font = Enum.Font.GothamBold
+    textoTiempo.Parent = tiempoFrame
+    
+    -- Conectar con servidor
+    local eventosFolder = ReplicatedStorage:WaitForChild("FiestaNocturnaEvents")
+    local actualizarTiempo = eventosFolder:WaitForChild("ActualizarTiempo")
+    
+    actualizarTiempo.OnClientEvent:Connect(function(tiempoRestante, esDia)
+        local minutos = math.floor(tiempoRestante / 60)
+        local segundos = tiempoRestante % 60
+        
+        if esDia then
+            iconoTiempo.Text = "🌅"
+            textoTiempo.Text = string.format("DÍA: %d:%02d", minutos, segundos)
+            textoTiempo.TextColor3 = COLORES_CUBANOS.Amarillo
+        else
+            iconoTiempo.Text = "🌙"
+            textoTiempo.Text = string.format("NOCHE: %d:%02d", minutos, segundos)
+            textoTiempo.TextColor3 = COLORES_CUBANOS.Azul
+        end
+    end)
+    
+    print("✅ GUI de tiempo OK")
+end
 
 local function CrearInterfaz()
     print("🎨 Creando interfaz...")
@@ -836,6 +894,7 @@ end)
 
 wait(1)
 local screenGui = CrearInterfaz()
+CrearGUITiempo(screenGui)
 CrearMenuAjustes(screenGui)
 CrearMenuBailes(screenGui)
 ActualizarCamara()

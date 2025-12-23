@@ -77,22 +77,76 @@ EfectosFolder.Parent = MapaFolder
 local function ConfigurarIluminacion()
     print("🌙 Configurando iluminacion...")
     
-    Lighting.Ambient = Color3.fromRGB(80, 100, 150)
-    Lighting.OutdoorAmbient = Color3.fromRGB(50, 70, 120)
-    Lighting.Brightness = 1.5
-    Lighting.ClockTime = 22
+    -- CONFIGURACIÓN INICIAL DE DÍA
+    Lighting.Ambient = Color3.fromRGB(150, 150, 150)
+    Lighting.OutdoorAmbient = Color3.fromRGB(120, 120, 120)
+    Lighting.Brightness = 2
+    Lighting.ClockTime = 12 -- Empezar de día
     Lighting.GeographicLatitude = 23
     
     local atmosphere = Instance.new("Atmosphere")
-    atmosphere.Density = 0.3
+    atmosphere.Density = 0.1
     atmosphere.Offset = 0.25
-    atmosphere.Color = Color3.fromRGB(180, 200, 255)
+    atmosphere.Color = Color3.fromRGB(200, 220, 255)
     atmosphere.Decay = Color3.fromRGB(106, 112, 125)
-    atmosphere.Glare = 0.4
-    atmosphere.Haze = 1.2
+    atmosphere.Glare = 0.2
+    atmosphere.Haze = 0.8
     atmosphere.Parent = Lighting
     
     print("✅ Iluminacion OK")
+end
+
+-- ============================================
+-- SISTEMA DÍA/NOCHE
+-- ============================================
+
+local function SistemaDiaNoche()
+    print("🌅 Iniciando sistema día/noche...")
+    
+    local esDia = true
+    local tiempoRestante = 180 -- 3 minutos por ciclo
+    
+    -- Crear RemoteEvent para comunicar con cliente
+    local eventosFolder = ReplicatedStorage:WaitForChild("FiestaNocturnaEvents")
+    local actualizarTiempo = Instance.new("RemoteEvent")
+    actualizarTiempo.Name = "ActualizarTiempo"
+    actualizarTiempo.Parent = eventosFolder
+    
+    spawn(function()
+        while true do
+            -- Actualizar tiempo cada segundo
+            tiempoRestante = tiempoRestante - 1
+            
+            -- Enviar tiempo a todos los clientes
+            actualizarTiempo:FireAllClients(tiempoRestante, esDia)
+            
+            if tiempoRestante <= 0 then
+                -- Cambiar ciclo
+                esDia = not esDia
+                tiempoRestante = 180 -- Reiniciar a 3 minutos
+                
+                if esDia then
+                    -- CAMBIAR A DÍA
+                    print("🌅 Cambiando a DÍA")
+                    Lighting.ClockTime = 12
+                    Lighting.Ambient = Color3.fromRGB(150, 150, 150)
+                    Lighting.OutdoorAmbient = Color3.fromRGB(120, 120, 120)
+                    Lighting.Brightness = 2
+                else
+                    -- CAMBIAR A NOCHE
+                    print("🌙 Cambiando a NOCHE")
+                    Lighting.ClockTime = 0
+                    Lighting.Ambient = Color3.fromRGB(80, 100, 150)
+                    Lighting.OutdoorAmbient = Color3.fromRGB(50, 70, 120)
+                    Lighting.Brightness = 1.5
+                end
+            end
+            
+            wait(1)
+        end
+    end)
+    
+    print("✅ Sistema día/noche OK")
 end
 
 -- ============================================
@@ -748,6 +802,7 @@ print("🇨🇺 FIESTA NOCTURNA - ARREGLADO")
 print("🇨🇺 ========================================")
 
 ConfigurarIluminacion()
+SistemaDiaNoche()
 CrearBase()
 CrearCalle()
 CrearSalon()
