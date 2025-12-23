@@ -1,8 +1,8 @@
--- 🎉 FIESTA NOCTURNA 🎉
--- Juego social multijugador con música, baile y ambiente épico
+-- 🇨🇺 FIESTA NOCTURNA CUBANA 🇨🇺
+-- Juego social con estilo colonial cubano y discoteca moderna
 -- Colocar en: ServerScriptService
 
-print("🎉 Iniciando Fiesta Nocturna...")
+print("🇨🇺 Iniciando Fiesta Nocturna Cubana...")
 wait(1)
 
 -- Limpiar
@@ -12,151 +12,212 @@ for _, obj in pairs(workspace:GetChildren()) do
     end
 end
 
--- CALLE NOCTURNA
+-- CALLE COLONIAL CUBANA
 local street = Instance.new("Model", workspace)
-street.Name = "Street"
+street.Name = "CalleHabana"
 
--- Asfalto mojado
+-- Adoquines coloniales
 local road = Instance.new("Part", street)
-road.Size = Vector3.new(80, 0.5, 200)
-road.Position = Vector3.new(0, 0, -50)
+road.Size = Vector3.new(60, 0.5, 180)
+road.Position = Vector3.new(0, 0.25, -40)
 road.Anchored = true
-road.Material = Enum.Material.Asphalt
-road.Color = Color3.fromRGB(40, 40, 45)
-road.Reflectance = 0.3
+road.Material = Enum.Material.Cobblestone
+road.Color = Color3.fromRGB(120, 110, 100)
 
--- Aceras
+-- Aceras coloniales
 for i = 1, 2 do
     local sidewalk = Instance.new("Part", street)
-    sidewalk.Size = Vector3.new(15, 0.6, 200)
-    sidewalk.Position = Vector3.new((i == 1 and -47.5 or 47.5), 0.3, -50)
+    sidewalk.Size = Vector3.new(12, 0.8, 180)
+    sidewalk.Position = Vector3.new((i == 1 and -36 or 36), 0.4, -40)
     sidewalk.Anchored = true
-    sidewalk.Material = Enum.Material.Concrete
-    sidewalk.Color = Color3.fromRGB(150, 150, 150)
+    sidewalk.Material = Enum.Material.Slate
+    sidewalk.Color = Color3.fromRGB(180, 170, 160)
 end
 
--- Faroles
-for i = 1, 10 do
+-- Faroles coloniales cubanos
+for i = 1, 8 do
     local pole = Instance.new("Part", street)
-    pole.Size = Vector3.new(1, 12, 1)
-    pole.Position = Vector3.new(-45, 6, -140 + i * 30)
+    pole.Size = Vector3.new(0.8, 10, 0.8)
+    pole.Position = Vector3.new(-38, 5, -110 + i * 28)
     pole.Anchored = true
     pole.Material = Enum.Material.Metal
-    pole.Color = Color3.fromRGB(60, 60, 60)
+    pole.Color = Color3.fromRGB(30, 30, 30)
     
     local lamp = Instance.new("Part", street)
-    lamp.Size = Vector3.new(3, 1, 3)
-    lamp.Position = Vector3.new(-45, 12, -140 + i * 30)
+    lamp.Size = Vector3.new(2.5, 2.5, 2.5)
+    lamp.Position = Vector3.new(-38, 10.5, -110 + i * 28)
     lamp.Anchored = true
     lamp.Material = Enum.Material.Neon
-    lamp.Color = Color3.fromRGB(255, 220, 150)
+    lamp.Color = Color3.fromRGB(255, 230, 180)
     lamp.Shape = Enum.PartType.Ball
     
     local light = Instance.new("PointLight", lamp)
-    light.Brightness = 3
-    light.Range = 40
-    light.Color = Color3.fromRGB(255, 220, 150)
+    light.Brightness = 4
+    light.Range = 35
+    light.Color = Color3.fromRGB(255, 230, 180)
 end
 
--- Edificios laterales
+-- Edificios coloniales coloridos (estilo La Habana)
+local colors = {
+    Color3.fromRGB(255, 180, 120), -- Naranja pastel
+    Color3.fromRGB(120, 200, 255), -- Azul cielo
+    Color3.fromRGB(255, 220, 120), -- Amarillo
+    Color3.fromRGB(255, 150, 180), -- Rosa
+    Color3.fromRGB(180, 255, 200), -- Verde menta
+    Color3.fromRGB(200, 180, 255)  -- Lila
+}
+
 for i = 1, 6 do
     local building = Instance.new("Part", street)
-    building.Size = Vector3.new(20, 30, 25)
-    building.Position = Vector3.new(-70, 15, -130 + i * 40)
+    building.Size = Vector3.new(18, 25, 22)
+    building.Position = Vector3.new(-55, 12.5, -100 + i * 35)
     building.Anchored = true
-    building.Material = Enum.Material.Brick
-    building.Color = Color3.fromRGB(80, 70, 60)
+    building.Material = Enum.Material.SmoothPlastic
+    building.Color = colors[i]
     
-    -- Ventanas
-    for j = 1, 8 do
+    -- Balcones coloniales
+    local balcony = Instance.new("Part", street)
+    balcony.Size = Vector3.new(12, 0.5, 3)
+    balcony.Position = Vector3.new(-49, 18, building.Position.Z)
+    balcony.Anchored = true
+    balcony.Material = Enum.Material.Wood
+    balcony.Color = Color3.fromRGB(80, 50, 30)
+    
+    -- Barandas
+    for j = 1, 6 do
+        local rail = Instance.new("Part", street)
+        rail.Size = Vector3.new(0.3, 2, 0.3)
+        rail.Position = Vector3.new(-54 + j * 2, 19, building.Position.Z + 1.3)
+        rail.Anchored = true
+        rail.Material = Enum.Material.Metal
+        rail.Color = Color3.fromRGB(40, 40, 40)
+    end
+    
+    -- Ventanas coloniales
+    for j = 1, 4 do
         local window = Instance.new("Part", street)
-        window.Size = Vector3.new(0.2, 3, 3)
-        window.Position = Vector3.new(-59.9, 8 + (j % 4) * 6, building.Position.Z + (math.floor((j-1)/4) - 0.5) * 8)
+        window.Size = Vector3.new(0.2, 4, 3)
+        window.Position = Vector3.new(-45.9, 8 + (j % 2) * 10, building.Position.Z + (math.floor((j-1)/2) - 0.5) * 8)
         window.Anchored = true
-        window.Material = Enum.Material.Neon
-        window.Color = Color3.fromRGB(255, 200, 100)
-        window.Transparency = 0.3
+        window.Material = Enum.Material.Glass
+        window.Color = Color3.fromRGB(200, 230, 255)
+        window.Transparency = 0.4
+        window.Reflectance = 0.3
     end
 end
 
--- Grafitis
-for i = 1, 5 do
-    local graffiti = Instance.new("Part", street)
-    graffiti.Size = Vector3.new(0.1, 8, 12)
-    graffiti.Position = Vector3.new(-59.9, 4, -120 + i * 35)
-    graffiti.Anchored = true
-    graffiti.Material = Enum.Material.Neon
-    graffiti.Color = Color3.fromRGB(math.random(100,255), math.random(100,255), math.random(100,255))
-    graffiti.Transparency = 0.2
+-- Banderas cubanas
+for i = 1, 4 do
+    local flag = Instance.new("Part", street)
+    flag.Size = Vector3.new(0.1, 6, 10)
+    flag.Position = Vector3.new(-45, 22, -90 + i * 50)
+    flag.Anchored = true
+    flag.Material = Enum.Material.Fabric
+    flag.Color = Color3.fromRGB(0, 50, 160) -- Azul de bandera cubana
+    
+    local stripe = Instance.new("Part", street)
+    stripe.Size = Vector3.new(0.15, 2, 10)
+    stripe.Position = Vector3.new(-45, 22, -90 + i * 50)
+    stripe.Anchored = true
+    stripe.Material = Enum.Material.Fabric
+    stripe.Color = Color3.fromRGB(200, 16, 46) -- Rojo cubano
 end
 
 -- Spawn inicial
 local spawn = Instance.new("SpawnLocation", street)
-spawn.Size = Vector3.new(15, 1, 15)
-spawn.Position = Vector3.new(0, 1, -130)
+spawn.Size = Vector3.new(12, 0.8, 12)
+spawn.Position = Vector3.new(0, 1.4, -100)
 spawn.Anchored = true
-spawn.Transparency = 0.8
+spawn.Transparency = 1
 spawn.CanCollide = false
-spawn.BrickColor = BrickColor.new("Bright blue")
 spawn.Duration = 0
 
-print("✅ Calle nocturna creada")
+print("✅ Calle colonial cubana creada")
 
--- SALÓN DE FIESTAS
+-- DISCOTECA MODERNA CUBANA
 local club = Instance.new("Model", workspace)
-club.Name = "Club"
+club.Name = "DiscotecaCubana"
 
--- Edificio exterior
+-- Edificio exterior moderno
 local exterior = Instance.new("Part", club)
-exterior.Size = Vector3.new(100, 40, 80)
-exterior.Position = Vector3.new(0, 20, 80)
+exterior.Size = Vector3.new(90, 35, 70)
+exterior.Position = Vector3.new(0, 17.5, 70)
 exterior.Anchored = true
-exterior.Material = Enum.Material.Concrete
-exterior.Color = Color3.fromRGB(20, 20, 25)
+exterior.Material = Enum.Material.Glass
+exterior.Color = Color3.fromRGB(20, 20, 30)
+exterior.Transparency = 0.3
+exterior.CanCollide = false
 
--- Entrada con luces LED
-local entrance = Instance.new("Part", club)
-entrance.Size = Vector3.new(20, 15, 2)
-entrance.Position = Vector3.new(0, 7.5, 39)
-entrance.Anchored = true
-entrance.Material = Enum.Material.Neon
-entrance.Color = Color3.fromRGB(0, 200, 255)
-entrance.Transparency = 0.3
-
--- Reflectores al cielo
-for i = 1, 4 do
-    local spotlight = Instance.new("Part", club)
-    spotlight.Size = Vector3.new(3, 3, 3)
-    spotlight.Position = Vector3.new(-30 + i * 20, 41, 80)
-    spotlight.Anchored = true
-    spotlight.Material = Enum.Material.Neon
-    spotlight.Color = Color3.fromRGB(255, 0, 200)
-    spotlight.Shape = Enum.PartType.Ball
-    
-    local beam = Instance.new("SpotLight", spotlight)
-    beam.Brightness = 10
-    beam.Range = 100
-    beam.Angle = 30
-    beam.Face = Enum.NormalId.Top
-    beam.Color = Color3.fromRGB(255, 0, 200)
+-- Paredes sólidas
+for _, pos in pairs({{-45, 70}, {45, 70}, {0, 35}, {0, 105}}) do
+    local wall = Instance.new("Part", club)
+    wall.Size = pos[2] == 70 and Vector3.new(2, 35, 70) or Vector3.new(90, 35, 2)
+    wall.Position = Vector3.new(pos[1], 17.5, pos[2])
+    wall.Anchored = true
+    wall.Material = Enum.Material.Concrete
+    wall.Color = Color3.fromRGB(40, 40, 50)
 end
 
--- Interior del salón
+-- PUERTAS AUTOMÁTICAS MODERNAS
+local doorFrame = Instance.new("Part", club)
+doorFrame.Size = Vector3.new(18, 12, 1)
+doorFrame.Position = Vector3.new(0, 6, 34.5)
+doorFrame.Anchored = true
+doorFrame.Material = Enum.Material.Metal
+doorFrame.Color = Color3.fromRGB(50, 50, 60)
+
+local doorLeft = Instance.new("Part", club)
+doorLeft.Size = Vector3.new(8, 10, 0.5)
+doorLeft.Position = Vector3.new(-4.5, 5, 34.5)
+doorLeft.Anchored = true
+doorLeft.Material = Enum.Material.Glass
+doorLeft.Color = Color3.fromRGB(0, 200, 255)
+doorLeft.Transparency = 0.2
+doorLeft.CanCollide = false
+
+local doorRight = Instance.new("Part", club)
+doorRight.Size = Vector3.new(8, 10, 0.5)
+doorRight.Position = Vector3.new(4.5, 5, 34.5)
+doorRight.Anchored = true
+doorRight.Material = Enum.Material.Glass
+doorRight.Color = Color3.fromRGB(0, 200, 255)
+doorRight.Transparency = 0.2
+doorRight.CanCollide = false
+
+-- Letrero "DISCOTECA CUBANA"
+local sign = Instance.new("Part", club)
+sign.Size = Vector3.new(30, 4, 0.5)
+sign.Position = Vector3.new(0, 13, 34)
+sign.Anchored = true
+sign.Material = Enum.Material.Neon
+sign.Color = Color3.fromRGB(255, 50, 100)
+
+-- Luces LED entrada
+for i = 1, 12 do
+    local led = Instance.new("Part", club)
+    led.Size = Vector3.new(1.5, 1.5, 1.5)
+    led.Position = Vector3.new(-8 + i * 1.5, 12, 34)
+    led.Anchored = true
+    led.Material = Enum.Material.Neon
+    led.Color = Color3.fromRGB(255, 0, 150)
+    led.Shape = Enum.PartType.Ball
+    
+    task.spawn(function()
+        while led.Parent do
+            led.Color = Color3.fromRGB(math.random(150,255), math.random(0,100), math.random(100,255))
+            wait(0.3)
+        end
+    end)
+end
+
+-- Suelo interior
 local floor = Instance.new("Part", club)
-floor.Size = Vector3.new(90, 0.5, 70)
-floor.Position = Vector3.new(0, 0.25, 80)
+floor.Size = Vector3.new(86, 0.5, 66)
+floor.Position = Vector3.new(0, 0.25, 70)
 floor.Anchored = true
 floor.Material = Enum.Material.Marble
-floor.Color = Color3.fromRGB(30, 30, 35)
-floor.Reflectance = 0.5
-
--- Techo
-local ceiling = Instance.new("Part", club)
-ceiling.Size = Vector3.new(90, 1, 70)
-ceiling.Position = Vector3.new(0, 35, 80)
-ceiling.Anchored = true
-ceiling.Material = Enum.Material.Metal
-ceiling.Color = Color3.fromRGB(10, 10, 15)
+floor.Color = Color3.fromRGB(40, 40, 45)
+floor.Reflectance = 0.4
 
 -- ESCENARIO PRINCIPAL
 local stage = Instance.new("Model", club)
@@ -315,7 +376,91 @@ for i = 1, 15 do
     end)
 end
 
-print("✅ Salón de fiestas creado")
+-- MESAS Y SILLAS CON ASIENTOS FUNCIONALES
+local tables = Instance.new("Folder", club)
+tables.Name = "Tables"
+
+for i = 1, 12 do
+    local table = Instance.new("Part", tables)
+    table.Size = Vector3.new(6, 3, 6)
+    table.Position = Vector3.new(-35 + (i % 4) * 20, 1.5, 50 + math.floor((i-1)/4) * 15)
+    table.Anchored = true
+    table.Material = Enum.Material.Wood
+    table.Color = Color3.fromRGB(80, 50, 30)
+    table.Shape = Enum.PartType.Cylinder
+    table.Orientation = Vector3.new(0, 0, 90)
+    
+    for j = 1, 4 do
+        local angle = (j - 1) * 90
+        local rad = math.rad(angle)
+        local offsetX = math.cos(rad) * 5
+        local offsetZ = math.sin(rad) * 5
+        
+        local seat = Instance.new("Seat", tables)
+        seat.Size = Vector3.new(3, 1, 3)
+        seat.Position = table.Position + Vector3.new(offsetX, 0.5, offsetZ)
+        seat.Anchored = true
+        seat.Material = Enum.Material.Fabric
+        seat.Color = Color3.fromRGB(200, 50, 50)
+        
+        local back = Instance.new("Part", tables)
+        back.Size = Vector3.new(3, 4, 0.5)
+        back.Position = seat.Position + Vector3.new(offsetX * 0.3, 2, offsetZ * 0.3)
+        back.Anchored = true
+        back.Material = Enum.Material.Wood
+        back.Color = Color3.fromRGB(80, 50, 30)
+    end
+end
+
+-- DECORACIONES CUBANAS
+for i = 1, 8 do
+    local trunk = Instance.new("Part", club)
+    trunk.Size = Vector3.new(1.5, 12, 1.5)
+    trunk.Position = Vector3.new(-40 + i * 11, 6, 45)
+    trunk.Anchored = true
+    trunk.Material = Enum.Material.Wood
+    trunk.Color = Color3.fromRGB(101, 67, 33)
+    
+    for j = 1, 6 do
+        local leaf = Instance.new("Part", club)
+        leaf.Size = Vector3.new(0.5, 0.5, 8)
+        local angle = (j - 1) * 60
+        local rad = math.rad(angle)
+        leaf.Position = trunk.Position + Vector3.new(math.cos(rad) * 2, 6, math.sin(rad) * 2)
+        leaf.Anchored = true
+        leaf.Material = Enum.Material.Leaf
+        leaf.Color = Color3.fromRGB(34, 139, 34)
+        leaf.Orientation = Vector3.new(30, angle, 0)
+    end
+end
+
+local instruments = {
+    {pos = Vector3.new(-38, 2, 95), size = Vector3.new(2, 3, 3)},
+    {pos = Vector3.new(38, 2, 95), size = Vector3.new(1, 4, 1)},
+    {pos = Vector3.new(-35, 2, 90), size = Vector3.new(2.5, 5, 2.5)},
+}
+
+for _, inst in pairs(instruments) do
+    local item = Instance.new("Part", club)
+    item.Size = inst.size
+    item.Position = inst.pos
+    item.Anchored = true
+    item.Material = Enum.Material.Wood
+    item.Color = Color3.fromRGB(139, 90, 43)
+    item.Shape = Enum.PartType.Cylinder
+end
+
+for i = 1, 6 do
+    local poster = Instance.new("Part", club)
+    poster.Size = Vector3.new(0.1, 6, 8)
+    poster.Position = Vector3.new(-44.9, 8, 50 + i * 10)
+    poster.Anchored = true
+    poster.Material = Enum.Material.Neon
+    poster.Color = Color3.fromRGB(255, 100, 100)
+    poster.Transparency = 0.3
+end
+
+print("✅ Salón con mesas y decoraciones cubanas creado")
 
 -- SISTEMA DE MÚSICA
 local sound = Instance.new("Sound", screen)
