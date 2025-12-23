@@ -269,81 +269,118 @@ local function createSurvivalDock()
 end
 
 -- ========================================
--- CREAR 5 CÍRCULOS EN EL PISO
+-- CREAR 5 CUADROS DE ESPERA EN EL PISO
 -- ========================================
 local spawnCircles = {}
 local function createFloorCircles()
-    print("✨ Creando círculos de spawn en el piso...")
+    print("✨ Creando cuadros de espera en el piso...")
     
     local positions = {
-        Vector3.new(-15, 20.7, -10),  -- ELEVADOS
-        Vector3.new(-7.5, 20.7, -10),
+        Vector3.new(-18, 20.7, -10),
+        Vector3.new(-9, 20.7, -10),
         Vector3.new(0, 20.7, -10),
-        Vector3.new(7.5, 20.7, -10),
-        Vector3.new(15, 20.7, -10)
+        Vector3.new(9, 20.7, -10),
+        Vector3.new(18, 20.7, -10)
     }
     
     for i, pos in ipairs(positions) do
-        -- Círculo base EN EL PISO
-        local circle = Instance.new("Part")
-        circle.Name = "SpawnCircle" .. i
-        circle.Size = Vector3.new(5, 0.3, 5)
-        circle.Position = pos
-        circle.Anchored = true
-        circle.Shape = Enum.PartType.Cylinder
-        circle.Material = Enum.Material.Neon
-        circle.Color = Color3.fromRGB(50, 255, 150)
-        circle.Orientation = Vector3.new(0, 0, 90)
-        circle.Transparency = 0.2
-        circle.CanCollide = false
-        circle.Parent = lobbyFolder
+        -- CUADRO GRANDE EN EL PISO (8x8 studs)
+        local waitingPad = Instance.new("Part")
+        waitingPad.Name = "WaitingPad" .. i
+        waitingPad.Size = Vector3.new(8, 0.5, 8)  -- GRANDE
+        waitingPad.Position = pos
+        waitingPad.Anchored = true
+        waitingPad.Material = Enum.Material.SmoothPlastic
+        waitingPad.Color = Color3.fromRGB(40, 40, 45)
+        waitingPad.Parent = lobbyFolder
         
-        -- Anillo exterior brillante
-        local ring = Instance.new("Part")
-        ring.Size = Vector3.new(5.5, 0.25, 5.5)
-        ring.Position = pos
-        ring.Anchored = true
-        ring.Shape = Enum.PartType.Cylinder
-        ring.Material = Enum.Material.Neon
-        ring.Color = Color3.fromRGB(100, 255, 200)
-        ring.Orientation = Vector3.new(0, 0, 90)
-        ring.Transparency = 0.4
-        ring.CanCollide = false
-        ring.Parent = circle
+        -- Borde brillante del cuadro
+        local border = Instance.new("Part")
+        border.Size = Vector3.new(8.3, 0.3, 8.3)
+        border.Position = pos + Vector3.new(0, -0.15, 0)
+        border.Anchored = true
+        border.Material = Enum.Material.Neon
+        border.Color = Color3.fromRGB(50, 255, 150)
+        border.Transparency = 0.3
+        border.Parent = waitingPad
         
-        -- Partículas hacia arriba
+        -- Líneas decorativas en el cuadro
+        for x = -3, 3, 3 do
+            local line = Instance.new("Part")
+            line.Size = Vector3.new(0.2, 0.6, 7.5)
+            line.Position = pos + Vector3.new(x, 0.3, 0)
+            line.Anchored = true
+            line.Material = Enum.Material.Neon
+            line.Color = Color3.fromRGB(50, 255, 150)
+            line.Transparency = 0.5
+            line.Parent = waitingPad
+        end
+        
+        for z = -3, 3, 3 do
+            local line = Instance.new("Part")
+            line.Size = Vector3.new(7.5, 0.6, 0.2)
+            line.Position = pos + Vector3.new(0, 0.3, z)
+            line.Anchored = true
+            line.Material = Enum.Material.Neon
+            line.Color = Color3.fromRGB(50, 255, 150)
+            line.Transparency = 0.5
+            line.Parent = waitingPad
+        end
+        
+        -- Número grande en el cuadro
+        local numberPart = Instance.new("Part")
+        numberPart.Size = Vector3.new(7, 0.1, 7)
+        numberPart.Position = pos + Vector3.new(0, 0.3, 0)
+        numberPart.Anchored = true
+        numberPart.Transparency = 1
+        numberPart.CanCollide = false
+        numberPart.Parent = waitingPad
+        
+        local surfaceGui = Instance.new("SurfaceGui")
+        surfaceGui.Face = Enum.NormalId.Top
+        surfaceGui.Parent = numberPart
+        
+        local numberLabel = Instance.new("TextLabel")
+        numberLabel.Size = UDim2.fromScale(1, 1)
+        numberLabel.BackgroundTransparency = 1
+        numberLabel.Text = tostring(i)
+        numberLabel.Font = Enum.Font.GothamBlack
+        numberLabel.TextSize = 200
+        numberLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        numberLabel.TextStrokeTransparency = 0
+        numberLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        numberLabel.TextTransparency = 0.3
+        numberLabel.Parent = surfaceGui
+        
+        -- Partículas alrededor del cuadro
+        local particleAttachment = Instance.new("Attachment")
+        particleAttachment.Position = Vector3.new(0, 0.5, 0)
+        particleAttachment.Parent = waitingPad
+        
         local particles = Instance.new("ParticleEmitter")
         particles.Texture = "rbxasset://textures/particles/sparkles_main.dds"
-        particles.Rate = 30
+        particles.Rate = 20
         particles.Lifetime = NumberRange.new(2, 3)
-        particles.Speed = NumberRange.new(3, 5)
-        particles.SpreadAngle = Vector2.new(10, 10)
-        particles.Size = NumberSequence.new(0.8, 0)
+        particles.Speed = NumberRange.new(2, 4)
+        particles.SpreadAngle = Vector2.new(180, 10)
+        particles.Size = NumberSequence.new(0.5, 0)
         particles.Transparency = NumberSequence.new(0, 1)
         particles.Color = ColorSequence.new(Color3.fromRGB(50, 255, 150))
         particles.LightEmission = 1
         particles.EmissionDirection = Enum.NormalDirection.Top
-        particles.Parent = circle
+        particles.Parent = particleAttachment
         
-        -- Luz brillante
+        -- Luz del cuadro
         local light = Instance.new("PointLight")
-        light.Brightness = 3
-        light.Range = 18
+        light.Brightness = 2.5
+        light.Range = 15
         light.Color = Color3.fromRGB(50, 255, 150)
         light.Shadows = false
-        light.Parent = circle
-        
-        -- Número grande en el piso
-        local numberDecal = Instance.new("Decal")
-        numberDecal.Texture = "rbxasset://textures/face.png"
-        numberDecal.Face = Enum.NormalId.Top
-        numberDecal.Color3 = Color3.fromRGB(255, 255, 255)
-        numberDecal.Transparency = 0.3
-        numberDecal.Parent = circle
+        light.Parent = waitingPad
         
         table.insert(spawnCircles, {
-            circle = circle,
-            position = pos + Vector3.new(0, 3, 0),  -- Spawn arriba del círculo
+            circle = waitingPad,
+            position = pos + Vector3.new(0, 3, 0),
             occupied = false,
             number = i
         })
