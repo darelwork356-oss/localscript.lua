@@ -14,7 +14,7 @@ terrain:Clear()
 print("💧 Creando océano infinito...")
 
 terrain:FillRegion(
-    Region3.new(Vector3.new(-2000, 0, -2000), Vector3.new(2000, 100, 2000)):ExpandToGrid(4),
+    Region3.new(Vector3.new(-2000, 0, -2000), Vector3.new(2000, 80, 2000)):ExpandToGrid(4),
     4,
     Enum.Material.Water
 )
@@ -28,120 +28,164 @@ terrain:FillRegion(
 print("✅ Océano infinito creado")
 
 -- ========================================
--- BALSA INICIAL
+-- BALSA ÉPICA Y DETALLADA
 -- ========================================
-print("🛟 Construyendo balsa inicial...")
+print("🛟 Construyendo balsa épica...")
 
-local raftFolder = Instance.new("Folder")
+local raftFolder = Instance.new("Model")
 raftFolder.Name = "Raft"
 raftFolder.Parent = workspace
 
--- Base de la balsa (madera)
+-- Base principal flotante
 local raftBase = Instance.new("Part")
 raftBase.Name = "RaftBase"
-raftBase.Size = Vector3.new(20, 2, 20)
-raftBase.Position = Vector3.new(0, 51, 0)
-raftBase.Anchored = false
+raftBase.Size = Vector3.new(30, 3, 30)
+raftBase.Position = Vector3.new(0, 81, 0)
+raftBase.Anchored = true
 raftBase.Material = Enum.Material.Wood
-raftBase.Color = Color3.fromRGB(150, 110, 70)
+raftBase.Color = Color3.fromRGB(139, 90, 43)
 raftBase.Parent = raftFolder
 
--- Mantener la balsa flotando
-local bodyVelocity = Instance.new("BodyVelocity")
-bodyVelocity.MaxForce = Vector3.new(0, math.huge, 0)
-bodyVelocity.Velocity = Vector3.new(0, 0, 0)
-bodyVelocity.Parent = raftBase
-
-local bodyGyro = Instance.new("BodyGyro")
-bodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-bodyGyro.CFrame = raftBase.CFrame
-bodyGyro.Parent = raftBase
-
--- Tablas de madera (8 tablas)
-for i = 1, 4 do
+-- Troncos flotadores (6 troncos grandes)
+for i = 1, 3 do
     for j = 1, 2 do
-        local plank = Instance.new("Part")
-        plank.Size = Vector3.new(4.5, 0.5, 9)
-        plank.Position = raftBase.Position + Vector3.new(-7.5 + i*5, 1.5, -5 + j*10)
-        plank.Material = Enum.Material.Wood
-        plank.Color = Color3.fromRGB(140, 100, 60)
-        plank.Parent = raftFolder
+        local log = Instance.new("Part")
+        log.Size = Vector3.new(8, 2, 28)
+        log.Position = raftBase.Position + Vector3.new(-10 + i*10, -2, -14 + j*28)
+        log.Anchored = true
+        log.Material = Enum.Material.Wood
+        log.Color = Color3.fromRGB(101, 67, 33)
+        log.Shape = Enum.PartType.Cylinder
+        log.Orientation = Vector3.new(0, 0, 90)
+        log.Parent = raftFolder
         
-        local weld = Instance.new("WeldConstraint")
-        weld.Part0 = raftBase
-        weld.Part1 = plank
-        weld.Parent = plank
+        -- Textura de tronco
+        local mesh = Instance.new("CylinderMesh")
+        mesh.Parent = log
     end
 end
 
--- Poste central
+-- Tablas del piso (diseño cruzado)
+for i = 1, 10 do
+    local plank = Instance.new("Part")
+    plank.Size = Vector3.new(30, 0.8, 2.5)
+    plank.Position = raftBase.Position + Vector3.new(0, 2, -12 + i*2.5)
+    plank.Anchored = true
+    plank.Material = Enum.Material.WoodPlanks
+    plank.Color = Color3.fromRGB(160, 120, 80)
+    plank.Parent = raftFolder
+end
+
+-- Bordes de la balsa (barandilla)
+for i = 1, 4 do
+    local side = Instance.new("Part")
+    if i <= 2 then
+        side.Size = Vector3.new(32, 2, 1)
+        side.Position = raftBase.Position + Vector3.new(0, 3, i == 1 and -15.5 or 15.5)
+    else
+        side.Size = Vector3.new(1, 2, 30)
+        side.Position = raftBase.Position + Vector3.new(i == 3 and -15.5 or 15.5, 3, 0)
+    end
+    side.Anchored = true
+    side.Material = Enum.Material.Wood
+    side.Color = Color3.fromRGB(120, 80, 50)
+    side.Parent = raftFolder
+end
+
+-- Mástil central robusto
 local mast = Instance.new("Part")
 mast.Name = "Mast"
-mast.Size = Vector3.new(1.5, 15, 1.5)
-mast.Position = raftBase.Position + Vector3.new(0, 8.5, 0)
+mast.Size = Vector3.new(2, 25, 2)
+mast.Position = raftBase.Position + Vector3.new(0, 14.5, -5)
+mast.Anchored = true
 mast.Material = Enum.Material.Wood
-mast.Color = Color3.fromRGB(100, 70, 40)
+mast.Color = Color3.fromRGB(90, 60, 30)
 mast.Parent = raftFolder
 
-local mastWeld = Instance.new("WeldConstraint")
-mastWeld.Part0 = raftBase
-mastWeld.Part1 = mast
-mastWeld.Parent = mast
+local mastMesh = Instance.new("CylinderMesh")
+mastMesh.Parent = mast
 
--- Asiento para manejar
+-- Vela
+local sail = Instance.new("Part")
+sail.Name = "Sail"
+sail.Size = Vector3.new(0.3, 18, 15)
+sail.Position = mast.Position + Vector3.new(0, 0, 8)
+sail.Anchored = true
+sail.Material = Enum.Material.Fabric
+sail.Color = Color3.fromRGB(240, 240, 250)
+sail.Parent = raftFolder
+
+-- Asiento del capitán (elevado)
+local seatBase = Instance.new("Part")
+seatBase.Size = Vector3.new(6, 1, 6)
+seatBase.Position = raftBase.Position + Vector3.new(0, 3, 8)
+seatBase.Anchored = true
+seatBase.Material = Enum.Material.Wood
+seatBase.Color = Color3.fromRGB(139, 90, 43)
+seatBase.Parent = raftFolder
+
 local seat = Instance.new("Seat")
 seat.Name = "DriverSeat"
-seat.Size = Vector3.new(4, 1, 4)
-seat.Position = raftBase.Position + Vector3.new(0, 2, 5)
+seat.Size = Vector3.new(5, 1, 5)
+seat.Position = seatBase.Position + Vector3.new(0, 1, 0)
+seat.Anchored = true
 seat.Material = Enum.Material.Wood
-seat.Color = Color3.fromRGB(120, 80, 50)
+seat.Color = Color3.fromRGB(160, 110, 60)
 seat.Parent = raftFolder
-
-local seatWeld = Instance.new("WeldConstraint")
-seatWeld.Part0 = raftBase
-seatWeld.Part1 = seat
-seatWeld.Parent = seat
 
 -- Respaldo del asiento
 local backrest = Instance.new("Part")
-backrest.Size = Vector3.new(4, 3, 0.5)
-backrest.Position = seat.Position + Vector3.new(0, 2, -2)
+backrest.Size = Vector3.new(5, 4, 1)
+backrest.Position = seat.Position + Vector3.new(0, 2.5, -2.5)
+backrest.Anchored = true
 backrest.Material = Enum.Material.Wood
-backrest.Color = Color3.fromRGB(120, 80, 50)
+backrest.Color = Color3.fromRGB(160, 110, 60)
 backrest.Parent = raftFolder
 
-local backWeld = Instance.new("WeldConstraint")
-backWeld.Part0 = seat
-backWeld.Part1 = backrest
-backWeld.Parent = backrest
+-- Timón decorativo
+local rudder = Instance.new("Part")
+rudder.Size = Vector3.new(0.5, 6, 3)
+rudder.Position = raftBase.Position + Vector3.new(0, 2, 15)
+rudder.Anchored = true
+rudder.Material = Enum.Material.Wood
+rudder.Color = Color3.fromRGB(100, 65, 35)
+rudder.Parent = raftFolder
+
+-- Cajas de almacenamiento (decoración)
+for i = 1, 3 do
+    local crate = Instance.new("Part")
+    crate.Size = Vector3.new(4, 3, 4)
+    crate.Position = raftBase.Position + Vector3.new(-10 + i*5, 3.5, -10)
+    crate.Anchored = true
+    crate.Material = Enum.Material.Wood
+    crate.Color = Color3.fromRGB(120, 80, 40)
+    crate.Parent = raftFolder
+end
+
+-- Barril decorativo
+local barrel = Instance.new("Part")
+barrel.Size = Vector3.new(3, 4, 3)
+barrel.Position = raftBase.Position + Vector3.new(10, 4, -10)
+barrel.Anchored = true
+barrel.Material = Enum.Material.Wood
+barrel.Color = Color3.fromRGB(100, 60, 30)
+barrel.Shape = Enum.PartType.Cylinder
+barrel.Orientation = Vector3.new(90, 0, 0)
+barrel.Parent = raftFolder
 
 -- Spawn en la balsa
 local spawn = Instance.new("SpawnLocation")
-spawn.Size = Vector3.new(6, 1, 6)
-spawn.Position = raftBase.Position + Vector3.new(-5, 2, 0)
-spawn.Anchored = false
+spawn.Size = Vector3.new(8, 1, 8)
+spawn.Position = raftBase.Position + Vector3.new(-8, 3.5, 0)
+spawn.Anchored = true
 spawn.Material = Enum.Material.Wood
-spawn.Color = Color3.fromRGB(150, 110, 70)
+spawn.Color = Color3.fromRGB(160, 120, 80)
 spawn.BrickColor = BrickColor.new("Bright blue")
 spawn.TopSurface = Enum.SurfaceType.Smooth
-spawn.CanCollide = false
-spawn.Transparency = 0.5
+spawn.Transparency = 0.3
 spawn.Parent = raftFolder
 
-local spawnWeld = Instance.new("WeldConstraint")
-spawnWeld.Part0 = raftBase
-spawnWeld.Part1 = spawn
-spawnWeld.Parent = spawn
-
-print("✅ Balsa inicial creada")
-
--- ========================================
--- SISTEMA DE RECURSOS
--- ========================================
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local resourcesFolder = Instance.new("Folder")
-resourcesFolder.Name = "PlayerResources"
-resourcesFolder.Parent = ReplicatedStorage
+print("✅ Balsa épica creada en Y=81")
 
 -- ========================================
 -- ALGAS RECOLECTABLES (1000 algas)
@@ -161,17 +205,15 @@ for i = 1, 1000 do
     local z = math.random(-1800, 1800)
     local distance = math.sqrt(x*x + z*z)
     
-    -- No spawear algas cerca de la balsa
-    if distance > 50 then
-        local height = math.random(10, 30)
-        local segments = math.floor(height / 3)
-        local baseColor = Color3.fromRGB(math.random(30, 60), math.random(120, 180), math.random(30, 60))
+    if distance > 60 then
+        local height = math.random(15, 35)
+        local segments = math.floor(height / 4)
+        local baseColor = Color3.fromRGB(math.random(30, 60), math.random(130, 200), math.random(30, 60))
         
-        -- Base del alga (parte recolectable)
         local algaeBase = Instance.new("Part")
         algaeBase.Name = "AlgaeBase"
-        algaeBase.Size = Vector3.new(2, 3, 2)
-        algaeBase.Position = Vector3.new(x, 3, z)
+        algaeBase.Size = Vector3.new(3, 4, 3)
+        algaeBase.Position = Vector3.new(x, 5, z)
         algaeBase.Anchored = true
         algaeBase.Material = Enum.Material.Neon
         algaeBase.Color = baseColor
@@ -179,31 +221,28 @@ for i = 1, 1000 do
         algaeBase.Shape = Enum.PartType.Ball
         algaeBase.Parent = algaeModel
         
-        -- Highlight para visibilidad
         local highlight = Instance.new("Highlight")
         highlight.FillColor = baseColor
-        highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-        highlight.FillTransparency = 0.5
+        highlight.OutlineColor = Color3.fromRGB(255, 255, 100)
+        highlight.FillTransparency = 0.4
         highlight.OutlineTransparency = 0
         highlight.Parent = algaeBase
         
-        -- ProximityPrompt para recolectar
         local prompt = Instance.new("ProximityPrompt")
         prompt.ActionText = "Arrancar Alga"
-        prompt.ObjectText = "Alga Marina"
-        prompt.HoldDuration = 1
-        prompt.MaxActivationDistance = 10
+        prompt.ObjectText = "🌿 Alga Marina"
+        prompt.HoldDuration = 0.8
+        prompt.MaxActivationDistance = 15
         prompt.RequiresLineOfSight = false
         prompt.Parent = algaeBase
         
-        -- Segmentos del alga
         for seg = 1, segments do
             local segment = Instance.new("Part")
-            segment.Size = Vector3.new(1, 3, 0.3)
+            segment.Size = Vector3.new(1.5, 4, 0.5)
             segment.Position = Vector3.new(
-                x + math.sin(seg * 0.8) * (seg * 0.4),
-                3 + seg * 3,
-                z + math.cos(seg * 0.8) * (seg * 0.4)
+                x + math.sin(seg * 0.6) * (seg * 0.5),
+                5 + seg * 4,
+                z + math.cos(seg * 0.6) * (seg * 0.5)
             )
             segment.Anchored = true
             segment.CanCollide = false
@@ -215,22 +254,20 @@ for i = 1, 1000 do
             local mesh = Instance.new("SpecialMesh")
             mesh.MeshType = Enum.MeshType.FileMesh
             mesh.MeshId = "rbxassetid://1290033"
-            mesh.Scale = Vector3.new(1.5, 3, 1)
+            mesh.Scale = Vector3.new(2, 4, 1.5)
             mesh.Parent = segment
         end
         
-        -- Animación ondulante
         task.spawn(function()
             local time = math.random(0, 100)
             while algaeModel.Parent do
-                time = time + 0.05
+                time = time + 0.04
                 for _, part in pairs(algaeModel:GetChildren()) do
                     if part:IsA("BasePart") and part.Name ~= "AlgaeBase" then
-                        local offset = math.sin(time + part.Position.Y * 0.1) * 1.5
-                        part.CFrame = part.CFrame * CFrame.Angles(math.sin(time) * 0.1, 0, math.cos(time) * 0.1)
+                        part.CFrame = part.CFrame * CFrame.Angles(math.sin(time) * 0.08, 0, math.cos(time) * 0.08)
                     end
                 end
-                task.wait(0.05)
+                task.wait(0.04)
             end
         end)
     end
@@ -239,13 +276,12 @@ end
 print("✅ 1000 algas recolectables creadas")
 
 -- ========================================
--- SCRIPT DE RECOLECCIÓN
+-- SISTEMA DE RECOLECCIÓN Y VELOCIDAD
 -- ========================================
-print("📦 Configurando sistema de recolección...")
+print("📦 Configurando sistema...")
 
 local Players = game:GetService("Players")
 
--- Función para dar recursos al jugador
 local function giveResource(player, resourceType, amount)
     local leaderstats = player:FindFirstChild("leaderstats")
     if not leaderstats then
@@ -265,20 +301,17 @@ local function giveResource(player, resourceType, amount)
     resource.Value = resource.Value + amount
 end
 
--- Conectar ProximityPrompts
 for _, algae in pairs(algaeFolder:GetChildren()) do
     local algaeBase = algae:FindFirstChild("AlgaeBase")
     if algaeBase then
         local prompt = algaeBase:FindFirstChild("ProximityPrompt")
         if prompt then
             prompt.Triggered:Connect(function(player)
-                -- Dar recursos
                 giveResource(player, "Algas", 1)
                 giveResource(player, "Madera", math.random(1, 3))
                 
-                -- Efecto visual
                 local explosion = Instance.new("Part")
-                explosion.Size = Vector3.new(1, 1, 1)
+                explosion.Size = Vector3.new(2, 2, 2)
                 explosion.Position = algaeBase.Position
                 explosion.Anchored = true
                 explosion.CanCollide = false
@@ -289,139 +322,91 @@ for _, algae in pairs(algaeFolder:GetChildren()) do
                 explosion.Parent = workspace
                 
                 task.spawn(function()
-                    for i = 1, 20 do
-                        explosion.Size = explosion.Size + Vector3.new(0.5, 0.5, 0.5)
-                        explosion.Transparency = i / 20
-                        task.wait(0.05)
+                    for i = 1, 15 do
+                        explosion.Size = explosion.Size + Vector3.new(1, 1, 1)
+                        explosion.Transparency = i / 15
+                        task.wait(0.03)
                     end
                     explosion:Destroy()
                 end)
                 
-                -- Eliminar alga
                 algae:Destroy()
-                
-                -- Mensaje
-                print(player.Name .. " recolectó un alga!")
             end)
         end
     end
 end
 
-print("✅ Sistema de recolección configurado")
-
--- ========================================
--- SISTEMA DE EXPANSIÓN DE BALSA
--- ========================================
-print("🔨 Configurando expansión de balsa...")
-
+-- Aumentar velocidad de nado
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
-        local leaderstats = player:FindFirstChild("leaderstats")
-        if not leaderstats then
-            leaderstats = Instance.new("Folder")
-            leaderstats.Name = "leaderstats"
-            leaderstats.Parent = player
-            
-            local algas = Instance.new("IntValue")
-            algas.Name = "Algas"
-            algas.Value = 0
-            algas.Parent = leaderstats
-            
-            local madera = Instance.new("IntValue")
-            madera.Name = "Madera"
-            madera.Value = 0
-            madera.Parent = leaderstats
-            
-            local velocidad = Instance.new("IntValue")
-            velocidad.Name = "Velocidad"
-            velocidad.Value = 10
-            velocidad.Parent = leaderstats
-        end
+        local humanoid = character:WaitForChild("Humanoid")
         
-        -- Monitorear recursos para expandir balsa
-        local algas = leaderstats:FindFirstChild("Algas")
-        if algas then
-            algas.Changed:Connect(function(value)
-                local velocidad = leaderstats:FindFirstChild("Velocidad")
-                if velocidad then
-                    -- Cada 10 algas aumenta velocidad
-                    velocidad.Value = 10 + math.floor(value / 10) * 5
-                end
-            end)
-        end
+        -- Velocidad de nado RÁPIDA
+        humanoid.WalkSpeed = 25
+        
+        local leaderstats = Instance.new("Folder")
+        leaderstats.Name = "leaderstats"
+        leaderstats.Parent = player
+        
+        local algas = Instance.new("IntValue")
+        algas.Name = "Algas"
+        algas.Value = 0
+        algas.Parent = leaderstats
+        
+        local madera = Instance.new("IntValue")
+        madera.Name = "Madera"
+        madera.Value = 0
+        madera.Parent = leaderstats
+        
+        local velocidad = Instance.new("IntValue")
+        velocidad.Name = "Velocidad"
+        velocidad.Value = 25
+        velocidad.Parent = leaderstats
+        
+        algas.Changed:Connect(function(value)
+            velocidad.Value = 25 + math.floor(value / 10) * 10
+            humanoid.WalkSpeed = velocidad.Value
+        end)
     end)
 end)
 
--- Control de la balsa
-seat:GetPropertyChangedSignal("Occupant"):Connect(function()
-    if seat.Occupant then
-        local player = game.Players:GetPlayerFromCharacter(seat.Occupant.Parent)
-        if player then
-            local leaderstats = player:FindFirstChild("leaderstats")
-            local velocidad = leaderstats and leaderstats:FindFirstChild("Velocidad")
-            local speed = velocidad and velocidad.Value or 10
-            
-            -- Controles
-            local humanoid = seat.Occupant
-            task.spawn(function()
-                while seat.Occupant == humanoid do
-                    local moveDirection = humanoid.Parent:FindFirstChild("Humanoid").MoveDirection
-                    if moveDirection.Magnitude > 0 then
-                        bodyVelocity.Velocity = Vector3.new(moveDirection.X * speed, 0, moveDirection.Z * speed)
-                    else
-                        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
-                    end
-                    task.wait()
-                end
-            end)
-        end
-    else
-        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
-    end
-end)
-
-print("✅ Sistema de expansión configurado")
+print("✅ Sistema configurado")
 
 -- ========================================
 -- ILUMINACIÓN
 -- ========================================
-print("💡 Configurando iluminación...")
-
 local Lighting = game:GetService("Lighting")
 Lighting.Ambient = Color3.fromRGB(100, 150, 200)
-Lighting.Brightness = 2
+Lighting.Brightness = 2.5
 Lighting.ColorShift_Top = Color3.fromRGB(150, 200, 255)
 Lighting.OutdoorAmbient = Color3.fromRGB(120, 170, 220)
-Lighting.FogEnd = 1000
+Lighting.FogEnd = 1200
 Lighting.FogColor = Color3.fromRGB(100, 180, 230)
-Lighting.ClockTime = 14
+Lighting.ClockTime = 13
 
 local atmos = Instance.new("Atmosphere")
 atmos.Density = 0.3
 atmos.Offset = 0.5
 atmos.Color = Color3.fromRGB(150, 200, 255)
 atmos.Decay = Color3.fromRGB(120, 180, 230)
-atmos.Glare = 0.5
-atmos.Haze = 1.5
+atmos.Glare = 0.6
+atmos.Haze = 1.8
 atmos.Parent = Lighting
 
 local sun = Instance.new("SunRaysEffect")
-sun.Intensity = 0.15
-sun.Spread = 0.1
+sun.Intensity = 0.2
+sun.Spread = 0.12
 sun.Parent = Lighting
-
-print("✅ Iluminación configurada")
 
 print("")
 print("🎉 ═══════════════════════════════════════")
-print("🧜♀️ MAKO MERMAIDS - SUPERVIVENCIA EN BALSA")
+print("🧜♀️ MAKO MERMAIDS - SUPERVIVENCIA")
 print("═══════════════════════════════════════")
-print("🛟 Balsa inicial: 20x20 studs")
-print("🌿 Algas recolectables: 1000")
-print("📦 Sistema: ProximityPrompt")
-print("⚡ Velocidad inicial: 10 studs/s")
-print("🚀 +5 velocidad cada 10 algas")
-print("🎯 Objetivo: Recolectar algas para expandir")
+print("🛟 Balsa épica: 30x30 studs en Y=81")
+print("🌿 Algas: 1000 recolectables")
+print("🏊 Velocidad nado: 25 studs/s")
+print("🚀 +10 velocidad cada 10 algas")
+print("📦 Recursos: Algas + Madera")
 print("═══════════════════════════════════════")
-print("✨ ¡Sobrevive en el océano!")
+print("✨ ¡Sobrevive y recolecta!")
 print("")
