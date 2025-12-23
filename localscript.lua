@@ -297,8 +297,8 @@ local function createHawkinsSchool()
     applyStudsToAllFaces(frontWall, Color3.fromRGB(190, 170, 150))
     
     local frontOrangeStripe = Instance.new("Part")
-    frontOrangeStripe.Size = Vector3.new(30, 2.2, 1)
-    frontOrangeStripe.Position = Vector3.new(0, 10.4, 75)
+    frontOrangeStripe.Size = Vector3.new(30, 2.2, 0.95)
+    frontOrangeStripe.Position = Vector3.new(0, 10.4, 74.5)
     frontOrangeStripe.Anchored = true
     frontOrangeStripe.Material = Enum.Material.Plastic
     frontOrangeStripe.Color = Color3.fromRGB(220, 130, 60)
@@ -420,8 +420,8 @@ local function createVecnaGrandfatherClock(position)
     applyStudsToAllFaces(base, Color3.fromRGB(18, 18, 20))
     
     local body = Instance.new("Part")
-    body.Size = Vector3.new(2.8, 12, 2.5)  -- Altura total máxima 14 studs
-    body.Position = position + Vector3.new(0, 7.25, 0)
+    body.Size = Vector3.new(2.8, 10, 2.5)
+    body.Position = position + Vector3.new(0, 6.25, 0)
     body.Anchored = true
     body.Material = Enum.Material.Plastic
     body.Color = Color3.fromRGB(22, 22, 25)
@@ -466,7 +466,7 @@ local function createVecnaGrandfatherClock(position)
     
     local clockFaceBase = Instance.new("Part")
     clockFaceBase.Size = Vector3.new(0.6, 4.5, 4.5)
-    clockFaceBase.Position = body.Position + Vector3.new(0, 6.5, -1.6)
+    clockFaceBase.Position = body.Position + Vector3.new(0, 5.5, -1.6)
     clockFaceBase.Anchored = true
     clockFaceBase.Material = Enum.Material.Plastic
     clockFaceBase.Color = Color3.fromRGB(20, 20, 22)
@@ -568,8 +568,8 @@ local function createVecnaGrandfatherClock(position)
     applyStudsToAllFaces(handCenter, Color3.fromRGB(15, 15, 15))
     
     local top = Instance.new("Part")
-    top.Size = Vector3.new(3.5, 2.5, 3)
-    top.Position = body.Position + Vector3.new(0, 6.5, 0)
+    top.Size = Vector3.new(3.5, 2, 3)
+    top.Position = body.Position + Vector3.new(0, 5.5, 0)
     top.Anchored = true
     top.Material = Enum.Material.Plastic
     top.Color = Color3.fromRGB(18, 18, 20)
@@ -577,8 +577,8 @@ local function createVecnaGrandfatherClock(position)
     applyStudsToAllFaces(top, Color3.fromRGB(18, 18, 20))
     
     local topArch = Instance.new("Part")
-    topArch.Size = Vector3.new(3.5, 1.5, 3)
-    topArch.Position = top.Position + Vector3.new(0, 1.5, 0)
+    topArch.Size = Vector3.new(3.5, 1.2, 3)
+    topArch.Position = top.Position + Vector3.new(0, 1.2, 0)
     topArch.Anchored = true
     topArch.Material = Enum.Material.Plastic
     topArch.Color = Color3.fromRGB(18, 18, 20)
@@ -587,8 +587,8 @@ local function createVecnaGrandfatherClock(position)
     
     local function createSpike(xOffset)
         local spikeBase = Instance.new("Part")
-        spikeBase.Size = Vector3.new(0.6, 1.5, 0.6)
-        spikeBase.Position = topArch.Position + Vector3.new(xOffset, 1.3, 0)
+        spikeBase.Size = Vector3.new(0.6, 1.2, 0.6)
+        spikeBase.Position = topArch.Position + Vector3.new(xOffset, 1, 0)
         spikeBase.Anchored = true
         spikeBase.Material = Enum.Material.Plastic
         spikeBase.Color = Color3.fromRGB(15, 15, 17)
@@ -596,8 +596,8 @@ local function createVecnaGrandfatherClock(position)
         applyStudsToAllFaces(spikeBase, Color3.fromRGB(15, 15, 17))
         
         local spikeTop = Instance.new("Part")
-        spikeTop.Size = Vector3.new(0.35, 0.7, 0.35)
-        spikeTop.Position = spikeBase.Position + Vector3.new(0, 1.1, 0)
+        spikeTop.Size = Vector3.new(0.35, 0.6, 0.35)
+        spikeTop.Position = spikeBase.Position + Vector3.new(0, 0.9, 0)
         spikeTop.Anchored = true
         spikeTop.Shape = Enum.PartType.Ball
         spikeTop.Material = Enum.Material.Plastic
@@ -606,8 +606,8 @@ local function createVecnaGrandfatherClock(position)
         applyStudsToAllFaces(spikeTop, Color3.fromRGB(15, 15, 17))
         
         local ball = Instance.new("Part")
-        ball.Size = Vector3.new(0.5, 0.5, 0.5)
-        ball.Position = spikeTop.Position + Vector3.new(0, 0.5, 0)
+        ball.Size = Vector3.new(0.4, 0.4, 0.4)
+        ball.Position = spikeTop.Position + Vector3.new(0, 0.4, 0)
         ball.Anchored = true
         ball.Shape = Enum.PartType.Ball
         ball.Material = Enum.Material.Plastic
@@ -776,7 +776,7 @@ local function startVecnaClockScene()
         local targetCamCF = CFrame.new(targetCamPos, root.Position + Vector3.new(0, 1.5, 0))
         cam.CFrame = cam.CFrame:Lerp(targetCamCF, 0.06)
         
-        if hum.WalkSpeed > 0 and hum.MoveVector.Magnitude > 0.1 then
+        if hum.WalkSpeed > 0 and hum.MoveVector and hum.MoveVector.Magnitude > 0.1 then
             if tick() - lastStepTime >= stepInterval then
                 playAudio("Footstep", soundIds.footsteps, 0.4, false, root)
                 lastStepTime = tick()
@@ -1002,7 +1002,7 @@ local function startVecnaClockScene()
         cam.CFrame = cam.CFrame:Lerp(targetCF, 0.04)
         cam.FieldOfView = 58
         
-        if hum.WalkSpeed > 0 and hum.MoveVector.Magnitude > 0.1 then
+        if hum.WalkSpeed > 0 and hum.MoveVector and hum.MoveVector.Magnitude > 0.1 then
             if tick() - lastStepTime >= 0.6 then
                 playAudio("Footstep", soundIds.footsteps, 0.4, false, root)
                 lastStepTime = tick()
