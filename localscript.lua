@@ -187,9 +187,9 @@ local function createHawkinsSchool()
     floor.Position = Vector3.new(0, 0, 0)
     floor.Anchored = true
     floor.Material = Enum.Material.Plastic
-    floor.Color = Color3.fromRGB(235, 235, 230)
+    floor.Color = Color3.fromRGB(180, 160, 140)
     floor.Parent = schoolFolder
-    applyStudsToAllFaces(floor, Color3.fromRGB(235, 235, 230))
+    applyStudsToAllFaces(floor, Color3.fromRGB(180, 160, 140))
     
     for z = -70, 70, 4 do
         for x = -12, 12, 4 do
@@ -199,7 +199,7 @@ local function createHawkinsSchool()
                 tile.Position = Vector3.new(x, 0.4, z)
                 tile.Anchored = true
                 tile.Material = Enum.Material.Plastic
-                tile.Color = Color3.fromRGB(225, 140, 75)
+                tile.Color = Color3.fromRGB(160, 100, 50)
                 tile.Parent = floor
                 applyStudsToAllFaces(tile, Color3.fromRGB(225, 140, 75))
             end
@@ -211,9 +211,9 @@ local function createHawkinsSchool()
     leftWhite.Position = Vector3.new(-14, 13.5, 0)
     leftWhite.Anchored = true
     leftWhite.Material = Enum.Material.Plastic
-    leftWhite.Color = Color3.fromRGB(250, 250, 245)
+    leftWhite.Color = Color3.fromRGB(200, 180, 160)
     leftWhite.Parent = schoolFolder
-    applyStudsToAllFaces(leftWhite, Color3.fromRGB(250, 250, 245))
+    applyStudsToAllFaces(leftWhite, Color3.fromRGB(200, 180, 160))
     
     local leftOrange = Instance.new("Part")
     leftOrange.Size = Vector3.new(0.95, 2.2, 150)
@@ -238,18 +238,18 @@ local function createHawkinsSchool()
     leftBeige.Position = Vector3.new(-13.98, 0, 0)
     leftBeige.Anchored = true
     leftBeige.Material = Enum.Material.Plastic
-    leftBeige.Color = Color3.fromRGB(245, 240, 225)
+    leftBeige.Color = Color3.fromRGB(190, 170, 150)
     leftBeige.Parent = schoolFolder
-    applyStudsToAllFaces(leftBeige, Color3.fromRGB(245, 240, 225))
+    applyStudsToAllFaces(leftBeige, Color3.fromRGB(190, 170, 150))
     
     local rightWhite = Instance.new("Part")
     rightWhite.Size = Vector3.new(1, 4.5, 150)
     rightWhite.Position = Vector3.new(14, 13.5, 0)
     rightWhite.Anchored = true
     rightWhite.Material = Enum.Material.Plastic
-    rightWhite.Color = Color3.fromRGB(250, 250, 245)
+    rightWhite.Color = Color3.fromRGB(200, 180, 160)
     rightWhite.Parent = schoolFolder
-    applyStudsToAllFaces(rightWhite, Color3.fromRGB(250, 250, 245))
+    applyStudsToAllFaces(rightWhite, Color3.fromRGB(200, 180, 160))
     
     local rightOrange = Instance.new("Part")
     rightOrange.Size = Vector3.new(0.95, 2.2, 150)
@@ -265,27 +265,27 @@ local function createHawkinsSchool()
     rightBeige.Position = Vector3.new(13.98, 0, 0)
     rightBeige.Anchored = true
     rightBeige.Material = Enum.Material.Plastic
-    rightBeige.Color = Color3.fromRGB(245, 240, 225)
+    rightBeige.Color = Color3.fromRGB(190, 170, 150)
     rightBeige.Parent = schoolFolder
-    applyStudsToAllFaces(rightBeige, Color3.fromRGB(245, 240, 225))
+    applyStudsToAllFaces(rightBeige, Color3.fromRGB(190, 170, 150))
     
     local backWall = Instance.new("Part")
     backWall.Size = Vector3.new(30, 16, 1)
     backWall.Position = Vector3.new(0, 8, -75)
     backWall.Anchored = true
     backWall.Material = Enum.Material.Plastic
-    backWall.Color = Color3.fromRGB(245, 240, 225)
+    backWall.Color = Color3.fromRGB(190, 170, 150)
     backWall.Parent = schoolFolder
-    applyStudsToAllFaces(backWall, Color3.fromRGB(245, 240, 225))
+    applyStudsToAllFaces(backWall, Color3.fromRGB(190, 170, 150))
     
     local frontWallTop = Instance.new("Part")
     frontWallTop.Size = Vector3.new(30, 6, 1)
     frontWallTop.Position = Vector3.new(0, 13, 75)
     frontWallTop.Anchored = true
     frontWallTop.Material = Enum.Material.Plastic
-    frontWallTop.Color = Color3.fromRGB(250, 250, 245)
+    frontWallTop.Color = Color3.fromRGB(200, 180, 160)
     frontWallTop.Parent = schoolFolder
-    applyStudsToAllFaces(frontWallTop, Color3.fromRGB(250, 250, 245))
+    applyStudsToAllFaces(frontWallTop, Color3.fromRGB(200, 180, 160))
     
     local frontOrangeStripe = Instance.new("Part")
     frontOrangeStripe.Size = Vector3.new(30, 2.2, 1)
@@ -301,18 +301,18 @@ local function createHawkinsSchool()
     frontWallBeige.Position = Vector3.new(0, 0, 75)
     frontWallBeige.Anchored = true
     frontWallBeige.Material = Enum.Material.Plastic
-    frontWallBeige.Color = Color3.fromRGB(245, 240, 225)
+    frontWallBeige.Color = Color3.fromRGB(190, 170, 150)
     frontWallBeige.Parent = schoolFolder
-    applyStudsToAllFaces(frontWallBeige, Color3.fromRGB(245, 240, 225))
+    applyStudsToAllFaces(frontWallBeige, Color3.fromRGB(190, 170, 150))
     
     local ceiling = Instance.new("Part")
     ceiling.Size = Vector3.new(30, 0.8, 150)
     ceiling.Position = Vector3.new(0, 16, 0)
     ceiling.Anchored = true
     ceiling.Material = Enum.Material.Plastic
-    ceiling.Color = Color3.fromRGB(250, 250, 250)
+    ceiling.Color = Color3.fromRGB(180, 160, 140)
     ceiling.Parent = schoolFolder
-    applyStudsToAllFaces(ceiling, Color3.fromRGB(250, 250, 250))
+    applyStudsToAllFaces(ceiling, Color3.fromRGB(180, 160, 140))
     
     for z = -65, 65, 5.5 do
         local locker = Instance.new("Part")
@@ -320,9 +320,9 @@ local function createHawkinsSchool()
         locker.Position = Vector3.new(-12.5, 4.5, z)
         locker.Anchored = true
         locker.Material = Enum.Material.Plastic
-        locker.Color = Color3.fromRGB(232, 222, 200)
+        locker.Color = Color3.fromRGB(160, 140, 120)
         locker.Parent = schoolFolder
-        applyStudsToAllFaces(locker, Color3.fromRGB(232, 222, 200))
+        applyStudsToAllFaces(locker, Color3.fromRGB(160, 140, 120))
         
         local handle = Instance.new("Part")
         handle.Size = Vector3.new(0.15, 0.5, 0.15)
@@ -347,7 +347,7 @@ local function createHawkinsSchool()
     for z = -65, 65, 12 do
         local lightFixture = Instance.new("Part")
         lightFixture.Size = Vector3.new(4, 0.35, 10)
-        lightFixture.Position = Vector3.new(0, 15.6, z)
+        lightFixture.Position = Vector3.new(0, 15.2, z)  -- Bajado para no traspasar techo
         lightFixture.Anchored = true
         lightFixture.Material = Enum.Material.Neon
         lightFixture.Color = Color3.fromRGB(255, 252, 240)
@@ -689,11 +689,11 @@ local function startVecnaClockScene()
     root.CFrame = CFrame.new(startPos)
     root.Anchored = true
     
-    Lighting.Ambient = Color3.fromRGB(150, 150, 155)
-    Lighting.Brightness = 2.5
-    Lighting.ColorShift_Top = Color3.fromRGB(255, 250, 245)
+    Lighting.Ambient = Color3.fromRGB(120, 110, 100)
+    Lighting.Brightness = 2.2
+    Lighting.ColorShift_Top = Color3.fromRGB(200, 180, 160)
     Lighting.FogEnd = 320
-    Lighting.FogColor = Color3.fromRGB(220, 220, 220)
+    Lighting.FogColor = Color3.fromRGB(150, 140, 130)
     
     local blackFrame = Instance.new("Frame", screenGui)
     blackFrame.Size = UDim2.fromScale(1, 1)
@@ -992,7 +992,7 @@ local function startVecnaClockScene()
     
     local bigFlash = Instance.new("Frame", screenGui)
     bigFlash.Size = UDim2.fromScale(1, 1)
-    bigFlash.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    bigFlash.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
     bigFlash.ZIndex = 150
     TweenService:Create(bigFlash, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
     Debris:AddItem(bigFlash, 1.5)
