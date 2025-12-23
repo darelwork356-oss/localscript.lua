@@ -308,7 +308,7 @@ local function createHawkinsSchool()
     for z = -65, 65, 5.5 do
         local locker = Instance.new("Part")
         locker.Size = Vector3.new(1.3, 9, 2.3)
-        locker.Position = Vector3.new(-12.5, 4.5, z)
+        locker.Position = Vector3.new(-13.8, 4.5, z)  -- Pegado a la pared izquierda
         locker.Anchored = true
         locker.Material = Enum.Material.Plastic
         locker.Color = Color3.fromRGB(160, 140, 120)
@@ -317,7 +317,7 @@ local function createHawkinsSchool()
         
         local handle = Instance.new("Part")
         handle.Size = Vector3.new(0.15, 0.5, 0.15)
-        handle.Position = Vector3.new(-11.3, 4.5, z)
+        handle.Position = Vector3.new(-13.1, 4.5, z)  -- Ajustado a nueva posición
         handle.Anchored = true
         handle.Material = Enum.Material.Metal
         handle.Color = Color3.fromRGB(70, 70, 70)
@@ -326,7 +326,7 @@ local function createHawkinsSchool()
         for i = 1, 3 do
             local vent = Instance.new("Part")
             vent.Size = Vector3.new(0.8, 0.05, 0.15)
-            vent.Position = Vector3.new(-11.3, 3 + (i * 0.4), z)
+            vent.Position = Vector3.new(-13.1, 3 + (i * 0.4), z)  -- Ajustado
             vent.Anchored = true
             vent.Material = Enum.Material.Metal
             vent.Color = Color3.fromRGB(50, 50, 50)
@@ -377,8 +377,8 @@ local function createVecnaGrandfatherClock(position)
     applyStudsToAllFaces(base, Color3.fromRGB(18, 18, 20))
     
     local body = Instance.new("Part")
-    body.Size = Vector3.new(2.8, 8, 2.5)  -- Reducido de 10 a 8
-    body.Position = position + Vector3.new(0, 6.25, 0)  -- Ajustado
+    body.Size = Vector3.new(2.8, 12, 2.5)  -- Altura total máxima 14 studs
+    body.Position = position + Vector3.new(0, 7.25, 0)
     body.Anchored = true
     body.Material = Enum.Material.Plastic
     body.Color = Color3.fromRGB(22, 22, 25)
@@ -859,7 +859,7 @@ local function startVecnaClockScene()
     
     print("🎬 FASE 4: RELOJ APARECE")
     
-    local clockPosition = Vector3.new(0, 4, 68)
+    local clockPosition = Vector3.new(0, 0.5, 68)  -- En el suelo
     local clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, darkParticles, darkAura = createVecnaGrandfatherClock(clockPosition)
     
     for _, part in pairs(clockModel:GetDescendants()) do
