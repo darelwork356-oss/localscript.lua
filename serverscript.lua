@@ -120,129 +120,232 @@ end
 -- ============================================
 
 local function CrearPalmeraCubana(posicion)
-    -- Modelo de palmera realista
+    -- Modelo de palmera cubana realista
     local palmeraModel = Instance.new("Model")
     palmeraModel.Name = "PalmeraCubana"
     palmeraModel.Parent = CalleFolder
     
-    -- TRONCO (15 studs de alto, segmentado)
-    local segmentosTronco = 6
-    local alturaPorSegmento = 2.5
+    -- TRONCO CURVADO REALISTA (18 studs de alto)
+    local segmentosTronco = 9
+    local alturaPorSegmento = 2
+    local curvatura = math.random(-15, 15) -- Curvatura natural aleatoria
     
     for i = 1, segmentosTronco do
         local segmento = Instance.new("Part")
         segmento.Name = "TroncoSegmento" .. i
-        segmento.Size = Vector3.new(2, alturaPorSegmento, 2)
-        segmento.Position = posicion + Vector3.new(0, (i - 1) * alturaPorSegmento + alturaPorSegmento/2, 0)
+        
+        -- Tronco más grueso en la base, más delgado arriba
+        local grosor = 2.5 - (i * 0.15)
+        segmento.Size = Vector3.new(grosor, alturaPorSegmento, grosor)
+        
+        -- Curvatura progresiva del tronco
+        local offsetX = math.sin(math.rad(curvatura * i / segmentosTronco)) * (i * 0.3)
+        local offsetZ = math.cos(math.rad(curvatura * i / segmentosTronco)) * (i * 0.2)
+        
+        segmento.Position = posicion + Vector3.new(
+            offsetX, 
+            (i - 1) * alturaPorSegmento + alturaPorSegmento/2, 
+            offsetZ
+        )
         segmento.Anchored = true
-        segmento.Color = Color3.fromRGB(101, 67, 33)
+        
+        -- Colores más realistas del tronco
+        local colorTronco = Color3.fromRGB(120 - i*3, 85 - i*2, 45 - i)
+        segmento.Color = colorTronco
         segmento.Material = Enum.Material.SmoothPlastic
         segmento.Parent = palmeraModel
         
-        -- Textura del tronco
+        -- Mesh cilíndrico
         local cilindro = Instance.new("CylinderMesh")
         cilindro.Parent = segmento
         
-        -- Anillos del tronco
+        -- Anillos característicos de palmera (cada 2 segmentos)
         if i % 2 == 0 then
             local anillo = Instance.new("Part")
-            anillo.Name = "Anillo"
-            anillo.Size = Vector3.new(2.3, 0.3, 2.3)
-            anillo.Position = segmento.Position + Vector3.new(0, alturaPorSegmento/2, 0)
+            anillo.Name = "AnilloPalmera" .. i
+            anillo.Size = Vector3.new(grosor + 0.4, 0.4, grosor + 0.4)
+            anillo.Position = segmento.Position + Vector3.new(0, alturaPorSegmento/2 - 0.1, 0)
             anillo.Anchored = true
-            anillo.Color = Color3.fromRGB(85, 55, 25)
+            anillo.Color = Color3.fromRGB(95, 65, 35)
             anillo.Material = Enum.Material.SmoothPlastic
             anillo.Parent = palmeraModel
             
             local anilloMesh = Instance.new("CylinderMesh")
             anilloMesh.Parent = anillo
         end
+        
+        -- Marcas y cicatrices del tronco
+        if math.random() > 0.7 then
+            local cicatriz = Instance.new("Part")
+            cicatriz.Size = Vector3.new(0.2, 0.8, 0.2)
+            cicatriz.Position = segmento.Position + Vector3.new(
+                math.random(-grosor/2, grosor/2) * 0.8,
+                math.random(-alturaPorSegmento/2, alturaPorSegmento/2),
+                grosor/2
+            )
+            cicatriz.Anchored = true
+            cicatriz.Color = Color3.fromRGB(80, 50, 25)
+            cicatriz.Material = Enum.Material.SmoothPlastic
+            cicatriz.Parent = palmeraModel
+        end
     end
     
-    -- COPA DE HOJAS (12 hojas grandes)
+    -- COPA DE HOJAS REALISTA (16-20 hojas)
+    local numHojas = math.random(16, 20)
     local alturaCopa = segmentosTronco * alturaPorSegmento
-    local posicionCopa = posicion + Vector3.new(0, alturaCopa, 0)
+    local posicionCopa = posicion + Vector3.new(
+        math.sin(math.rad(curvatura)) * (segmentosTronco * 0.3),
+        alturaCopa,
+        math.cos(math.rad(curvatura)) * (segmentosTronco * 0.2)
+    )
     
-    for i = 1, 12 do
-        local angulo = (i - 1) * 30 -- 12 hojas = 30 grados cada una
+    for i = 1, numHojas do
+        local angulo = (i - 1) * (360 / numHojas) + math.random(-10, 10)
+        local inclinacion = math.random(-45, -25) -- Hojas caídas naturalmente
         
-        -- Tallo de la hoja
-        local tallo = Instance.new("Part")
-        tallo.Name = "TalloHoja" .. i
-        tallo.Size = Vector3.new(0.3, 0.3, 6)
-        tallo.CFrame = CFrame.new(posicionCopa) 
-            * CFrame.Angles(math.rad(-35), math.rad(angulo), 0)
-            * CFrame.new(0, 0, 3)
-        tallo.Anchored = true
-        tallo.Color = Color3.fromRGB(60, 120, 40)
-        tallo.Material = Enum.Material.SmoothPlastic
-        tallo.Parent = palmeraModel
+        -- RAQUIS (tallo principal de la hoja) - más largo y curvado
+        local longitudRaquis = math.random(8, 12)
+        local raquis = Instance.new("Part")
+        raquis.Name = "RaquisHoja" .. i
+        raquis.Size = Vector3.new(0.25, 0.25, longitudRaquis)
+        raquis.CFrame = CFrame.new(posicionCopa) 
+            * CFrame.Angles(math.rad(inclinacion), math.rad(angulo), math.rad(math.random(-5, 5)))
+            * CFrame.new(0, 0, longitudRaquis/2)
+        raquis.Anchored = true
+        raquis.Color = Color3.fromRGB(85, 140, 60)
+        raquis.Material = Enum.Material.SmoothPlastic
+        raquis.Parent = palmeraModel
         
-        -- Hoja izquierda
-        local hojaIzq = Instance.new("Part")
-        hojaIzq.Name = "HojaIzq" .. i
-        hojaIzq.Size = Vector3.new(3, 0.2, 5)
-        hojaIzq.CFrame = tallo.CFrame 
-            * CFrame.new(-1.5, 0, 0)
-            * CFrame.Angles(0, 0, math.rad(15))
-        hojaIzq.Anchored = true
-        hojaIzq.Color = COLORES_CUBANOS.Verde
-        hojaIzq.Material = Enum.Material.SmoothPlastic
-        hojaIzq.Parent = palmeraModel
+        -- FOLIOLOS (hojas pequeñas a los lados) - más realistas
+        local numFoliolos = math.random(12, 18)
+        for j = 1, numFoliolos do
+            local posicionFoliolo = (j - 1) / (numFoliolos - 1) -- 0 a 1
+            local tamanoFoliolo = 1.5 + (1 - math.abs(posicionFoliolo - 0.5) * 2) * 2 -- Más grande en el centro
+            
+            -- Foliolo izquierdo
+            local folioloIzq = Instance.new("Part")
+            folioloIzq.Name = "FolioloIzq" .. i .. "_" .. j
+            folioloIzq.Size = Vector3.new(tamanoFoliolo, 0.1, 0.8)
+            folioloIzq.CFrame = raquis.CFrame 
+                * CFrame.new(0, 0, (posicionFoliolo - 0.5) * longitudRaquis)
+                * CFrame.new(-tamanoFoliolo/2, 0, 0)
+                * CFrame.Angles(0, 0, math.rad(15 + math.random(-5, 5)))
+            folioloIzq.Anchored = true
+            
+            -- Variación de color verde más natural
+            local verdeBase = math.random(45, 65)
+            folioloIzq.Color = Color3.fromRGB(verdeBase, 120 + math.random(-15, 15), verdeBase + 10)
+            folioloIzq.Material = Enum.Material.SmoothPlastic
+            folioloIzq.Parent = palmeraModel
+            
+            -- Foliolo derecho
+            local folioloDer = Instance.new("Part")
+            folioloDer.Name = "FolioloDer" .. i .. "_" .. j
+            folioloDer.Size = Vector3.new(tamanoFoliolo, 0.1, 0.8)
+            folioloDer.CFrame = raquis.CFrame 
+                * CFrame.new(0, 0, (posicionFoliolo - 0.5) * longitudRaquis)
+                * CFrame.new(tamanoFoliolo/2, 0, 0)
+                * CFrame.Angles(0, 0, math.rad(-15 + math.random(-5, 5)))
+            folioloDer.Anchored = true
+            folioloDer.Color = folioloIzq.Color
+            folioloDer.Material = Enum.Material.SmoothPlastic
+            folioloDer.Parent = palmeraModel
+        end
         
-        -- Hoja derecha
-        local hojaDer = Instance.new("Part")
-        hojaDer.Name = "HojaDer" .. i
-        hojaDer.Size = Vector3.new(3, 0.2, 5)
-        hojaDer.CFrame = tallo.CFrame 
-            * CFrame.new(1.5, 0, 0)
-            * CFrame.Angles(0, 0, math.rad(-15))
-        hojaDer.Anchored = true
-        hojaDer.Color = COLORES_CUBANOS.Verde
-        hojaDer.Material = Enum.Material.SmoothPlastic
-        hojaDer.Parent = palmeraModel
-        
-        -- Detalle de punta
-        local punta = Instance.new("Part")
-        punta.Name = "PuntaHoja" .. i
-        punta.Size = Vector3.new(2, 0.2, 2)
-        punta.CFrame = tallo.CFrame * CFrame.new(0, 0, 3)
-        punta.Anchored = true
-        punta.Color = Color3.fromRGB(40, 100, 30)
-        punta.Material = Enum.Material.SmoothPlastic
-        punta.Parent = palmeraModel
+        -- Punta de la hoja (ápice)
+        local apice = Instance.new("Part")
+        apice.Name = "ApiceHoja" .. i
+        apice.Size = Vector3.new(1, 0.1, 1.5)
+        apice.CFrame = raquis.CFrame * CFrame.new(0, 0, longitudRaquis/2 + 0.5)
+        apice.Anchored = true
+        apice.Color = Color3.fromRGB(40, 100, 35)
+        apice.Material = Enum.Material.SmoothPlastic
+        apice.Parent = palmeraModel
     end
     
-    -- Cocos decorativos
-    for i = 1, 4 do
+    -- COCOS REALISTAS (racimo)
+    local numCocos = math.random(6, 10)
+    local racimo = Instance.new("Part")
+    racimo.Name = "RacimoCocos"
+    racimo.Size = Vector3.new(0.5, 2, 0.5)
+    racimo.Position = posicionCopa + Vector3.new(0, -2, 0)
+    racimo.Anchored = true
+    racimo.Color = Color3.fromRGB(85, 140, 60)
+    racimo.Material = Enum.Material.SmoothPlastic
+    racimo.Parent = palmeraModel
+    
+    for i = 1, numCocos do
         local coco = Instance.new("Part")
         coco.Name = "Coco" .. i
-        coco.Size = Vector3.new(1.2, 1.5, 1.2)
-        coco.Position = posicionCopa + Vector3.new(
-            math.cos(math.rad(i * 90)) * 0.8,
-            -1,
-            math.sin(math.rad(i * 90)) * 0.8
+        local tamano = math.random(10, 14) / 10
+        coco.Size = Vector3.new(tamano, tamano * 1.3, tamano)
+        
+        -- Distribución natural del racimo
+        local anguloCoco = math.random(0, 360)
+        local radioCoco = math.random(0.5, 1.2)
+        coco.Position = racimo.Position + Vector3.new(
+            math.cos(math.rad(anguloCoco)) * radioCoco,
+            math.random(-1, 0.5),
+            math.sin(math.rad(anguloCoco)) * radioCoco
         )
         coco.Anchored = true
-        coco.Color = Color3.fromRGB(139, 90, 43)
+        
+        -- Colores variados de cocos (verdes, amarillos, marrones)
+        local tipoColor = math.random(1, 3)
+        if tipoColor == 1 then
+            coco.Color = Color3.fromRGB(60, 120, 40) -- Verde
+        elseif tipoColor == 2 then
+            coco.Color = Color3.fromRGB(160, 140, 60) -- Amarillo
+        else
+            coco.Color = Color3.fromRGB(120, 80, 40) -- Marrón
+        end
+        
         coco.Material = Enum.Material.SmoothPlastic
         coco.Parent = palmeraModel
         
         local cocoMesh = Instance.new("SpecialMesh")
         cocoMesh.MeshType = Enum.MeshType.Sphere
-        cocoMesh.Scale = Vector3.new(1, 1.2, 1)
+        cocoMesh.Scale = Vector3.new(1, 1.3, 1)
         cocoMesh.Parent = coco
+        
+        -- Tallo del coco
+        local talloCoco = Instance.new("Part")
+        talloCoco.Size = Vector3.new(0.1, 0.5, 0.1)
+        talloCoco.Position = Vector3.new(
+            (racimo.Position.X + coco.Position.X) / 2,
+            (racimo.Position.Y + coco.Position.Y) / 2,
+            (racimo.Position.Z + coco.Position.Z) / 2
+        )
+        talloCoco.Anchored = true
+        talloCoco.Color = Color3.fromRGB(85, 140, 60)
+        talloCoco.Material = Enum.Material.SmoothPlastic
+        talloCoco.Parent = palmeraModel
+    end
+    
+    -- BASE DE LA PALMERA (raíces visibles)
+    for i = 1, 4 do
+        local raiz = Instance.new("Part")
+        raiz.Name = "Raiz" .. i
+        raiz.Size = Vector3.new(0.8, 0.5, 3)
+        local anguloRaiz = (i - 1) * 90 + math.random(-20, 20)
+        raiz.CFrame = CFrame.new(posicion + Vector3.new(0, 0.2, 0))
+            * CFrame.Angles(math.rad(-10), math.rad(anguloRaiz), 0)
+            * CFrame.new(0, 0, 1.5)
+        raiz.Anchored = true
+        raiz.Color = Color3.fromRGB(100, 70, 40)
+        raiz.Material = Enum.Material.SmoothPlastic
+        raiz.Parent = palmeraModel
     end
     
     return palmeraModel
 end
 
 -- ============================================
--- CALLE
+-- CALLE CUBANA AUTENTICA
 -- ============================================
 
 local function CrearCalle()
-    print("🏘️ Creando calle...")
+    print("🏘️ Creando calle cubana auténtica...")
     
     -- Aceras - 12 studs ancho x 400 studs largo
     for i = -1, 1, 2 do
@@ -256,10 +359,10 @@ local function CrearCalle()
         acera.Parent = CalleFolder
     end
     
-    -- Faroles cada 40 studs
+    -- Faroles coloniales cubanos cada 40 studs
     for z = -150, 150, 40 do
         for x = -48, 48, 96 do
-            -- Poste - 14 studs alto
+            -- Poste colonial - 14 studs alto
             local poste = Instance.new("Part")
             poste.Size = Vector3.new(0.8, 14, 0.8)
             poste.Position = Vector3.new(x, 7, z)
@@ -268,179 +371,482 @@ local function CrearCalle()
             poste.Material = Enum.Material.SmoothPlastic
             poste.Parent = CalleFolder
             
-            -- Base del poste
+            -- Base ornamental
             local base = Instance.new("Part")
-            base.Size = Vector3.new(2, 0.5, 2)
-            base.Position = Vector3.new(x, 0.25, z)
+            base.Size = Vector3.new(2.5, 1, 2.5)
+            base.Position = Vector3.new(x, 0.5, z)
             base.Anchored = true
-            base.Color = Color3.fromRGB(60, 60, 65)
+            base.Color = Color3.fromRGB(80, 80, 85)
             base.Material = Enum.Material.SmoothPlastic
             base.Parent = CalleFolder
             
-            -- Farol - 3 studs de diametro
+            -- Farol estilo colonial
             local farol = Instance.new("Part")
-            farol.Size = Vector3.new(3, 3, 3)
-            farol.Position = Vector3.new(x, 14, z)
+            farol.Size = Vector3.new(4, 4, 4)
+            farol.Position = Vector3.new(x, 14.5, z)
             farol.Anchored = true
             farol.Color = COLORES_CUBANOS.Amarillo
             farol.Material = Enum.Material.Neon
-            farol.Transparency = 0.2
+            farol.Transparency = 0.3
             farol.Parent = CalleFolder
             
-            local farolMesh = Instance.new("SpecialMesh")
-            farolMesh.MeshType = Enum.MeshType.Sphere
-            farolMesh.Parent = farol
+            -- Marco del farol
+            local marco = Instance.new("Part")
+            marco.Size = Vector3.new(4.5, 4.5, 4.5)
+            marco.Position = Vector3.new(x, 14.5, z)
+            marco.Anchored = true
+            marco.Color = Color3.fromRGB(20, 20, 25)
+            marco.Material = Enum.Material.SmoothPlastic
+            marco.Transparency = 0.7
+            marco.Parent = CalleFolder
             
             local luz = Instance.new("PointLight")
-            luz.Brightness = 3
+            luz.Brightness = 4
             luz.Color = COLORES_CUBANOS.Amarillo
-            luz.Range = 50
+            luz.Range = 60
             luz.Parent = farol
         end
     end
     
-    -- Palmeras cubanas realistas (15 palmeras distribuidas)
-    print("🌴 Creando palmeras cubanas...")
+    -- Casas coloniales cubanas de fondo
+    print("🏠 Creando casas coloniales...")
+    for i = 1, 8 do
+        local x = math.random(-80, 80)
+        local z = math.random(-180, -100)
+        
+        -- Casa base
+        local casa = Instance.new("Part")
+        casa.Size = Vector3.new(15, 12, 10)
+        casa.Position = Vector3.new(x, 6, z)
+        casa.Anchored = true
+        
+        -- Colores típicos cubanos
+        local coloresCasas = {
+            Color3.fromRGB(255, 180, 120), -- Amarillo pastel
+            Color3.fromRGB(180, 220, 255), -- Azul pastel
+            Color3.fromRGB(255, 200, 200), -- Rosa pastel
+            Color3.fromRGB(200, 255, 200), -- Verde pastel
+            Color3.fromRGB(255, 220, 180)  -- Naranja pastel
+        }
+        casa.Color = coloresCasas[math.random(1, #coloresCasas)]
+        casa.Material = Enum.Material.SmoothPlastic
+        casa.Parent = CalleFolder
+        
+        -- Techo de tejas
+        local techo = Instance.new("Part")
+        techo.Size = Vector3.new(17, 1, 12)
+        techo.Position = Vector3.new(x, 12.5, z)
+        techo.Anchored = true
+        techo.Color = Color3.fromRGB(150, 80, 60)
+        techo.Material = Enum.Material.SmoothPlastic
+        techo.Parent = CalleFolder
+        
+        -- Ventanas coloniales
+        for j = 1, 2 do
+            local ventana = Instance.new("Part")
+            ventana.Size = Vector3.new(3, 4, 0.2)
+            ventana.Position = Vector3.new(x + (j-1.5)*5, 8, z - 5.1)
+            ventana.Anchored = true
+            ventana.Color = Color3.fromRGB(100, 150, 200)
+            ventana.Material = Enum.Material.SmoothPlastic
+            ventana.Transparency = 0.3
+            ventana.Parent = CalleFolder
+            
+            -- Marco de ventana
+            local marco = Instance.new("Part")
+            marco.Size = Vector3.new(3.5, 4.5, 0.3)
+            marco.Position = ventana.Position + Vector3.new(0, 0, -0.1)
+            marco.Anchored = true
+            marco.Color = Color3.fromRGB(255, 255, 255)
+            marco.Material = Enum.Material.SmoothPlastic
+            marco.Parent = CalleFolder
+        end
+        
+        -- Puerta
+        local puerta = Instance.new("Part")
+        puerta.Size = Vector3.new(2.5, 6, 0.3)
+        puerta.Position = Vector3.new(x, 3, z - 5.15)
+        puerta.Anchored = true
+        puerta.Color = Color3.fromRGB(120, 80, 40)
+        puerta.Material = Enum.Material.SmoothPlastic
+        puerta.Parent = CalleFolder
+    end
+    
+    -- Plantas tropicales adicionales
+    print("🌺 Agregando flora tropical...")
+    for i = 1, 20 do
+        local x = math.random(-90, 90)
+        local z = math.random(-180, 180)
+        
+        -- Arbustos tropicales
+        local arbusto = Instance.new("Part")
+        arbusto.Size = Vector3.new(3, 2, 3)
+        arbusto.Position = Vector3.new(x, 1, z)
+        arbusto.Anchored = true
+        arbusto.Color = Color3.fromRGB(60, 140, 80)
+        arbusto.Material = Enum.Material.SmoothPlastic
+        arbusto.Parent = CalleFolder
+        
+        local arbustoMesh = Instance.new("SpecialMesh")
+        arbustoMesh.MeshType = Enum.MeshType.Sphere
+        arbustoMesh.Parent = arbusto
+        
+        -- Flores tropicales aleatorias
+        if math.random() > 0.6 then
+            local flor = Instance.new("Part")
+            flor.Size = Vector3.new(0.8, 0.8, 0.8)
+            flor.Position = arbusto.Position + Vector3.new(
+                math.random(-1, 1),
+                1.5,
+                math.random(-1, 1)
+            )
+            flor.Anchored = true
+            
+            local coloresFlores = {
+                COLORES_CUBANOS.Rosa,
+                COLORES_CUBANOS.Amarillo,
+                COLORES_CUBANOS.Naranja,
+                Color3.fromRGB(255, 100, 255)
+            }
+            flor.Color = coloresFlores[math.random(1, #coloresFlores)]
+            flor.Material = Enum.Material.Neon
+            flor.Transparency = 0.2
+            flor.Parent = CalleFolder
+            
+            local florMesh = Instance.new("SpecialMesh")
+            florMesh.MeshType = Enum.MeshType.Sphere
+            florMesh.Parent = flor
+        end
+    end
+    
+    -- Palmeras cubanas realistas (20 palmeras distribuidas)
+    print("🌴 Creando palmeras cubanas realistas...")
     local posicionesPalmeras = {
-        Vector3.new(-45, 0, -120),
-        Vector3.new(45, 0, -120),
-        Vector3.new(-45, 0, -80),
-        Vector3.new(45, 0, -80),
-        Vector3.new(-45, 0, -40),
-        Vector3.new(45, 0, -40),
-        Vector3.new(-45, 0, 0),
-        Vector3.new(45, 0, 0),
-        Vector3.new(-45, 0, 40),
-        Vector3.new(45, 0, 40),
-        Vector3.new(-35, 0, 100),
-        Vector3.new(35, 0, 100),
-        Vector3.new(-35, 0, 130),
-        Vector3.new(35, 0, 130),
-        Vector3.new(0, 0, 160)
+        Vector3.new(-45, 0, -120), Vector3.new(45, 0, -120),
+        Vector3.new(-45, 0, -80), Vector3.new(45, 0, -80),
+        Vector3.new(-45, 0, -40), Vector3.new(45, 0, -40),
+        Vector3.new(-45, 0, 0), Vector3.new(45, 0, 0),
+        Vector3.new(-45, 0, 40), Vector3.new(45, 0, 40),
+        Vector3.new(-35, 0, 100), Vector3.new(35, 0, 100),
+        Vector3.new(-35, 0, 130), Vector3.new(35, 0, 130),
+        Vector3.new(0, 0, 160), Vector3.new(-25, 0, 80),
+        Vector3.new(25, 0, 80), Vector3.new(-60, 0, 20),
+        Vector3.new(60, 0, 20), Vector3.new(0, 0, -60)
     }
     
     for _, pos in ipairs(posicionesPalmeras) do
         CrearPalmeraCubana(pos)
     end
     
-    print("✅ Calle con palmeras OK")
+    -- Bancos cubanos
+    print("🪑 Agregando bancos típicos...")
+    for i = 1, 6 do
+        local x = math.random(-40, 40)
+        local z = math.random(-100, 100)
+        
+        local banco = Instance.new("Seat")
+        banco.Size = Vector3.new(6, 1, 2)
+        banco.Position = Vector3.new(x, 1.5, z)
+        banco.Anchored = true
+        banco.Color = Color3.fromRGB(180, 120, 80)
+        banco.Material = Enum.Material.SmoothPlastic
+        banco.Parent = CalleFolder
+        
+        -- Respaldo
+        local respaldo = Instance.new("Part")
+        respaldo.Size = Vector3.new(6, 2, 0.3)
+        respaldo.Position = Vector3.new(x, 2.5, z + 0.85)
+        respaldo.Anchored = true
+        respaldo.Color = Color3.fromRGB(180, 120, 80)
+        respaldo.Material = Enum.Material.SmoothPlastic
+        respaldo.Parent = CalleFolder
+    end
+    
+    print("✅ Calle cubana auténtica completada")
 end
 
 -- ============================================
--- SALON CON ENTRADA ABIERTA
+-- SALON CUBANO CON ENTRADA ABIERTA
 -- ============================================
 
 local function CrearSalon()
-    print("🎉 Creando salon con entrada abierta...")
+    print("🎉 Creando salón cubano con entrada abierta...")
     
     local posBase = Vector3.new(0, 0, 220)
     
-    -- PISO - 120 studs x 100 studs
+    -- PISO CON MOSAICOS CUBANOS - 120 studs x 100 studs
     local piso = Instance.new("Part")
     piso.Name = "PisoSalon"
     piso.Size = Vector3.new(120, 1, 100)
     piso.Position = posBase
     piso.Anchored = true
-    piso.Color = Color3.fromRGB(30, 30, 35)
+    piso.Color = Color3.fromRGB(40, 35, 30)
     piso.Material = Enum.Material.SmoothPlastic
     piso.Parent = SalonFolder
     
-    -- Baldosas decorativas - 10x10 studs cada una
-    for x = -55, 55, 10 do
-        for z = -45, 45, 10 do
-            local baldosa = Instance.new("Part")
-            baldosa.Size = Vector3.new(9, 0.2, 9)
-            baldosa.Position = posBase + Vector3.new(x, 0.6, z)
-            baldosa.Anchored = true
-            local esPar = ((x + z) / 10) % 2 == 0
-            baldosa.Color = esPar and Color3.fromRGB(45, 45, 50) or Color3.fromRGB(25, 25, 30)
-            baldosa.Material = Enum.Material.SmoothPlastic
-            baldosa.Parent = SalonFolder
+    -- Mosaicos cubanos tradicionales - patrón de 8x8 studs
+    for x = -56, 56, 8 do
+        for z = -46, 46, 8 do
+            local mosaico = Instance.new("Part")
+            mosaico.Size = Vector3.new(7.5, 0.3, 7.5)
+            mosaico.Position = posBase + Vector3.new(x, 0.65, z)
+            mosaico.Anchored = true
+            
+            -- Patrón de colores cubanos tradicionales
+            local patron = (math.abs(x) + math.abs(z)) / 8
+            if patron % 4 == 0 then
+                mosaico.Color = Color3.fromRGB(220, 200, 180) -- Crema
+            elseif patron % 4 == 1 then
+                mosaico.Color = Color3.fromRGB(180, 160, 140) -- Beige
+            elseif patron % 4 == 2 then
+                mosaico.Color = Color3.fromRGB(160, 120, 100) -- Terracota
+            else
+                mosaico.Color = Color3.fromRGB(120, 100, 80) -- Marrón
+            end
+            
+            mosaico.Material = Enum.Material.SmoothPlastic
+            mosaico.Parent = SalonFolder
+            
+            -- Detalles decorativos en algunos mosaicos
+            if math.random() > 0.8 then
+                local detalle = Instance.new("Part")
+                detalle.Size = Vector3.new(1, 0.1, 1)
+                detalle.Position = mosaico.Position + Vector3.new(0, 0.2, 0)
+                detalle.Anchored = true
+                detalle.Color = COLORES_CUBANOS.Amarillo
+                detalle.Material = Enum.Material.Neon
+                detalle.Transparency = 0.5
+                detalle.Parent = SalonFolder
+                
+                local detalleMesh = Instance.new("SpecialMesh")
+                detalleMesh.MeshType = Enum.MeshType.Sphere
+                detalleMesh.Parent = detalle
+            end
         end
     end
     
-    -- PAREDES (3 lados - SIN PARED FRONTAL = ENTRADA ABIERTA)
+    -- PAREDES CON DECORACIÓN CUBANA (3 lados - SIN PARED FRONTAL)
     local alturaParedes = 30
     
-    -- Pared trasera - 120 studs ancho x 30 studs alto
+    -- Pared trasera con murales cubanos
     local paredTrasera = Instance.new("Part")
     paredTrasera.Name = "ParedTrasera"
-    paredTrasera.Size = Vector3.new(120, alturaParedes, 2)
+    paredTrasera.Size = Vector3.new(120, alturaParedes, 3)
     paredTrasera.Position = posBase + Vector3.new(0, alturaParedes/2, 50)
     paredTrasera.Anchored = true
-    paredTrasera.Color = Color3.fromRGB(25, 25, 30)
+    paredTrasera.Color = Color3.fromRGB(45, 40, 35)
     paredTrasera.Material = Enum.Material.SmoothPlastic
     paredTrasera.Parent = SalonFolder
     
-    -- Pared izquierda - 100 studs largo x 30 studs alto
+    -- Mural de la bandera cubana
+    local mural = Instance.new("Part")
+    mural.Size = Vector3.new(40, 15, 0.2)
+    mural.Position = posBase + Vector3.new(0, 20, 48.9)
+    mural.Anchored = true
+    mural.Color = COLORES_CUBANOS.Blanco
+    mural.Material = Enum.Material.SmoothPlastic
+    mural.Parent = SalonFolder
+    
+    -- Franjas de la bandera
+    for i = 1, 5 do
+        local franja = Instance.new("Part")
+        franja.Size = Vector3.new(40, 3, 0.1)
+        franja.Position = mural.Position + Vector3.new(0, 6 - (i * 3), -0.1)
+        franja.Anchored = true
+        franja.Color = (i % 2 == 1) and COLORES_CUBANOS.Azul or COLORES_CUBANOS.Blanco
+        franja.Material = Enum.Material.SmoothPlastic
+        franja.Parent = SalonFolder
+    end
+    
+    -- Triángulo rojo de la bandera
+    local triangulo = Instance.new("Part")
+    triangulo.Size = Vector3.new(15, 15, 0.1)
+    triangulo.Position = mural.Position + Vector3.new(-12.5, 0, -0.15)
+    triangulo.Anchored = true
+    triangulo.Color = COLORES_CUBANOS.Rojo
+    triangulo.Material = Enum.Material.SmoothPlastic
+    triangulo.Parent = SalonFolder
+    
+    -- Estrella (simplificada)
+    local estrella = Instance.new("Part")
+    estrella.Size = Vector3.new(3, 3, 0.1)
+    estrella.Position = triangulo.Position + Vector3.new(0, 0, -0.05)
+    estrella.Anchored = true
+    estrella.Color = COLORES_CUBANOS.Blanco
+    estrella.Material = Enum.Material.Neon
+    estrella.Parent = SalonFolder
+    
+    local estrellaMesh = Instance.new("SpecialMesh")
+    estrellaMesh.MeshType = Enum.MeshType.Sphere
+    estrellaMesh.Parent = estrella
+    
+    -- Pared izquierda con ventanas coloniales
     local paredIzq = Instance.new("Part")
     paredIzq.Name = "ParedIzquierda"
-    paredIzq.Size = Vector3.new(2, alturaParedes, 100)
+    paredIzq.Size = Vector3.new(3, alturaParedes, 100)
     paredIzq.Position = posBase + Vector3.new(-60, alturaParedes/2, 0)
     paredIzq.Anchored = true
-    paredIzq.Color = Color3.fromRGB(35, 35, 40)
+    paredIzq.Color = Color3.fromRGB(55, 50, 45)
     paredIzq.Material = Enum.Material.SmoothPlastic
     paredIzq.Parent = SalonFolder
     
-    -- Pared derecha - 100 studs largo x 30 studs alto
+    -- Ventanas coloniales en pared izquierda
+    for i = 1, 4 do
+        local ventana = Instance.new("Part")
+        ventana.Size = Vector3.new(0.3, 8, 6)
+        ventana.Position = posBase + Vector3.new(-61.5, 15, -30 + (i * 20))
+        ventana.Anchored = true
+        ventana.Color = Color3.fromRGB(100, 150, 200)
+        ventana.Material = Enum.Material.SmoothPlastic
+        ventana.Transparency = 0.4
+        ventana.Parent = SalonFolder
+        
+        -- Marco de ventana
+        local marco = Instance.new("Part")
+        marco.Size = Vector3.new(0.4, 9, 7)
+        marco.Position = ventana.Position
+        marco.Anchored = true
+        marco.Color = COLORES_CUBANOS.Blanco
+        marco.Material = Enum.Material.SmoothPlastic
+        marco.Parent = SalonFolder
+    end
+    
+    -- Pared derecha con decoración tropical
     local paredDer = Instance.new("Part")
     paredDer.Name = "ParedDerecha"
-    paredDer.Size = Vector3.new(2, alturaParedes, 100)
+    paredDer.Size = Vector3.new(3, alturaParedes, 100)
     paredDer.Position = posBase + Vector3.new(60, alturaParedes/2, 0)
     paredDer.Anchored = true
-    paredDer.Color = Color3.fromRGB(35, 35, 40)
+    paredDer.Color = Color3.fromRGB(55, 50, 45)
     paredDer.Material = Enum.Material.SmoothPlastic
     paredDer.Parent = SalonFolder
     
-    -- TECHO - 120 studs x 100 studs
+    -- Decoraciones tropicales en pared derecha
+    for i = 1, 6 do
+        local decoracion = Instance.new("Part")
+        decoracion.Size = Vector3.new(0.2, 4, 4)
+        decoracion.Position = posBase + Vector3.new(61.4, 10 + math.random(-5, 5), -40 + (i * 15))
+        decoracion.Anchored = true
+        decoracion.Color = COLORES_CUBANOS.Verde
+        decoracion.Material = Enum.Material.Neon
+        decoracion.Transparency = 0.3
+        decoracion.Parent = SalonFolder
+        
+        local decorMesh = Instance.new("SpecialMesh")
+        decorMesh.MeshType = Enum.MeshType.Sphere
+        decorMesh.Parent = decoracion
+    end
+    
+    -- TECHO CON VIGAS COLONIALES
     local techo = Instance.new("Part")
     techo.Name = "Techo"
     techo.Size = Vector3.new(120, 1, 100)
     techo.Position = posBase + Vector3.new(0, alturaParedes, 0)
     techo.Anchored = true
-    techo.Color = Color3.fromRGB(20, 20, 25)
+    techo.Color = Color3.fromRGB(30, 25, 20)
     techo.Material = Enum.Material.SmoothPlastic
     techo.Parent = SalonFolder
     
-    -- Vigas decorativas - 4 studs ancho cada una
-    for i = -40, 40, 20 do
+    -- Vigas coloniales decorativas
+    for i = -50, 50, 25 do
         local viga = Instance.new("Part")
-        viga.Name = "Viga"
-        viga.Size = Vector3.new(4, 2, 100)
-        viga.Position = posBase + Vector3.new(i, alturaParedes - 1, 0)
+        viga.Name = "VigaColonial"
+        viga.Size = Vector3.new(6, 3, 100)
+        viga.Position = posBase + Vector3.new(i, alturaParedes - 1.5, 0)
         viga.Anchored = true
-        viga.Color = Color3.fromRGB(60, 60, 70)
+        viga.Color = Color3.fromRGB(80, 60, 40)
         viga.Material = Enum.Material.SmoothPlastic
         viga.Parent = SalonFolder
     end
     
-    -- ENTRADA ABIERTA - Solo decoración lateral
-    -- Columnas laterales de entrada - 3 studs ancho x 20 studs alto
-    for lado = -1, 1, 2 do
-        local columna = Instance.new("Part")
-        columna.Name = "ColumnaEntrada"
-        columna.Size = Vector3.new(3, 20, 3)
-        columna.Position = posBase + Vector3.new(lado * 58, 10, -50)
-        columna.Anchored = true
-        columna.Color = Color3.fromRGB(60, 60, 70)
-        columna.Material = Enum.Material.SmoothPlastic
-        columna.Parent = SalonFolder
+    -- Lámparas coloniales colgantes
+    for i = -40, 40, 40 do
+        for j = -30, 30, 30 do
+            local lampara = Instance.new("Part")
+            lampara.Size = Vector3.new(3, 4, 3)
+            lampara.Position = posBase + Vector3.new(i, alturaParedes - 3, j)
+            lampara.Anchored = true
+            lampara.Color = COLORES_CUBANOS.Amarillo
+            lampara.Material = Enum.Material.Neon
+            lampara.Transparency = 0.2
+            lampara.Parent = SalonFolder
+            
+            local lamparaMesh = Instance.new("SpecialMesh")
+            lamparaMesh.MeshType = Enum.MeshType.Sphere
+            lamparaMesh.Parent = lampara
+            
+            local luzLampara = Instance.new("PointLight")
+            luzLampara.Brightness = 3
+            luzLampara.Color = COLORES_CUBANOS.Amarillo
+            luzLampara.Range = 25
+            luzLampara.Parent = lampara
+            
+            -- Cadena de la lámpara
+            local cadena = Instance.new("Part")
+            cadena.Size = Vector3.new(0.2, 2, 0.2)
+            cadena.Position = lampara.Position + Vector3.new(0, 3, 0)
+            cadena.Anchored = true
+            cadena.Color = Color3.fromRGB(60, 60, 70)
+            cadena.Material = Enum.Material.SmoothPlastic
+            cadena.Parent = SalonFolder
+        end
     end
     
-    -- LETRERO LUMINOSO - 50 studs ancho x 8 studs alto
+    -- ENTRADA ABIERTA con arco colonial
+    -- Columnas ornamentales de entrada
+    for lado = -1, 1, 2 do
+        local columna = Instance.new("Part")
+        columna.Name = "ColumnaColonial"
+        columna.Size = Vector3.new(4, 25, 4)
+        columna.Position = posBase + Vector3.new(lado * 58, 12.5, -50)
+        columna.Anchored = true
+        columna.Color = Color3.fromRGB(80, 75, 70)
+        columna.Material = Enum.Material.SmoothPlastic
+        columna.Parent = SalonFolder
+        
+        -- Capitel de la columna
+        local capitel = Instance.new("Part")
+        capitel.Size = Vector3.new(5, 2, 5)
+        capitel.Position = columna.Position + Vector3.new(0, 13.5, 0)
+        capitel.Anchored = true
+        capitel.Color = Color3.fromRGB(100, 95, 90)
+        capitel.Material = Enum.Material.SmoothPlastic
+        capitel.Parent = SalonFolder
+        
+        -- Base de la columna
+        local base = Instance.new("Part")
+        base.Size = Vector3.new(5, 2, 5)
+        base.Position = columna.Position + Vector3.new(0, -13.5, 0)
+        base.Anchored = true
+        base.Color = Color3.fromRGB(100, 95, 90)
+        base.Material = Enum.Material.SmoothPlastic
+        base.Parent = SalonFolder
+    end
+    
+    -- Arco de entrada
+    local arco = Instance.new("Part")
+    arco.Name = "ArcoEntrada"
+    arco.Size = Vector3.new(120, 8, 4)
+    arco.Position = posBase + Vector3.new(0, 22, -50)
+    arco.Anchored = true
+    arco.Color = Color3.fromRGB(80, 75, 70)
+    arco.Material = Enum.Material.SmoothPlastic
+    arco.Parent = SalonFolder
+    
+    -- LETRERO LUMINOSO CUBANO
     local letrero = Instance.new("Part")
     letrero.Name = "LetreroEntrada"
-    letrero.Size = Vector3.new(50, 8, 1)
-    letrero.Position = posBase + Vector3.new(0, 25, -51)
+    letrero.Size = Vector3.new(60, 10, 1)
+    letrero.Position = posBase + Vector3.new(0, 28, -52)
     letrero.Anchored = true
     letrero.Color = COLORES_CUBANOS.Rosa
     letrero.Material = Enum.Material.Neon
     letrero.Parent = SalonFolder
     
     local luzLetrero = Instance.new("PointLight")
-    luzLetrero.Brightness = 5
+    luzLetrero.Brightness = 6
     luzLetrero.Color = COLORES_CUBANOS.Rosa
-    luzLetrero.Range = 60
+    luzLetrero.Range = 80
     luzLetrero.Parent = letrero
     
     local textGui = Instance.new("SurfaceGui")
@@ -450,13 +856,13 @@ local function CrearSalon()
     local texto = Instance.new("TextLabel")
     texto.Size = UDim2.new(1, 0, 1, 0)
     texto.BackgroundTransparency = 1
-    texto.Text = "🇨🇺 FIESTA NOCTURNA 🇨🇺"
+    texto.Text = "🇨🇺 FIESTA NOCTURNA CUBANA 🇨🇺"
     texto.TextColor3 = COLORES_CUBANOS.Blanco
     texto.TextScaled = true
     texto.Font = Enum.Font.GothamBold
     texto.Parent = textGui
     
-    print("✅ Salon con ENTRADA ABIERTA OK")
+    print("✅ Salón cubano con ENTRADA ABIERTA completado")
 end
 
 -- ============================================
