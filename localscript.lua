@@ -278,14 +278,14 @@ local function createHawkinsSchool()
     backWall.Parent = schoolFolder
     applyStudsToAllFaces(backWall, Color3.fromRGB(190, 170, 150))
     
-    local frontWallTop = Instance.new("Part")
-    frontWallTop.Size = Vector3.new(30, 6, 1)
-    frontWallTop.Position = Vector3.new(0, 13, 75)
-    frontWallTop.Anchored = true
-    frontWallTop.Material = Enum.Material.Plastic
-    frontWallTop.Color = Color3.fromRGB(200, 180, 160)
-    frontWallTop.Parent = schoolFolder
-    applyStudsToAllFaces(frontWallTop, Color3.fromRGB(200, 180, 160))
+    local frontWall = Instance.new("Part")
+    frontWall.Size = Vector3.new(30, 16, 1)
+    frontWall.Position = Vector3.new(0, 8, 75)
+    frontWall.Anchored = true
+    frontWall.Material = Enum.Material.Plastic
+    frontWall.Color = Color3.fromRGB(190, 170, 150)
+    frontWall.Parent = schoolFolder
+    applyStudsToAllFaces(frontWall, Color3.fromRGB(190, 170, 150))
     
     local frontOrangeStripe = Instance.new("Part")
     frontOrangeStripe.Size = Vector3.new(30, 2.2, 1)
@@ -295,15 +295,6 @@ local function createHawkinsSchool()
     frontOrangeStripe.Color = Color3.fromRGB(220, 130, 60)
     frontOrangeStripe.Parent = schoolFolder
     applyStudsToAllFaces(frontOrangeStripe, Color3.fromRGB(220, 130, 60))
-    
-    local frontWallBeige = Instance.new("Part")
-    frontWallBeige.Size = Vector3.new(30, 18, 1)
-    frontWallBeige.Position = Vector3.new(0, 0, 75)
-    frontWallBeige.Anchored = true
-    frontWallBeige.Material = Enum.Material.Plastic
-    frontWallBeige.Color = Color3.fromRGB(190, 170, 150)
-    frontWallBeige.Parent = schoolFolder
-    applyStudsToAllFaces(frontWallBeige, Color3.fromRGB(190, 170, 150))
     
     local ceiling = Instance.new("Part")
     ceiling.Size = Vector3.new(30, 0.8, 150)
@@ -386,8 +377,8 @@ local function createVecnaGrandfatherClock(position)
     applyStudsToAllFaces(base, Color3.fromRGB(18, 18, 20))
     
     local body = Instance.new("Part")
-    body.Size = Vector3.new(2.8, 10, 2.5)
-    body.Position = position + Vector3.new(0, 7.25, 0)
+    body.Size = Vector3.new(2.8, 8, 2.5)  -- Reducido de 10 a 8
+    body.Position = position + Vector3.new(0, 6.25, 0)  -- Ajustado
     body.Anchored = true
     body.Material = Enum.Material.Plastic
     body.Color = Color3.fromRGB(22, 22, 25)
@@ -525,8 +516,8 @@ local function createVecnaGrandfatherClock(position)
     handCenter.Parent = clockFace
     
     local top = Instance.new("Part")
-    top.Size = Vector3.new(3.5, 3, 3)
-    top.Position = body.Position + Vector3.new(0, 8, 0)
+    top.Size = Vector3.new(3.5, 2.5, 3)  -- Reducido de 3 a 2.5
+    top.Position = body.Position + Vector3.new(0, 6.5, 0)  -- Ajustado
     top.Anchored = true
     top.Material = Enum.Material.Plastic
     top.Color = Color3.fromRGB(18, 18, 20)
@@ -534,8 +525,8 @@ local function createVecnaGrandfatherClock(position)
     applyStudsToAllFaces(top, Color3.fromRGB(18, 18, 20))
     
     local topArch = Instance.new("Part")
-    topArch.Size = Vector3.new(3.5, 1.8, 3)
-    topArch.Position = top.Position + Vector3.new(0, 1.8, 0)
+    topArch.Size = Vector3.new(3.5, 1.5, 3)  -- Reducido de 1.8 a 1.5
+    topArch.Position = top.Position + Vector3.new(0, 1.5, 0)  -- Ajustado
     topArch.Anchored = true
     topArch.Material = Enum.Material.Plastic
     topArch.Color = Color3.fromRGB(18, 18, 20)
@@ -543,16 +534,16 @@ local function createVecnaGrandfatherClock(position)
     
     local function createSpike(xOffset)
         local spikeBase = Instance.new("Part")
-        spikeBase.Size = Vector3.new(0.6, 2, 0.6)
-        spikeBase.Position = topArch.Position + Vector3.new(xOffset, 1.8, 0)
+        spikeBase.Size = Vector3.new(0.6, 1.5, 0.6)  -- Reducido de 2 a 1.5
+        spikeBase.Position = topArch.Position + Vector3.new(xOffset, 1.3, 0)  -- Ajustado
         spikeBase.Anchored = true
         spikeBase.Material = Enum.Material.Metal
         spikeBase.Color = Color3.fromRGB(15, 15, 17)
         spikeBase.Parent = topArch
         
         local spikeTop = Instance.new("Part")
-        spikeTop.Size = Vector3.new(0.35, 0.9, 0.35)
-        spikeTop.Position = spikeBase.Position + Vector3.new(0, 1.4, 0)
+        spikeTop.Size = Vector3.new(0.35, 0.7, 0.35)  -- Reducido de 0.9 a 0.7
+        spikeTop.Position = spikeBase.Position + Vector3.new(0, 1.1, 0)  -- Ajustado
         spikeTop.Anchored = true
         spikeTop.Shape = Enum.PartType.Ball
         spikeTop.Material = Enum.Material.Metal
@@ -560,8 +551,8 @@ local function createVecnaGrandfatherClock(position)
         spikeTop.Parent = spikeBase
         
         local ball = Instance.new("Part")
-        ball.Size = Vector3.new(0.7, 0.7, 0.7)
-        ball.Position = spikeTop.Position + Vector3.new(0, 0.7, 0)
+        ball.Size = Vector3.new(0.5, 0.5, 0.5)  -- Reducido de 0.7 a 0.5
+        ball.Position = spikeTop.Position + Vector3.new(0, 0.5, 0)  -- Ajustado
         ball.Anchored = true
         ball.Shape = Enum.PartType.Ball
         ball.Material = Enum.Material.Metal
@@ -813,6 +804,10 @@ local function startVecnaClockScene()
             for _, lightData in ipairs(lights) do
                 lightData.light.Enabled = not lightData.light.Enabled
                 lightData.fixture.Transparency = lightData.light.Enabled and 0.15 or 0.98
+                -- Sonido por cada luz que parpadea
+                if lightData.light.Enabled then
+                    playAudio("LightFlicker"..flicker.."_".._, soundIds.lightFlicker, 0.3, false, lightData.fixture)
+                end
             end
             task.wait(0.07)
         end
@@ -828,6 +823,8 @@ local function startVecnaClockScene()
             for _, lightData in ipairs(lights) do
                 lightData.light.Enabled = true
                 lightData.fixture.Transparency = 0.15
+                -- Sonido por cada luz que se enciende
+                playAudio("LightOn"..flicker.."_".._, soundIds.lightFlicker, 0.2, false, lightData.fixture)
             end
             task.wait(0.2)
         end
@@ -842,6 +839,8 @@ local function startVecnaClockScene()
                 task.wait(0.03)
                 lightData.light.Enabled = true
                 lightData.fixture.Transparency = 0.15
+                -- Sonido por cada parpadeo individual
+                playAudio("LightMini"..i.."_"..mini, soundIds.lightFlicker, 0.15, false, lightData.fixture)
                 task.wait(0.03)
             end
             lightData.light.Enabled = false
