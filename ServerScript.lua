@@ -290,6 +290,7 @@ local function createFloorCircles()
         waitingPad.Size = Vector3.new(8, 0.5, 8)  -- GRANDE
         waitingPad.Position = pos
         waitingPad.Anchored = true
+        waitingPad.CanCollide = true  -- COLISIÓN ACTIVADA
         waitingPad.Material = Enum.Material.SmoothPlastic
         waitingPad.Color = Color3.fromRGB(40, 40, 45)
         waitingPad.Parent = lobbyFolder
@@ -367,7 +368,7 @@ local function createFloorCircles()
         particles.Transparency = NumberSequence.new(0, 1)
         particles.Color = ColorSequence.new(Color3.fromRGB(50, 255, 150))
         particles.LightEmission = 1
-        particles.EmissionDirection = Enum.NormalDirection.Top
+        -- Sin EmissionDirection para evitar error
         particles.Parent = particleAttachment
         
         -- Luz del cuadro
