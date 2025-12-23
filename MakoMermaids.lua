@@ -168,28 +168,60 @@ local islandDecor = Instance.new("Folder")
 islandDecor.Name = "IslandDecoration"
 islandDecor.Parent = workspace
 
--- Selva tropical (200 palmeras)
-for i = 1, 200 do
+-- PALMERAS TROPICALES REALISTAS (150 palmeras)
+for i = 1, 150 do
     local x = math.random(-150, 150)
     local z = math.random(-150, 150)
     if math.sqrt(x*x + z*z) < 140 then
-        local trunk = Instance.new("Part")
-        trunk.Size = Vector3.new(3, math.random(20, 35), 3)
-        trunk.Position = Vector3.new(x, 155, z)
-        trunk.Anchored = true
-        trunk.Material = Enum.Material.Wood
-        trunk.Color = Color3.fromRGB(100, 70, 40)
-        trunk.Parent = islandDecor
+        local treeModel = Instance.new("Model")
+        treeModel.Name = "PalmTree"
+        treeModel.Parent = islandDecor
         
-        for j = 1, 5 do
-            local leaf = Instance.new("Part")
-            leaf.Size = Vector3.new(15, 2, 15)
-            leaf.Position = trunk.Position + Vector3.new(math.random(-5,5), trunk.Size.Y/2+j*2, math.random(-5,5))
-            leaf.Anchored = true
-            leaf.Material = Enum.Material.Grass
-            leaf.Color = Color3.fromRGB(30, math.random(100,150), 30)
-            leaf.Shape = Enum.PartType.Ball
-            leaf.Parent = trunk
+        -- Tronco con segmentos curvos
+        for seg = 0, 6 do
+            local segment = Instance.new("Part")
+            segment.Size = Vector3.new(2.5, 5, 2.5)
+            segment.Position = Vector3.new(x + math.sin(seg*0.3)*2, 155 + seg*4.5, z + math.cos(seg*0.3)*2)
+            segment.Anchored = true
+            segment.Material = Enum.Material.Wood
+            segment.Color = Color3.fromRGB(120, 85, 60)
+            segment.Shape = Enum.PartType.Cylinder
+            segment.Orientation = Vector3.new(0, 0, 90 + seg*3)
+            segment.Parent = treeModel
+            
+            -- Textura del tronco
+            local mesh = Instance.new("CylinderMesh")
+            mesh.Scale = Vector3.new(1, 1, 1)
+            mesh.Parent = segment
+        end
+        
+        -- Hojas de palma (8 hojas)
+        for leafNum = 1, 8 do
+            local angle = math.rad(leafNum * 45)
+            local leafBase = Instance.new("Part")
+            leafBase.Size = Vector3.new(1, 1, 12)
+            leafBase.Position = Vector3.new(x, 185, z) + Vector3.new(math.cos(angle)*6, -2, math.sin(angle)*6)
+            leafBase.Anchored = true
+            leafBase.Material = Enum.Material.Grass
+            leafBase.Color = Color3.fromRGB(40, 140, 40)
+            leafBase.Transparency = 0.1
+            leafBase.Orientation = Vector3.new(math.random(-20, -10), math.deg(angle), 0)
+            leafBase.Parent = treeModel
+            
+            -- Hojas secundarias
+            for side = -1, 1, 2 do
+                for j = 1, 5 do
+                    local subLeaf = Instance.new("Part")
+                    subLeaf.Size = Vector3.new(0.3, 0.3, 3)
+                    subLeaf.Position = leafBase.Position + leafBase.CFrame.LookVector * (j*2) + leafBase.CFrame.RightVector * (side*1.5)
+                    subLeaf.Anchored = true
+                    subLeaf.Material = Enum.Material.Grass
+                    subLeaf.Color = Color3.fromRGB(30, math.random(120, 160), 30)
+                    subLeaf.Transparency = 0.2
+                    subLeaf.Orientation = leafBase.Orientation + Vector3.new(side*20, 0, side*30)
+                    subLeaf.Parent = treeModel
+                end
+            end
         end
     end
 end
@@ -217,37 +249,110 @@ local oceanFloor = Instance.new("Folder")
 oceanFloor.Name = "OceanFloor"
 oceanFloor.Parent = workspace
 
--- CONCHAS MARINAS (500 conchas)
+-- CONCHAS MARINAS REALISTAS EN ESPIRAL (500 conchas)
 for i = 1, 500 do
-    local shell = Instance.new("Part")
-    shell.Name = "Shell"
-    shell.Size = Vector3.new(math.random(2, 5), math.random(1, 3), math.random(2, 5))
-    shell.Position = Vector3.new(math.random(-1400, 1400), -2, math.random(-1400, 1400))
-    shell.Anchored = true
-    shell.Material = Enum.Material.SmoothPlastic
-    local colors = {
+    local shellModel = Instance.new("Model")
+    shellModel.Name = "SeaShell"
+    shellModel.Parent = oceanFloor
+    
+    local x = math.random(-1400, 1400)
+    local z = math.random(-1400, 1400)
+    local shellColors = {
         Color3.fromRGB(255, 200, 180),
         Color3.fromRGB(255, 150, 200),
         Color3.fromRGB(200, 150, 255),
-        Color3.fromRGB(255, 220, 150)
+        Color3.fromRGB(255, 220, 150),
+        Color3.fromRGB(255, 180, 200)
     }
-    shell.Color = colors[math.random(1, #colors)]
-    shell.Shape = Enum.PartType.Ball
-    shell.Orientation = Vector3.new(math.random(-45, 45), math.random(0, 360), math.random(-45, 45))
-    shell.Parent = oceanFloor
+    local shellColor = shellColors[math.random(1, #shellColors)]
+    
+    -- Crear espiral de concha (8 segmentos)
+    for spiral = 1, 8 do
+        local angle = math.rad(spiral * 45)
+        local radius = spiral * 0.4
+        local segment = Instance.new("Part")
+        segment.Size = Vector3.new(1 + spiral*0.3, 1 + spiral*0.3, 1.5 + spiral*0.2)
+        segment.Position = Vector3.new(
+            x + math.cos(angle) * radius,
+            -2 + spiral * 0.3,
+            z + math.sin(angle) * radius
+        )
+        segment.Anchored = true
+        segment.Material = Enum.Material.Marble
+        segment.Color = shellColor
+        segment.Shape = Enum.PartType.Ball
+        segment.Orientation = Vector3.new(math.random(-30, 30), math.deg(angle), math.random(-30, 30))
+        segment.Parent = shellModel
+        
+        -- Brillo perlado
+        local mesh = Instance.new("SpecialMesh")
+        mesh.MeshType = Enum.MeshType.Sphere
+        mesh.Scale = Vector3.new(1, 0.8, 1.2)
+        mesh.Parent = segment
+    end
 end
 
--- ALGAS MARINAS (400 algas)
+-- ALGAS MARINAS ANIMADAS (400 algas)
 for i = 1, 400 do
-    local seaweed = Instance.new("Part")
-    seaweed.Name = "Seaweed"
-    seaweed.Size = Vector3.new(2, math.random(15, 40), 2)
-    seaweed.Position = Vector3.new(math.random(-1400, 1400), 10, math.random(-1400, 1400))
-    seaweed.Anchored = true
-    seaweed.Material = Enum.Material.Grass
-    seaweed.Color = Color3.fromRGB(math.random(20, 50), math.random(100, 150), math.random(20, 50))
-    seaweed.Transparency = 0.2
-    seaweed.Parent = oceanFloor
+    local seaweedModel = Instance.new("Model")
+    seaweedModel.Name = "Seaweed"
+    seaweedModel.Parent = oceanFloor
+    
+    local x = math.random(-1400, 1400)
+    local z = math.random(-1400, 1400)
+    local height = math.random(15, 40)
+    local segments = math.floor(height / 4)
+    local baseColor = Color3.fromRGB(math.random(20, 50), math.random(100, 150), math.random(20, 50))
+    
+    -- Crear alga con segmentos ondulantes
+    for seg = 1, segments do
+        local segment = Instance.new("Part")
+        segment.Size = Vector3.new(1.5, 4, 0.5)
+        segment.Position = Vector3.new(
+            x + math.sin(seg * 0.5) * (seg * 0.3),
+            seg * 4,
+            z + math.cos(seg * 0.5) * (seg * 0.3)
+        )
+        segment.Anchored = false
+        segment.CanCollide = false
+        segment.Material = Enum.Material.Neon
+        segment.Color = baseColor
+        segment.Transparency = 0.3
+        segment.Parent = seaweedModel
+        
+        -- Mesh para forma de hoja
+        local mesh = Instance.new("SpecialMesh")
+        mesh.MeshType = Enum.MeshType.FileMesh
+        mesh.MeshId = "rbxassetid://1290033"  -- Mesh de hoja
+        mesh.Scale = Vector3.new(2, 4, 1)
+        mesh.Parent = segment
+        
+        -- Animación ondulante
+        local bodyPos = Instance.new("BodyPosition")
+        bodyPos.MaxForce = Vector3.new(4000, 4000, 4000)
+        bodyPos.Position = segment.Position
+        bodyPos.Parent = segment
+        
+        local bodyGyro = Instance.new("BodyGyro")
+        bodyGyro.MaxTorque = Vector3.new(400, 400, 400)
+        bodyGyro.Parent = segment
+        
+        -- Script de animación
+        task.spawn(function()
+            local time = 0
+            while segment.Parent do
+                time = time + 0.05
+                local offset = math.sin(time + seg * 0.5) * 2
+                bodyPos.Position = Vector3.new(
+                    x + math.sin(seg * 0.5) * (seg * 0.3) + offset,
+                    seg * 4,
+                    z + math.cos(seg * 0.5) * (seg * 0.3) + math.cos(time) * 1
+                )
+                bodyGyro.CFrame = CFrame.Angles(math.sin(time) * 0.3, 0, math.cos(time) * 0.3)
+                task.wait(0.05)
+            end
+        end)
+    end
 end
 
 -- CORALES (300 corales)
