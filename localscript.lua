@@ -382,107 +382,138 @@ local function createHawkinsSchool()
 end
 
 local function createVecnaGrandfatherClock(position)
-    print("🕰️ CREANDO RELOJ DE VECNA")
+    print("🕰️ CREANDO RELOJ DE VECNA REALISTA")
     
     local clockModel = Instance.new("Model")
     clockModel.Name = "VecnaGrandfatherClock"
     clockModel.Parent = workspace
     registerEffect(clockModel)
     
+    -- Base pegada al suelo
     local base = Instance.new("Part")
-    base.Size = Vector3.new(4, 2.5, 3.5)
-    base.Position = position + Vector3.new(0, 1.25, 0)
+    base.Size = Vector3.new(4.5, 1.8, 3.8)
+    base.Position = position + Vector3.new(0, 0.9, 0)
     base.Anchored = true
-    base.Material = Enum.Material.Plastic
-    base.Color = Color3.fromRGB(18, 18, 20)
+    base.Material = Enum.Material.Wood
+    base.Color = Color3.fromRGB(25, 20, 18)
     base.Parent = clockModel
-    applyStudsToAllFaces(base, Color3.fromRGB(18, 18, 20))
     
-    local body = Instance.new("Part")
-    body.Size = Vector3.new(2.8, 10, 2.5)
-    body.Position = position + Vector3.new(0, 6.25, 0)
-    body.Anchored = true
-    body.Material = Enum.Material.Plastic
-    body.Color = Color3.fromRGB(22, 22, 25)
-    body.Parent = clockModel
-    applyStudsToAllFaces(body, Color3.fromRGB(22, 22, 25))
-    
-    local bodyGlass = Instance.new("Part")
-    bodyGlass.Size = Vector3.new(2.6, 9.5, 0.3)
-    bodyGlass.Position = body.Position + Vector3.new(0, 0, -1.4)
-    bodyGlass.Anchored = true
-    bodyGlass.Material = Enum.Material.Plastic
-    bodyGlass.Color = Color3.fromRGB(80, 70, 50)
-    bodyGlass.Transparency = 0.65
-    bodyGlass.Parent = body
-    applyStudsToAllFaces(bodyGlass, Color3.fromRGB(80, 70, 50))
-    
-    local function createPendulum(xOffset, length, weightSize)
-        local pendulum = Instance.new("Part")
-        pendulum.Size = Vector3.new(0.28, length, 0.28)
-        pendulum.Position = body.Position + Vector3.new(xOffset, -2.5, -0.7)
-        pendulum.Anchored = true
-        pendulum.Material = Enum.Material.Plastic
-        pendulum.Color = Color3.fromRGB(170, 150, 110)
-        pendulum.Parent = body
-        applyStudsToAllFaces(pendulum, Color3.fromRGB(170, 150, 110))
-        
-        local weight = Instance.new("Part")
-        weight.Size = Vector3.new(weightSize, weightSize * 1.6, weightSize)
-        weight.Position = pendulum.Position + Vector3.new(0, -(length/2 + weightSize), 0)
-        weight.Anchored = true
-        weight.Shape = Enum.PartType.Cylinder
-        weight.Material = Enum.Material.Plastic
-        weight.Color = Color3.fromRGB(170, 150, 110)
-        weight.Orientation = Vector3.new(0, 0, 90)
-        weight.Parent = pendulum
-        applyStudsToAllFaces(weight, Color3.fromRGB(170, 150, 110))
+    -- Detalles tallados en la base
+    for i = -1, 1 do
+        local carving = Instance.new("Part")
+        carving.Size = Vector3.new(0.3, 1.5, 0.2)
+        carving.Position = base.Position + Vector3.new(i * 1.5, 0, -1.8)
+        carving.Anchored = true
+        carving.Material = Enum.Material.Wood
+        carving.Color = Color3.fromRGB(20, 16, 14)
+        carving.Parent = base
     end
     
-    createPendulum(-0.8, 6.5, 0.75)
-    createPendulum(0, 7.5, 0.95)
-    createPendulum(0.8, 6.5, 0.75)
+    -- Cuerpo principal más alto y realista
+    local body = Instance.new("Part")
+    body.Size = Vector3.new(3.2, 11, 2.8)
+    body.Position = position + Vector3.new(0, 7.4, 0)
+    body.Anchored = true
+    body.Material = Enum.Material.Wood
+    body.Color = Color3.fromRGB(28, 24, 22)
+    body.Parent = clockModel
     
+    -- Marcos decorativos del cuerpo
+    local frameLeft = Instance.new("Part")
+    frameLeft.Size = Vector3.new(0.25, 11, 0.3)
+    frameLeft.Position = body.Position + Vector3.new(-1.5, 0, -1.3)
+    frameLeft.Anchored = true
+    frameLeft.Material = Enum.Material.Wood
+    frameLeft.Color = Color3.fromRGB(18, 15, 13)
+    frameLeft.Parent = body
+    
+    local frameRight = Instance.new("Part")
+    frameRight.Size = Vector3.new(0.25, 11, 0.3)
+    frameRight.Position = body.Position + Vector3.new(1.5, 0, -1.3)
+    frameRight.Anchored = true
+    frameRight.Material = Enum.Material.Wood
+    frameRight.Color = Color3.fromRGB(18, 15, 13)
+    frameRight.Parent = body
+    
+    -- Vidrio realista con reflejos
+    local bodyGlass = Instance.new("Part")
+    bodyGlass.Size = Vector3.new(2.8, 10, 0.2)
+    bodyGlass.Position = body.Position + Vector3.new(0, 0, -1.5)
+    bodyGlass.Anchored = true
+    bodyGlass.Material = Enum.Material.Glass
+    bodyGlass.Color = Color3.fromRGB(60, 50, 40)
+    bodyGlass.Transparency = 0.7
+    bodyGlass.Reflectance = 0.3
+    bodyGlass.Parent = body
+    
+    -- Péndulo realista con cadena
+    local pendulumChain = Instance.new("Part")
+    pendulumChain.Size = Vector3.new(0.15, 7, 0.15)
+    pendulumChain.Position = body.Position + Vector3.new(0, -1.5, -0.8)
+    pendulumChain.Anchored = true
+    pendulumChain.Material = Enum.Material.Metal
+    pendulumChain.Color = Color3.fromRGB(180, 160, 120)
+    pendulumChain.Parent = body
+    
+    local pendulumWeight = Instance.new("Part")
+    pendulumWeight.Size = Vector3.new(1.2, 1.8, 0.8)
+    pendulumWeight.Position = pendulumChain.Position + Vector3.new(0, -4.5, 0)
+    pendulumWeight.Anchored = true
+    pendulumWeight.Material = Enum.Material.Metal
+    pendulumWeight.Color = Color3.fromRGB(200, 180, 130)
+    pendulumWeight.Parent = pendulumChain
+    
+    -- Disco del péndulo
+    local pendulumDisc = Instance.new("Part")
+    pendulumDisc.Size = Vector3.new(0.3, 2, 2)
+    pendulumDisc.Position = pendulumWeight.Position + Vector3.new(0, -1.2, 0)
+    pendulumDisc.Anchored = true
+    pendulumDisc.Shape = Enum.PartType.Cylinder
+    pendulumDisc.Material = Enum.Material.Metal
+    pendulumDisc.Color = Color3.fromRGB(220, 200, 140)
+    pendulumDisc.Orientation = Vector3.new(0, 0, 90)
+    pendulumDisc.Parent = pendulumWeight
+    
+    -- Base del reloj más elaborada
     local clockFaceBase = Instance.new("Part")
-    clockFaceBase.Size = Vector3.new(0.6, 4.5, 4.5)
-    clockFaceBase.Position = body.Position + Vector3.new(0, 5.5, -1.6)
+    clockFaceBase.Size = Vector3.new(0.8, 5, 5)
+    clockFaceBase.Position = body.Position + Vector3.new(0, 6.2, -1.7)
     clockFaceBase.Anchored = true
-    clockFaceBase.Material = Enum.Material.Plastic
-    clockFaceBase.Color = Color3.fromRGB(20, 20, 22)
+    clockFaceBase.Material = Enum.Material.Wood
+    clockFaceBase.Color = Color3.fromRGB(22, 18, 16)
     clockFaceBase.Parent = clockModel
-    applyStudsToAllFaces(clockFaceBase, Color3.fromRGB(20, 20, 22))
     
-    local goldBackground = Instance.new("Part")
-    goldBackground.Size = Vector3.new(0.4, 3.6, 3.6)
-    goldBackground.Position = clockFaceBase.Position + Vector3.new(0, 0, -0.35)
-    goldBackground.Anchored = true
-    goldBackground.Shape = Enum.PartType.Cylinder
-    goldBackground.Material = Enum.Material.Plastic
-    goldBackground.Color = Color3.fromRGB(140, 120, 60)
-    goldBackground.Orientation = Vector3.new(0, 0, 90)
-    goldBackground.Parent = clockFaceBase
-    applyStudsToAllFaces(goldBackground, Color3.fromRGB(140, 120, 60))
+    -- Marco dorado ornamentado
+    local goldFrame = Instance.new("Part")
+    goldFrame.Size = Vector3.new(0.5, 4.2, 4.2)
+    goldFrame.Position = clockFaceBase.Position + Vector3.new(0, 0, -0.4)
+    goldFrame.Anchored = true
+    goldFrame.Shape = Enum.PartType.Cylinder
+    goldFrame.Material = Enum.Material.Metal
+    goldFrame.Color = Color3.fromRGB(180, 150, 80)
+    goldFrame.Orientation = Vector3.new(0, 0, 90)
+    goldFrame.Parent = clockFaceBase
     
+    -- Cara del reloj realista
     local clockFace = Instance.new("Part")
     clockFace.Name = "ClockFace"
-    clockFace.Size = Vector3.new(3.1, 0.35, 3.1)
-    clockFace.Position = goldBackground.Position + Vector3.new(0, 0, -0.25)
+    clockFace.Size = Vector3.new(3.6, 0.3, 3.6)
+    clockFace.Position = goldFrame.Position + Vector3.new(0, 0, -0.35)
     clockFace.Anchored = true
-    clockFace.Material = Enum.Material.Plastic
-    clockFace.Color = Color3.fromRGB(215, 205, 185)
+    clockFace.Material = Enum.Material.Marble
+    clockFace.Color = Color3.fromRGB(230, 220, 200)
     clockFace.Parent = clockFaceBase
-    applyStudsToAllFaces(clockFace, Color3.fromRGB(215, 205, 185))
     
+    -- Anillo exterior negro
     local outerRing = Instance.new("Part")
-    outerRing.Size = Vector3.new(0.3, 3.9, 3.9)
-    outerRing.Position = goldBackground.Position + Vector3.new(0, 0, -0.5)
+    outerRing.Size = Vector3.new(0.25, 4, 4)
+    outerRing.Position = goldFrame.Position + Vector3.new(0, 0, -0.6)
     outerRing.Anchored = true
     outerRing.Shape = Enum.PartType.Cylinder
-    outerRing.Material = Enum.Material.Plastic
-    outerRing.Color = Color3.fromRGB(18, 18, 20)
+    outerRing.Material = Enum.Material.Metal
+    outerRing.Color = Color3.fromRGB(15, 12, 10)
     outerRing.Orientation = Vector3.new(0, 0, 90)
     outerRing.Parent = clockFaceBase
-    applyStudsToAllFaces(outerRing, Color3.fromRGB(18, 18, 20))
     
     local numbers = {
         {text = "XII", pos = Vector3.new(0, 1.2, -0.12)},
@@ -514,88 +545,85 @@ local function createVecnaGrandfatherClock(position)
         label.Parent = sg
     end
     
+    -- Manecillas realistas
     local hourHand = Instance.new("Part")
     hourHand.Name = "HourHand"
-    hourHand.Size = Vector3.new(0.14, 1.2, 0.1)
-    hourHand.Position = clockFace.Position + Vector3.new(0, 0, -0.18)
+    hourHand.Size = Vector3.new(0.18, 1.4, 0.12)
+    hourHand.Position = clockFace.Position + Vector3.new(0, 0.5, -0.2)
     hourHand.Anchored = true
-    hourHand.Material = Enum.Material.Plastic
-    hourHand.Color = Color3.fromRGB(15, 15, 15)
+    hourHand.Material = Enum.Material.Metal
+    hourHand.Color = Color3.fromRGB(10, 8, 8)
     hourHand.Parent = clockFace
-    applyStudsToAllFaces(hourHand, Color3.fromRGB(15, 15, 15))
     
     local minuteHand = Instance.new("Part")
     minuteHand.Name = "MinuteHand"
-    minuteHand.Size = Vector3.new(0.11, 1.5, 0.08)
-    minuteHand.Position = clockFace.Position + Vector3.new(0, 0, -0.22)
+    minuteHand.Size = Vector3.new(0.14, 1.8, 0.1)
+    minuteHand.Position = clockFace.Position + Vector3.new(0, 0.7, -0.25)
     minuteHand.Anchored = true
-    minuteHand.Material = Enum.Material.Plastic
-    minuteHand.Color = Color3.fromRGB(15, 15, 15)
+    minuteHand.Material = Enum.Material.Metal
+    minuteHand.Color = Color3.fromRGB(10, 8, 8)
     minuteHand.Parent = clockFace
-    applyStudsToAllFaces(minuteHand, Color3.fromRGB(15, 15, 15))
     
+    -- Centro de las manecillas
     local handCenter = Instance.new("Part")
-    handCenter.Size = Vector3.new(0.18, 0.18, 0.18)
-    handCenter.Position = clockFace.Position + Vector3.new(0, 0, -0.28)
+    handCenter.Size = Vector3.new(0.25, 0.25, 0.25)
+    handCenter.Position = clockFace.Position + Vector3.new(0, 0, -0.3)
     handCenter.Anchored = true
     handCenter.Shape = Enum.PartType.Ball
-    handCenter.Material = Enum.Material.Plastic
-    handCenter.Color = Color3.fromRGB(15, 15, 15)
+    handCenter.Material = Enum.Material.Metal
+    handCenter.Color = Color3.fromRGB(8, 6, 6)
     handCenter.Parent = clockFace
-    applyStudsToAllFaces(handCenter, Color3.fromRGB(15, 15, 15))
     
+    -- Corona superior elaborada
     local top = Instance.new("Part")
-    top.Size = Vector3.new(3.5, 2, 3)
-    top.Position = body.Position + Vector3.new(0, 5.5, 0)
+    top.Size = Vector3.new(3.8, 2.5, 3.2)
+    top.Position = body.Position + Vector3.new(0, 6.5, 0)
     top.Anchored = true
-    top.Material = Enum.Material.Plastic
-    top.Color = Color3.fromRGB(18, 18, 20)
+    top.Material = Enum.Material.Wood
+    top.Color = Color3.fromRGB(20, 16, 14)
     top.Parent = clockModel
-    applyStudsToAllFaces(top, Color3.fromRGB(18, 18, 20))
     
+    -- Arco decorativo
     local topArch = Instance.new("Part")
-    topArch.Size = Vector3.new(3.5, 1.2, 3)
-    topArch.Position = top.Position + Vector3.new(0, 1.2, 0)
+    topArch.Size = Vector3.new(3.8, 1.5, 3.2)
+    topArch.Position = top.Position + Vector3.new(0, 1.5, 0)
     topArch.Anchored = true
-    topArch.Material = Enum.Material.Plastic
-    topArch.Color = Color3.fromRGB(18, 18, 20)
+    topArch.Material = Enum.Material.Wood
+    topArch.Color = Color3.fromRGB(18, 14, 12)
     topArch.Parent = top
-    applyStudsToAllFaces(topArch, Color3.fromRGB(18, 18, 20))
     
-    local function createSpike(xOffset)
-        local spikeBase = Instance.new("Part")
-        spikeBase.Size = Vector3.new(0.6, 1.2, 0.6)
-        spikeBase.Position = topArch.Position + Vector3.new(xOffset, 1, 0)
-        spikeBase.Anchored = true
-        spikeBase.Material = Enum.Material.Plastic
-        spikeBase.Color = Color3.fromRGB(15, 15, 17)
-        spikeBase.Parent = topArch
-        applyStudsToAllFaces(spikeBase, Color3.fromRGB(15, 15, 17))
+    -- Ornamentos superiores realistas
+    local function createOrnament(xOffset)
+        local ornBase = Instance.new("Part")
+        ornBase.Size = Vector3.new(0.7, 1.5, 0.7)
+        ornBase.Position = topArch.Position + Vector3.new(xOffset, 1.2, 0)
+        ornBase.Anchored = true
+        ornBase.Material = Enum.Material.Wood
+        ornBase.Color = Color3.fromRGB(16, 12, 10)
+        ornBase.Parent = topArch
         
-        local spikeTop = Instance.new("Part")
-        spikeTop.Size = Vector3.new(0.35, 0.6, 0.35)
-        spikeTop.Position = spikeBase.Position + Vector3.new(0, 0.9, 0)
-        spikeTop.Anchored = true
-        spikeTop.Shape = Enum.PartType.Ball
-        spikeTop.Material = Enum.Material.Plastic
-        spikeTop.Color = Color3.fromRGB(15, 15, 17)
-        spikeTop.Parent = spikeBase
-        applyStudsToAllFaces(spikeTop, Color3.fromRGB(15, 15, 17))
+        local ornTop = Instance.new("Part")
+        ornTop.Size = Vector3.new(0.5, 0.8, 0.5)
+        ornTop.Position = ornBase.Position + Vector3.new(0, 1.1, 0)
+        ornTop.Anchored = true
+        ornTop.Shape = Enum.PartType.Ball
+        ornTop.Material = Enum.Material.Metal
+        ornTop.Color = Color3.fromRGB(140, 120, 70)
+        ornTop.Parent = ornBase
         
-        local ball = Instance.new("Part")
-        ball.Size = Vector3.new(0.4, 0.4, 0.4)
-        ball.Position = spikeTop.Position + Vector3.new(0, 0.4, 0)
-        ball.Anchored = true
-        ball.Shape = Enum.PartType.Ball
-        ball.Material = Enum.Material.Plastic
-        ball.Color = Color3.fromRGB(12, 12, 14)
-        ball.Parent = spikeTop
-        applyStudsToAllFaces(ball, Color3.fromRGB(12, 12, 14))
+        local ornBall = Instance.new("Part")
+        ornBall.Size = Vector3.new(0.5, 0.5, 0.5)
+        ornBall.Position = ornTop.Position + Vector3.new(0, 0.5, 0)
+        ornBall.Anchored = true
+        ornBall.Shape = Enum.PartType.Ball
+        ornBall.Material = Enum.Material.Metal
+        ornBall.Color = Color3.fromRGB(160, 140, 80)
+        ornBall.Parent = ornTop
     end
     
-    createSpike(-1.3)
-    createSpike(0)
-    createSpike(1.3)
+    createOrnament(-1.5)
+    createOrnament(0)
+    createOrnament(1.5)
     
     -- ✅ LUZ ROJA MASIVA VISIBLE - BRIGHTNESS 100, RANGE 300
     local clockLight = Instance.new("PointLight")
@@ -1092,23 +1120,30 @@ local function startVecnaClockScene()
     
     task.wait(1.5)
     
-    print("💥 ✅ TERREMOTO VISIBLE CON LUZ ROJA BRILLANTE")
+    print("💥 ✅ TERREMOTO REALISTA CON ANIMACIÓN CINEMATOGRÁFICA")
     
-    -- ✅ LUZ YA AL MÁXIMO (mantener)
+    -- Sonido de terremoto
+    local earthquakeSound = Instance.new("Sound")
+    earthquakeSound.SoundId = "rbxassetid://9125402735"
+    earthquakeSound.Volume = 0.8
+    earthquakeSound.Parent = workspace
+    earthquakeSound:Play()
+    registerEffect(earthquakeSound)
     
-    -- ✅ INTENSIFICAR AMBIENTE ROJO
+    -- Intensificar ambiente rojo
     TweenService:Create(Lighting, TweenInfo.new(2), {
-        Ambient = Color3.fromRGB(220, 70, 70),  -- ULTRA BRILLANTE
-        Brightness = 5,  -- MÁXIMO ABSOLUTO
+        Ambient = Color3.fromRGB(220, 70, 70),
+        Brightness = 5,
         ColorShift_Top = Color3.fromRGB(255, 120, 120)
     }):Play()
     
     task.wait(1)
     
-    print("⚡ TERREMOTO ÉPICO CON GRIETAS MASIVAS")
+    print("⚡ GRIETAS REALISTAS PROGRESIVAS")
     
     local crackOrigin = Vector3.new(0, 0.5, 68)
     
+    -- Fase 1: Grietas principales desde el reloj
     task.spawn(function()
         for angle = 0, 360, 20 do
             local rad = math.rad(angle)
@@ -1119,33 +1154,44 @@ local function startVecnaClockScene()
             )
             createGroundCrack(crackOrigin, endPos, 1.2, 3)
             
-            for debris = 1, 5 do
-                local debrisPart = Instance.new("Part")
-                debrisPart.Size = Vector3.new(math.random(2, 4), math.random(1, 3), math.random(2, 4))
-                debrisPart.Position = (crackOrigin + endPos) / 2 + Vector3.new(
-                    math.random(-5, 5),
-                    math.random(2, 8),
-                    math.random(-5, 5)
-                )
-                debrisPart.Anchored = false
-                debrisPart.Material = Enum.Material.Plastic
-                debrisPart.Color = Color3.fromRGB(math.random(100, 150), math.random(80, 120), math.random(80, 120))
-                debrisPart.Parent = workspace
-                registerEffect(debrisPart)
-                applyStudsToAllFaces(debrisPart, debrisPart.Color)
-                
-                local debrisLight = Instance.new("PointLight")
-                debrisLight.Brightness = 3
-                debrisLight.Range = 15
-                debrisLight.Color = Color3.fromRGB(255, 80, 80)
-                debrisLight.Parent = debrisPart
-                
-                Debris:AddItem(debrisPart, 8)
+            -- Escombros realistas cayendo
+            for debris = 1, 3 do
+                task.spawn(function()
+                    local debrisPart = Instance.new("Part")
+                    debrisPart.Size = Vector3.new(math.random(15, 30) / 10, math.random(10, 25) / 10, math.random(15, 30) / 10)
+                    debrisPart.Position = (crackOrigin + endPos) / 2 + Vector3.new(
+                        math.random(-3, 3),
+                        0.5,
+                        math.random(-3, 3)
+                    )
+                    debrisPart.Anchored = false
+                    debrisPart.Material = Enum.Material.Concrete
+                    debrisPart.Color = Color3.fromRGB(math.random(100, 140), math.random(90, 120), math.random(90, 120))
+                    debrisPart.Parent = workspace
+                    registerEffect(debrisPart)
+                    
+                    -- Impulso realista
+                    local bodyVel = Instance.new("BodyVelocity")
+                    bodyVel.Velocity = Vector3.new(
+                        math.random(-15, 15),
+                        math.random(8, 18),
+                        math.random(-15, 15)
+                    )
+                    bodyVel.MaxForce = Vector3.new(50000, 50000, 50000)
+                    bodyVel.Parent = debrisPart
+                    
+                    task.wait(0.3)
+                    bodyVel:Destroy()
+                    
+                    Debris:AddItem(debrisPart, 10)
+                end)
             end
             
-            task.wait(0.1)
+            task.wait(0.08)
         end
         
+        -- Fase 2: Grietas secundarias ramificadas
+        task.wait(0.5)
         for i = 1, 30 do
             local startPos = crackOrigin + Vector3.new(
                 math.random(-25, 25),
@@ -1158,38 +1204,76 @@ local function startVecnaClockScene()
                 math.random(-15, 15)
             )
             createGroundCrack(startPos, endPos, 0.9, 2.5)
-            task.wait(0.05)
+            task.wait(0.04)
+        end
+        
+        -- Fase 3: Grietas finas finales
+        task.wait(0.3)
+        for i = 1, 20 do
+            local startPos = crackOrigin + Vector3.new(
+                math.random(-30, 30),
+                0,
+                math.random(-30, 30)
+            )
+            local endPos = startPos + Vector3.new(
+                math.random(-8, 8),
+                0,
+                math.random(-8, 8)
+            )
+            createGroundCrack(startPos, endPos, 0.5, 1.5)
+            task.wait(0.02)
         end
     end)
     
-    -- ✅ CÁMARA 1: VISTA AÉREA CLARA DE LAS GRIETAS - DENTRO DEL PASILLO
+    -- CÁMARA 1: Vista aérea cinematográfica con movimiento suave
     print("📹 CÁMARA 1: Vista aérea del terremoto")
-    TweenService:Create(cam, TweenInfo.new(2.5), {
-        CFrame = CFrame.new(Vector3.new(0, 14, 40), Vector3.new(0, 0, 68)),
-        FieldOfView = 80
-    }):Play()
+    local aerialStart = Vector3.new(0, 18, 40)
+    local aerialEnd = Vector3.new(0, 12, 55)
     
     task.spawn(function()
-        for i = 1, 60 do
-            if cam then
-                cam.CFrame = cam.CFrame * CFrame.new(
-                    math.random(-4, 4) * 0.1,
-                    math.random(-4, 4) * 0.1,
-                    math.random(-4, 4) * 0.1
-                )
-            end
-            task.wait(0.035)
+        local startTime = tick()
+        local duration = 4
+        while tick() - startTime < duration do
+            local alpha = (tick() - startTime) / duration
+            local currentPos = aerialStart:Lerp(aerialEnd, alpha)
+            cam.CFrame = CFrame.new(currentPos, Vector3.new(0, 0, 68))
+            cam.FieldOfView = 75 + (alpha * 5)
+            
+            -- Shake realista
+            cam.CFrame = cam.CFrame * CFrame.new(
+                math.sin(tick() * 20) * 0.3,
+                math.cos(tick() * 25) * 0.3,
+                math.sin(tick() * 15) * 0.2
+            )
+            task.wait()
         end
     end)
     
     task.wait(4)
     
-    -- ✅ CÁMARA 2: LATERAL MOSTRANDO GRIETAS - DENTRO DEL PASILLO
+    -- CÁMARA 2: Lateral dramática con zoom
     print("📹 CÁMARA 2: Lateral del suelo rompiéndose")
-    TweenService:Create(cam, TweenInfo.new(2.5), {
-        CFrame = CFrame.new(Vector3.new(-12, 4, 50), Vector3.new(0, 0, 68)),
-        FieldOfView = 70
-    }):Play()
+    local lateralStart = Vector3.new(-15, 5, 50)
+    local lateralEnd = Vector3.new(-10, 3, 60)
+    
+    task.spawn(function()
+        local startTime = tick()
+        local duration = 4
+        while tick() - startTime < duration do
+            local alpha = (tick() - startTime) / duration
+            local currentPos = lateralStart:Lerp(lateralEnd, alpha)
+            cam.CFrame = CFrame.new(currentPos, Vector3.new(0, 0, 68))
+            cam.FieldOfView = 70 - (alpha * 5)
+            
+            -- Shake intenso
+            cam.CFrame = cam.CFrame * CFrame.new(
+                math.sin(tick() * 25) * 0.4,
+                math.cos(tick() * 30) * 0.4,
+                math.sin(tick() * 20) * 0.3
+            )
+            task.wait()
+        end
+    end)
     
     task.wait(4)
     
