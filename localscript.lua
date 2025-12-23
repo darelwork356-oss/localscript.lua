@@ -721,6 +721,37 @@ local function startVecnaClockScene()
     
     playAudio("BackgroundMusic", soundIds.backgroundMusic, 0.3, true)
     
+    -- Botón SKIP que aparece después de 20 segundos
+    local skipBtn = Instance.new("TextButton", screenGui)
+    skipBtn.Text = "SKIP"
+    skipBtn.Size = UDim2.fromScale(0.13, 0.07)
+    skipBtn.Position = UDim2.fromScale(0.84, 0.91)
+    skipBtn.BackgroundColor3 = Color3.new(0, 0, 0)
+    skipBtn.TextColor3 = Color3.new(1, 1, 1)
+    skipBtn.BackgroundTransparency = 1
+    skipBtn.TextTransparency = 1
+    skipBtn.Font = Enum.Font.GothamBold
+    skipBtn.TextSize = 24
+    skipBtn.BorderSizePixel = 0
+    registerEffect(skipBtn)
+    
+    local skipCorner = Instance.new("UICorner", skipBtn)
+    skipCorner.CornerRadius = UDim.new(0, 12)
+    
+    -- Aparecer después de 20 segundos
+    task.spawn(function()
+        task.wait(20)
+        TweenService:Create(skipBtn, TweenInfo.new(1), {
+            BackgroundTransparency = 0.5,
+            TextTransparency = 0
+        }):Play()
+    end)
+    
+    skipBtn.MouseButton1Click:Connect(function()
+        if introShownGlobal then introShownGlobal.Value = true end
+        cleanupIntro()
+    end)
+    
     task.wait(1.5)
     TweenService:Create(blackFrame, TweenInfo.new(3), {BackgroundTransparency = 1}):Play()
     task.wait(3)
@@ -1235,26 +1266,6 @@ local function startVecnaClockScene()
     playBtn.MouseButton1Click:Connect(function()
         TweenService:Create(blackFrame, TweenInfo.new(1.5), {BackgroundTransparency = 0}):Play()
         task.wait(1.5)
-        if introShownGlobal then introShownGlobal.Value = true end
-        cleanupIntro()
-    end)
-    
-    local skipBtn = Instance.new("TextButton", screenGui)
-    skipBtn.Text = "SKIP"
-    skipBtn.Size = UDim2.fromScale(0.13, 0.07)
-    skipBtn.Position = UDim2.fromScale(0.84, 0.91)
-    skipBtn.BackgroundColor3 = Color3.new(0, 0, 0)
-    skipBtn.TextColor3 = Color3.new(1, 1, 1)
-    skipBtn.BackgroundTransparency = 0.5
-    skipBtn.Font = Enum.Font.GothamBold
-    skipBtn.TextSize = 24
-    skipBtn.BorderSizePixel = 0
-    registerEffect(skipBtn)
-    
-    local skipCorner = Instance.new("UICorner", skipBtn)
-    skipCorner.CornerRadius = UDim.new(0, 12)
-    
-    skipBtn.MouseButton1Click:Connect(function()
         if introShownGlobal then introShownGlobal.Value = true end
         cleanupIntro()
     end)
