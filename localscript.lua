@@ -306,33 +306,64 @@ local function createHawkinsSchool()
     applyStudsToAllFaces(ceiling, Color3.fromRGB(180, 160, 140))
     
     for z = -65, 65, 5.5 do
-        local locker = Instance.new("Part")
-        locker.Size = Vector3.new(0.8, 9, 2.3)
-        locker.Position = Vector3.new(-13.6, 4.5, z)
-        locker.Anchored = true
-        locker.Material = Enum.Material.Plastic
-        locker.Color = Color3.fromRGB(160, 140, 120)
-        locker.Parent = schoolFolder
-        applyStudsToAllFaces(locker, Color3.fromRGB(160, 140, 120))
+        -- Casilleros lado izquierdo
+        local lockerLeft = Instance.new("Part")
+        lockerLeft.Size = Vector3.new(0.8, 9, 2.3)
+        lockerLeft.Position = Vector3.new(-13.6, 4.5, z)
+        lockerLeft.Anchored = true
+        lockerLeft.Material = Enum.Material.Plastic
+        lockerLeft.Color = Color3.fromRGB(180, 160, 140)
+        lockerLeft.Parent = schoolFolder
+        applyStudsToAllFaces(lockerLeft, Color3.fromRGB(180, 160, 140))
         
-        local handle = Instance.new("Part")
-        handle.Size = Vector3.new(0.2, 0.5, 0.2)
-        handle.Position = Vector3.new(-13.1, 4.5, z)
-        handle.Anchored = true
-        handle.Material = Enum.Material.Plastic
-        handle.Color = Color3.fromRGB(70, 70, 70)
-        handle.Parent = locker
-        applyStudsToAllFaces(handle, Color3.fromRGB(70, 70, 70))
+        local handleLeft = Instance.new("Part")
+        handleLeft.Size = Vector3.new(0.2, 0.5, 0.2)
+        handleLeft.Position = Vector3.new(-13.1, 4.5, z)
+        handleLeft.Anchored = true
+        handleLeft.Material = Enum.Material.Plastic
+        handleLeft.Color = Color3.fromRGB(90, 90, 90)
+        handleLeft.Parent = lockerLeft
+        applyStudsToAllFaces(handleLeft, Color3.fromRGB(90, 90, 90))
         
         for i = 1, 3 do
-            local vent = Instance.new("Part")
-            vent.Size = Vector3.new(0.6, 0.08, 0.2)
-            vent.Position = Vector3.new(-13.1, 3 + (i * 0.4), z)
-            vent.Anchored = true
-            vent.Material = Enum.Material.Plastic
-            vent.Color = Color3.fromRGB(50, 50, 50)
-            vent.Parent = locker
-            applyStudsToAllFaces(vent, Color3.fromRGB(50, 50, 50))
+            local ventLeft = Instance.new("Part")
+            ventLeft.Size = Vector3.new(0.6, 0.08, 0.2)
+            ventLeft.Position = Vector3.new(-13.1, 3 + (i * 0.4), z)
+            ventLeft.Anchored = true
+            ventLeft.Material = Enum.Material.Plastic
+            ventLeft.Color = Color3.fromRGB(60, 60, 60)
+            ventLeft.Parent = lockerLeft
+            applyStudsToAllFaces(ventLeft, Color3.fromRGB(60, 60, 60))
+        end
+        
+        -- Casilleros lado derecho
+        local lockerRight = Instance.new("Part")
+        lockerRight.Size = Vector3.new(0.8, 9, 2.3)
+        lockerRight.Position = Vector3.new(13.6, 4.5, z)
+        lockerRight.Anchored = true
+        lockerRight.Material = Enum.Material.Plastic
+        lockerRight.Color = Color3.fromRGB(180, 160, 140)
+        lockerRight.Parent = schoolFolder
+        applyStudsToAllFaces(lockerRight, Color3.fromRGB(180, 160, 140))
+        
+        local handleRight = Instance.new("Part")
+        handleRight.Size = Vector3.new(0.2, 0.5, 0.2)
+        handleRight.Position = Vector3.new(13.1, 4.5, z)
+        handleRight.Anchored = true
+        handleRight.Material = Enum.Material.Plastic
+        handleRight.Color = Color3.fromRGB(90, 90, 90)
+        handleRight.Parent = lockerRight
+        applyStudsToAllFaces(handleRight, Color3.fromRGB(90, 90, 90))
+        
+        for i = 1, 3 do
+            local ventRight = Instance.new("Part")
+            ventRight.Size = Vector3.new(0.6, 0.08, 0.2)
+            ventRight.Position = Vector3.new(13.1, 3 + (i * 0.4), z)
+            ventRight.Anchored = true
+            ventRight.Material = Enum.Material.Plastic
+            ventRight.Color = Color3.fromRGB(60, 60, 60)
+            ventRight.Parent = lockerRight
+            applyStudsToAllFaces(ventRight, Color3.fromRGB(60, 60, 60))
         end
     end
     
@@ -690,11 +721,11 @@ local function startVecnaClockScene()
     root.CFrame = CFrame.new(startPos)
     root.Anchored = true
     
-    Lighting.Ambient = Color3.fromRGB(120, 110, 100)
-    Lighting.Brightness = 2.2
-    Lighting.ColorShift_Top = Color3.fromRGB(200, 180, 160)
-    Lighting.FogEnd = 320
-    Lighting.FogColor = Color3.fromRGB(150, 140, 130)
+    Lighting.Ambient = Color3.fromRGB(160, 150, 140)
+    Lighting.Brightness = 2.5
+    Lighting.ColorShift_Top = Color3.fromRGB(220, 210, 200)
+    Lighting.FogEnd = 400
+    Lighting.FogColor = Color3.fromRGB(200, 190, 180)
     
     local blackFrame = Instance.new("Frame", screenGui)
     blackFrame.Size = UDim2.fromScale(1, 1)
@@ -869,7 +900,7 @@ local function startVecnaClockScene()
     
     print("🎬 FASE 4: RELOJ APARECE")
     
-    local clockPosition = Vector3.new(-12, 0.5, 68)
+    local clockPosition = Vector3.new(0, 0.5, 74)
     local clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, darkParticles, darkAura = createVecnaGrandfatherClock(clockPosition)
     
     for _, part in pairs(clockModel:GetDescendants()) do
@@ -893,6 +924,9 @@ local function startVecnaClockScene()
         end
         darkParticles.Enabled = true
         darkAura.Enabled = true
+        
+        -- Sonido tic-tac del reloj
+        playAudio("ClockTick", soundIds.clockTick, 0.6, true, clockFace)
     end)
     
     -- ✅ LUZ ROJA MASIVA INMEDIATA
