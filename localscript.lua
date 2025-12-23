@@ -307,8 +307,8 @@ local function createHawkinsSchool()
     
     for z = -65, 65, 5.5 do
         local locker = Instance.new("Part")
-        locker.Size = Vector3.new(1.3, 9, 2.3)
-        locker.Position = Vector3.new(-13.8, 4.5, z)  -- Pegado a la pared izquierda
+        locker.Size = Vector3.new(0.8, 9, 2.3)
+        locker.Position = Vector3.new(-13.6, 4.5, z)
         locker.Anchored = true
         locker.Material = Enum.Material.Plastic
         locker.Color = Color3.fromRGB(160, 140, 120)
@@ -316,21 +316,23 @@ local function createHawkinsSchool()
         applyStudsToAllFaces(locker, Color3.fromRGB(160, 140, 120))
         
         local handle = Instance.new("Part")
-        handle.Size = Vector3.new(0.15, 0.5, 0.15)
-        handle.Position = Vector3.new(-13.1, 4.5, z)  -- Ajustado a nueva posición
+        handle.Size = Vector3.new(0.2, 0.5, 0.2)
+        handle.Position = Vector3.new(-13.1, 4.5, z)
         handle.Anchored = true
-        handle.Material = Enum.Material.Metal
+        handle.Material = Enum.Material.Plastic
         handle.Color = Color3.fromRGB(70, 70, 70)
         handle.Parent = locker
+        applyStudsToAllFaces(handle, Color3.fromRGB(70, 70, 70))
         
         for i = 1, 3 do
             local vent = Instance.new("Part")
-            vent.Size = Vector3.new(0.8, 0.05, 0.15)
-            vent.Position = Vector3.new(-13.1, 3 + (i * 0.4), z)  -- Ajustado
+            vent.Size = Vector3.new(0.6, 0.08, 0.2)
+            vent.Position = Vector3.new(-13.1, 3 + (i * 0.4), z)
             vent.Anchored = true
-            vent.Material = Enum.Material.Metal
+            vent.Material = Enum.Material.Plastic
             vent.Color = Color3.fromRGB(50, 50, 50)
             vent.Parent = locker
+            applyStudsToAllFaces(vent, Color3.fromRGB(50, 50, 50))
         end
     end
     
@@ -399,19 +401,21 @@ local function createVecnaGrandfatherClock(position)
         pendulum.Size = Vector3.new(0.28, length, 0.28)
         pendulum.Position = body.Position + Vector3.new(xOffset, -2.5, -0.7)
         pendulum.Anchored = true
-        pendulum.Material = Enum.Material.Metal
+        pendulum.Material = Enum.Material.Plastic
         pendulum.Color = Color3.fromRGB(170, 150, 110)
         pendulum.Parent = body
+        applyStudsToAllFaces(pendulum, Color3.fromRGB(170, 150, 110))
         
         local weight = Instance.new("Part")
         weight.Size = Vector3.new(weightSize, weightSize * 1.6, weightSize)
         weight.Position = pendulum.Position + Vector3.new(0, -(length/2 + weightSize), 0)
         weight.Anchored = true
         weight.Shape = Enum.PartType.Cylinder
-        weight.Material = Enum.Material.Metal
+        weight.Material = Enum.Material.Plastic
         weight.Color = Color3.fromRGB(170, 150, 110)
         weight.Orientation = Vector3.new(0, 0, 90)
         weight.Parent = pendulum
+        applyStudsToAllFaces(weight, Color3.fromRGB(170, 150, 110))
     end
     
     createPendulum(-0.8, 6.5, 0.75)
@@ -432,10 +436,11 @@ local function createVecnaGrandfatherClock(position)
     goldBackground.Position = clockFaceBase.Position + Vector3.new(0, 0, -0.35)
     goldBackground.Anchored = true
     goldBackground.Shape = Enum.PartType.Cylinder
-    goldBackground.Material = Enum.Material.Metal
+    goldBackground.Material = Enum.Material.Plastic
     goldBackground.Color = Color3.fromRGB(140, 120, 60)
     goldBackground.Orientation = Vector3.new(0, 0, 90)
     goldBackground.Parent = clockFaceBase
+    applyStudsToAllFaces(goldBackground, Color3.fromRGB(140, 120, 60))
     
     local clockFace = Instance.new("Part")
     clockFace.Name = "ClockFace"
@@ -453,10 +458,11 @@ local function createVecnaGrandfatherClock(position)
     outerRing.Position = goldBackground.Position + Vector3.new(0, 0, -0.5)
     outerRing.Anchored = true
     outerRing.Shape = Enum.PartType.Cylinder
-    outerRing.Material = Enum.Material.Metal
+    outerRing.Material = Enum.Material.Plastic
     outerRing.Color = Color3.fromRGB(18, 18, 20)
     outerRing.Orientation = Vector3.new(0, 0, 90)
     outerRing.Parent = clockFaceBase
+    applyStudsToAllFaces(outerRing, Color3.fromRGB(18, 18, 20))
     
     local numbers = {
         {text = "XII", pos = Vector3.new(0, 1.2, -0.12)},
@@ -493,18 +499,20 @@ local function createVecnaGrandfatherClock(position)
     hourHand.Size = Vector3.new(0.14, 1.2, 0.1)
     hourHand.Position = clockFace.Position + Vector3.new(0, 0, -0.18)
     hourHand.Anchored = true
-    hourHand.Material = Enum.Material.Metal
+    hourHand.Material = Enum.Material.Plastic
     hourHand.Color = Color3.fromRGB(15, 15, 15)
     hourHand.Parent = clockFace
+    applyStudsToAllFaces(hourHand, Color3.fromRGB(15, 15, 15))
     
     local minuteHand = Instance.new("Part")
     minuteHand.Name = "MinuteHand"
     minuteHand.Size = Vector3.new(0.11, 1.5, 0.08)
     minuteHand.Position = clockFace.Position + Vector3.new(0, 0, -0.22)
     minuteHand.Anchored = true
-    minuteHand.Material = Enum.Material.Metal
+    minuteHand.Material = Enum.Material.Plastic
     minuteHand.Color = Color3.fromRGB(15, 15, 15)
     minuteHand.Parent = clockFace
+    applyStudsToAllFaces(minuteHand, Color3.fromRGB(15, 15, 15))
     
     local handCenter = Instance.new("Part")
     handCenter.Size = Vector3.new(0.18, 0.18, 0.18)
@@ -516,8 +524,8 @@ local function createVecnaGrandfatherClock(position)
     handCenter.Parent = clockFace
     
     local top = Instance.new("Part")
-    top.Size = Vector3.new(3.5, 2.5, 3)  -- Reducido de 3 a 2.5
-    top.Position = body.Position + Vector3.new(0, 6.5, 0)  -- Ajustado
+    top.Size = Vector3.new(3.5, 2.5, 3)
+    top.Position = body.Position + Vector3.new(0, 6.5, 0)
     top.Anchored = true
     top.Material = Enum.Material.Plastic
     top.Color = Color3.fromRGB(18, 18, 20)
@@ -525,21 +533,23 @@ local function createVecnaGrandfatherClock(position)
     applyStudsToAllFaces(top, Color3.fromRGB(18, 18, 20))
     
     local topArch = Instance.new("Part")
-    topArch.Size = Vector3.new(3.5, 1.5, 3)  -- Reducido de 1.8 a 1.5
-    topArch.Position = top.Position + Vector3.new(0, 1.5, 0)  -- Ajustado
+    topArch.Size = Vector3.new(3.5, 1.5, 3)
+    topArch.Position = top.Position + Vector3.new(0, 1.5, 0)
     topArch.Anchored = true
     topArch.Material = Enum.Material.Plastic
     topArch.Color = Color3.fromRGB(18, 18, 20)
     topArch.Parent = top
+    applyStudsToAllFaces(topArch, Color3.fromRGB(18, 18, 20))
     
     local function createSpike(xOffset)
         local spikeBase = Instance.new("Part")
-        spikeBase.Size = Vector3.new(0.6, 1.5, 0.6)  -- Reducido de 2 a 1.5
-        spikeBase.Position = topArch.Position + Vector3.new(xOffset, 1.3, 0)  -- Ajustado
+        spikeBase.Size = Vector3.new(0.6, 1.5, 0.6)
+        spikeBase.Position = topArch.Position + Vector3.new(xOffset, 1.3, 0)
         spikeBase.Anchored = true
-        spikeBase.Material = Enum.Material.Metal
+        spikeBase.Material = Enum.Material.Plastic
         spikeBase.Color = Color3.fromRGB(15, 15, 17)
         spikeBase.Parent = topArch
+        applyStudsToAllFaces(spikeBase, Color3.fromRGB(15, 15, 17))
         
         local spikeTop = Instance.new("Part")
         spikeTop.Size = Vector3.new(0.35, 0.7, 0.35)  -- Reducido de 0.9 a 0.7
@@ -859,7 +869,7 @@ local function startVecnaClockScene()
     
     print("🎬 FASE 4: RELOJ APARECE")
     
-    local clockPosition = Vector3.new(0, 0.5, 68)  -- En el suelo
+    local clockPosition = Vector3.new(-12, 0.5, 68)
     local clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, darkParticles, darkAura = createVecnaGrandfatherClock(clockPosition)
     
     for _, part in pairs(clockModel:GetDescendants()) do
