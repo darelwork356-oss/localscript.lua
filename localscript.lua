@@ -260,8 +260,17 @@ local function createHawkinsSchool()
     rightOrange.Parent = schoolFolder
     applyStudsToAllFaces(rightOrange, Color3.fromRGB(220, 130, 60))
     
+    local rightGreen = Instance.new("Part")
+    rightGreen.Size = Vector3.new(0.95, 2.2, 150)
+    rightGreen.Position = Vector3.new(13.98, 8.2, 0)
+    rightGreen.Anchored = true
+    rightGreen.Material = Enum.Material.Plastic
+    rightGreen.Color = Color3.fromRGB(115, 145, 95)
+    rightGreen.Parent = schoolFolder
+    applyStudsToAllFaces(rightGreen, Color3.fromRGB(115, 145, 95))
+    
     local rightBeige = Instance.new("Part")
-    rightBeige.Size = Vector3.new(0.95, 16.5, 150)
+    rightBeige.Size = Vector3.new(0.95, 14, 150)
     rightBeige.Position = Vector3.new(13.98, 0, 0)
     rightBeige.Anchored = true
     rightBeige.Material = Enum.Material.Plastic
@@ -837,10 +846,10 @@ local function startVecnaClockScene()
     
     -- ✅ CÁMARA 1: MIRANDO ARRIBA AL TECHO Y LUCES
     print("📹 CÁMARA 1: Luces del techo desde abajo")
-    local ceilingCam = Vector3.new(0, 6, 30)
+    local ceilingCam = Vector3.new(0, 8, 30)
     TweenService:Create(cam, TweenInfo.new(2), {
-        CFrame = CFrame.new(ceilingCam, Vector3.new(0, 15, 40)),
-        FieldOfView = 75
+        CFrame = CFrame.new(ceilingCam, Vector3.new(0, 14, 35)),
+        FieldOfView = 70
     }):Play()
     
     task.wait(1.5)
@@ -862,8 +871,8 @@ local function startVecnaClockScene()
         -- CÁMARA 2: Vista lateral del pasillo con luces
         print("📹 CÁMARA 2: Lateral del pasillo")
         TweenService:Create(cam, TweenInfo.new(2), {
-            CFrame = CFrame.new(Vector3.new(-20, 8, 0), Vector3.new(0, 12, 0)),
-            FieldOfView = 70
+            CFrame = CFrame.new(Vector3.new(-10, 8, 0), Vector3.new(0, 12, 0)),
+            FieldOfView = 65
         }):Play()
         
         task.wait(0.5)
@@ -1113,11 +1122,11 @@ local function startVecnaClockScene()
         end
     end)
     
-    -- ✅ CÁMARA 1: VISTA AÉREA CLARA DE LAS GRIETAS
+    -- ✅ CÁMARA 1: VISTA AÉREA CLARA DE LAS GRIETAS - DENTRO DEL PASILLO
     print("📹 CÁMARA 1: Vista aérea del terremoto")
     TweenService:Create(cam, TweenInfo.new(2.5), {
-        CFrame = CFrame.new(Vector3.new(0, 35, 60), Vector3.new(0, 0, 68)),
-        FieldOfView = 85
+        CFrame = CFrame.new(Vector3.new(0, 14, 40), Vector3.new(0, 0, 68)),
+        FieldOfView = 80
     }):Play()
     
     task.spawn(function()
@@ -1135,11 +1144,11 @@ local function startVecnaClockScene()
     
     task.wait(4)
     
-    -- ✅ CÁMARA 2: LATERAL MOSTRANDO GRIETAS EN EL SUELO
+    -- ✅ CÁMARA 2: LATERAL MOSTRANDO GRIETAS - DENTRO DEL PASILLO
     print("📹 CÁMARA 2: Lateral del suelo rompiéndose")
     TweenService:Create(cam, TweenInfo.new(2.5), {
-        CFrame = CFrame.new(Vector3.new(-30, 4, 68), Vector3.new(0, 0, 68)),
-        FieldOfView = 75
+        CFrame = CFrame.new(Vector3.new(-12, 4, 50), Vector3.new(0, 0, 68)),
+        FieldOfView = 70
     }):Play()
     
     task.wait(4)
@@ -1168,10 +1177,10 @@ local function startVecnaClockScene()
     
     task.wait(2.5)
     
-    -- ✅ CÁMARA 4: DESDE EL SUELO MOSTRANDO GRIETAS
+    -- ✅ CÁMARA 4: DESDE EL SUELO - DENTRO DEL PASILLO
     print("📹 CÁMARA 4: Vista desde el suelo")
     TweenService:Create(cam, TweenInfo.new(3.5), {
-        CFrame = CFrame.new(Vector3.new(10, 2, 50), Vector3.new(0, 0, 68)),
+        CFrame = CFrame.new(Vector3.new(8, 2, 50), Vector3.new(0, 0, 68)),
         FieldOfView = 65
     }):Play()
     
