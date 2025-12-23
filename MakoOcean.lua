@@ -22,21 +22,21 @@ terrain:Clear()
 local function createRealWater()
     print("💧 Generando agua REAL con Terrain...")
     
-    -- Región de agua (200x200x60 studs)
+    -- Región de agua MÁS GRANDE Y VISIBLE (desde Y=0 hasta Y=50)
     local waterRegion = Region3.new(
-        Vector3.new(-100, -60, -100),
-        Vector3.new(100, 0, 100)
+        Vector3.new(-200, 0, -200),
+        Vector3.new(200, 50, 200)
     ):ExpandToGrid(4)
     
     terrain:FillRegion(waterRegion, 4, Enum.Material.Water)
     
-    -- Configurar propiedades del agua
-    terrain.WaterWaveSize = 0.3
-    terrain.WaterWaveSpeed = 15
-    terrain.WaterReflectance = 0.8
-    terrain.WaterTransparency = 0.3
+    -- Configurar propiedades del agua para que se vea REAL
+    terrain.WaterWaveSize = 0.5
+    terrain.WaterWaveSpeed = 20
+    terrain.WaterReflectance = 0.9
+    terrain.WaterTransparency = 0.2
     
-    print("✅ Agua real creada")
+    print("✅ Agua real creada - Región: 400x50x400")
 end
 
 -- ========================================
@@ -45,25 +45,25 @@ end
 local function createOceanFloor()
     print("🏖️ Generando suelo marino...")
     
-    -- Suelo de arena
+    -- Suelo de arena EN EL FONDO DEL AGUA
     local floorRegion = Region3.new(
-        Vector3.new(-100, -65, -100),
-        Vector3.new(100, -60, 100)
+        Vector3.new(-200, -5, -200),
+        Vector3.new(200, 0, 200)
     ):ExpandToGrid(4)
     
     terrain:FillRegion(floorRegion, 4, Enum.Material.Sand)
     
     -- Rocas en el suelo
-    for i = 1, 30 do
+    for i = 1, 50 do
         local rockPos = Vector3.new(
-            math.random(-90, 90),
-            -60,
-            math.random(-90, 90)
+            math.random(-180, 180),
+            0,
+            math.random(-180, 180)
         )
         local rockSize = Vector3.new(
+            math.random(4, 10),
             math.random(3, 8),
-            math.random(2, 5),
-            math.random(3, 8)
+            math.random(4, 10)
         )
         local rockRegion = Region3.new(
             rockPos - rockSize/2,
@@ -73,7 +73,7 @@ local function createOceanFloor()
         terrain:FillRegion(rockRegion, 4, Enum.Material.Rock)
     end
     
-    print("✅ Suelo marino creado")
+    print("✅ Suelo marino creado - 50 rocas")
 end
 
 -- ========================================
@@ -169,9 +169,9 @@ local function createCorals()
     
     for i = 1, 25 do
         local pos = Vector3.new(
-            math.random(-85, 85),
-            -58,
-            math.random(-85, 85)
+            math.random(-150, 150),
+            2,
+            math.random(-150, 150)
         )
         createCoral(pos, colors[math.random(1, #colors)])
     end
@@ -212,9 +212,9 @@ local function createSeaweeds()
     
     for i = 1, 40 do
         local pos = Vector3.new(
-            math.random(-85, 85),
-            -58,
-            math.random(-85, 85)
+            math.random(-150, 150),
+            2,
+            math.random(-150, 150)
         )
         createSeaweed(pos)
     end
@@ -230,8 +230,8 @@ local function createSpawnPlatform()
     
     local platform = Instance.new("Part")
     platform.Name = "SpawnPlatform"
-    platform.Size = Vector3.new(25, 2, 25)
-    platform.Position = Vector3.new(0, 5, 0)
+    platform.Size = Vector3.new(30, 2, 30)
+    platform.Position = Vector3.new(0, 55, 0)  -- ARRIBA DEL AGUA
     platform.Anchored = true
     platform.Material = Enum.Material.Wood
     platform.Color = Color3.fromRGB(160, 130, 90)
