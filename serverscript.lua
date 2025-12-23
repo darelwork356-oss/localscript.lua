@@ -269,10 +269,11 @@ end
 -- ============================================
 
 local function CrearSalon()
-    print("🎉 Creando salón...")
+    print("🎉 Creando salón cubano completo...")
     
     local posBase = Vector3.new(0, 0, 220)
     
+    -- PISO CON MOSAICOS CUBANOS - 120 studs x 100 studs
     local piso = Instance.new("Part")
     piso.Name = "PisoSalon"
     piso.Size = Vector3.new(120, 1, 100)
@@ -282,7 +283,94 @@ local function CrearSalon()
     piso.Material = Enum.Material.SmoothPlastic
     piso.Parent = SalonFolder
     
-    print("✅ Salón OK")
+    -- Mosaicos cubanos tradicionales
+    for x = -56, 56, 8 do
+        for z = -46, 46, 8 do
+            local mosaico = Instance.new("Part")
+            mosaico.Size = Vector3.new(7.5, 0.3, 7.5)
+            mosaico.Position = posBase + Vector3.new(x, 0.65, z)
+            mosaico.Anchored = true
+            
+            local patron = (math.abs(x) + math.abs(z)) / 8
+            if patron % 4 == 0 then
+                mosaico.Color = Color3.fromRGB(220, 200, 180)
+            elseif patron % 4 == 1 then
+                mosaico.Color = Color3.fromRGB(180, 160, 140)
+            elseif patron % 4 == 2 then
+                mosaico.Color = Color3.fromRGB(160, 120, 100)
+            else
+                mosaico.Color = Color3.fromRGB(120, 100, 80)
+            end
+            
+            mosaico.Material = Enum.Material.SmoothPlastic
+            mosaico.Parent = SalonFolder
+        end
+    end
+    
+    -- PAREDES (3 lados - SIN PARED FRONTAL)
+    local alturaParedes = 30
+    
+    -- Pared trasera
+    local paredTrasera = Instance.new("Part")
+    paredTrasera.Name = "ParedTrasera"
+    paredTrasera.Size = Vector3.new(120, alturaParedes, 3)
+    paredTrasera.Position = posBase + Vector3.new(0, alturaParedes/2, 50)
+    paredTrasera.Anchored = true
+    paredTrasera.Color = Color3.fromRGB(45, 40, 35)
+    paredTrasera.Material = Enum.Material.SmoothPlastic
+    paredTrasera.Parent = SalonFolder
+    
+    -- Pared izquierda
+    local paredIzq = Instance.new("Part")
+    paredIzq.Name = "ParedIzquierda"
+    paredIzq.Size = Vector3.new(3, alturaParedes, 100)
+    paredIzq.Position = posBase + Vector3.new(-60, alturaParedes/2, 0)
+    paredIzq.Anchored = true
+    paredIzq.Color = Color3.fromRGB(55, 50, 45)
+    paredIzq.Material = Enum.Material.SmoothPlastic
+    paredIzq.Parent = SalonFolder
+    
+    -- Pared derecha
+    local paredDer = Instance.new("Part")
+    paredDer.Name = "ParedDerecha"
+    paredDer.Size = Vector3.new(3, alturaParedes, 100)
+    paredDer.Position = posBase + Vector3.new(60, alturaParedes/2, 0)
+    paredDer.Anchored = true
+    paredDer.Color = Color3.fromRGB(55, 50, 45)
+    paredDer.Material = Enum.Material.SmoothPlastic
+    paredDer.Parent = SalonFolder
+    
+    -- TECHO
+    local techo = Instance.new("Part")
+    techo.Name = "Techo"
+    techo.Size = Vector3.new(120, 1, 100)
+    techo.Position = posBase + Vector3.new(0, alturaParedes, 0)
+    techo.Anchored = true
+    techo.Color = Color3.fromRGB(30, 25, 20)
+    techo.Material = Enum.Material.SmoothPlastic
+    techo.Parent = SalonFolder
+    
+    -- Lámparas colgantes
+    for i = -40, 40, 40 do
+        for j = -30, 30, 30 do
+            local lampara = Instance.new("Part")
+            lampara.Size = Vector3.new(3, 4, 3)
+            lampara.Position = posBase + Vector3.new(i, alturaParedes - 3, j)
+            lampara.Anchored = true
+            lampara.Color = COLORES_CUBANOS.Amarillo
+            lampara.Material = Enum.Material.Neon
+            lampara.Transparency = 0.2
+            lampara.Parent = SalonFolder
+            
+            local luzLampara = Instance.new("PointLight")
+            luzLampara.Brightness = 3
+            luzLampara.Color = COLORES_CUBANOS.Amarillo
+            luzLampara.Range = 25
+            luzLampara.Parent = lampara
+        end
+    end
+    
+    print("✅ Salón completo OK")
 end
 
 -- ============================================
@@ -375,13 +463,14 @@ local function CrearMesas()
         end
     end
     
+    -- Crear 6 mesas bien distribuidas (ALEJADAS DEL ESCENARIO)
     local posicionesMesas = {
-        Vector3.new(-30, 0, 200),
-        Vector3.new(30, 0, 200),
-        Vector3.new(-30, 0, 230),
-        Vector3.new(30, 0, 230),
-        Vector3.new(0, 0, 215),
-        Vector3.new(0, 0, 245)
+        Vector3.new(-35, 0, 190),  -- Más lejos del escenario
+        Vector3.new(35, 0, 190),
+        Vector3.new(-35, 0, 210),
+        Vector3.new(35, 0, 210),
+        Vector3.new(-15, 0, 200),
+        Vector3.new(15, 0, 200)
     }
     
     for _, pos in ipairs(posicionesMesas) do
@@ -443,10 +532,11 @@ end
 -- ============================================
 
 local function CrearBolaDiscoteca()
-    print("🪩 Creando bola de discoteca...")
+    print("🪩 Creando bola de discoteca completa...")
     
     local posicionBola = Vector3.new(0, 25, 220)
     
+    -- BOLA PRINCIPAL
     local bola = Instance.new("Part")
     bola.Name = "BolaDiscoteca"
     bola.Size = Vector3.new(8, 8, 8)
@@ -461,7 +551,157 @@ local function CrearBolaDiscoteca()
     bolaMesh.MeshType = Enum.MeshType.Sphere
     bolaMesh.Parent = bola
     
-    print("✅ Bola de discoteca OK")
+    -- ESPEJOS EN LA BOLA
+    local espejos = {}
+    for i = 1, 32 do
+        local espejo = Instance.new("Part")
+        espejo.Size = Vector3.new(0.8, 0.8, 0.1)
+        espejo.Anchored = true
+        espejo.Color = Color3.fromRGB(255, 255, 255)
+        espejo.Material = Enum.Material.Neon
+        espejo.Transparency = 0.3
+        espejo.Parent = bola
+        
+        local angulo = (i - 1) * (360 / 32)
+        local altura = math.sin(math.rad(angulo * 2)) * 2
+        espejo.Position = posicionBola + Vector3.new(
+            math.cos(math.rad(angulo)) * 4.2,
+            altura,
+            math.sin(math.rad(angulo)) * 4.2
+        )
+        
+        table.insert(espejos, espejo)
+    end
+    
+    -- LUCES DE DISCOTECA
+    local luces = {}
+    for i = 1, 12 do
+        local luz = Instance.new("Part")
+        luz.Size = Vector3.new(2, 2, 2)
+        luz.Anchored = true
+        luz.Color = COLORES_CUBANOS.Blanco
+        luz.Material = Enum.Material.Neon
+        luz.Transparency = 0.5
+        luz.Parent = bola
+        
+        local angulo = (i - 1) * 30
+        luz.Position = posicionBola + Vector3.new(
+            math.cos(math.rad(angulo)) * 12,
+            math.random(-3, 3),
+            math.sin(math.rad(angulo)) * 12
+        )
+        
+        local pointLight = Instance.new("PointLight")
+        pointLight.Brightness = 0
+        pointLight.Range = 50
+        pointLight.Parent = luz
+        
+        table.insert(luces, {parte = luz, luz = pointLight})
+    end
+    
+    -- SISTEMA DE CONTROL
+    local bolaActiva = false
+    local anguloRotacion = 0
+    
+    -- CICLO DE ENCENDIDO/APAGADO (1 minuto encendida, 1 minuto apagada)
+    spawn(function()
+        while true do
+            -- ENCENDER (1 minuto)
+            bolaActiva = true
+            print("🎆 Bola de discoteca ENCENDIDA")
+            
+            -- Apagar luces del salón
+            for _, obj in pairs(SalonFolder:GetChildren()) do
+                if obj:FindFirstChild("PointLight") then
+                    obj.PointLight.Brightness = 0
+                end
+            end
+            
+            wait(60) -- 1 minuto encendida
+            
+            -- APAGAR (1 minuto)
+            bolaActiva = false
+            print("🌑 Bola de discoteca APAGADA")
+            
+            -- Encender luces del salón
+            for _, obj in pairs(SalonFolder:GetChildren()) do
+                if obj:FindFirstChild("PointLight") then
+                    obj.PointLight.Brightness = 3
+                end
+            end
+            
+            -- Apagar luces de discoteca
+            for _, luzData in pairs(luces) do
+                luzData.parte.Color = COLORES_CUBANOS.Blanco
+                luzData.luz.Brightness = 0
+            end
+            
+            wait(60) -- 1 minuto apagada
+        end
+    end)
+    
+    -- ANIMACION DE ROTACION Y EFECTOS
+    spawn(function()
+        while true do
+            if bolaActiva then
+                -- Rotar bola
+                anguloRotacion = anguloRotacion + 2
+                bola.CFrame = CFrame.new(posicionBola) * CFrame.Angles(0, math.rad(anguloRotacion), 0)
+                
+                -- Actualizar espejos
+                for i, espejo in pairs(espejos) do
+                    local angulo = (i - 1) * (360 / 32) + anguloRotacion
+                    local altura = math.sin(math.rad(angulo * 2)) * 2
+                    espejo.Position = posicionBola + Vector3.new(
+                        math.cos(math.rad(angulo)) * 4.2,
+                        altura,
+                        math.sin(math.rad(angulo)) * 4.2
+                    )
+                    
+                    espejo.Color = Color3.fromHSV((anguloRotacion + i * 10) % 360 / 360, 0.8, 1)
+                end
+                
+                -- Efectos de luces aleatorias
+                for _, luzData in pairs(luces) do
+                    if math.random() > 0.7 then
+                        local colores = {COLORES_CUBANOS.Rojo, COLORES_CUBANOS.Verde, COLORES_CUBANOS.Azul, COLORES_CUBANOS.Rosa, COLORES_CUBANOS.Amarillo}
+                        local colorAleatorio = colores[math.random(1, #colores)]
+                        
+                        luzData.parte.Color = colorAleatorio
+                        luzData.luz.Color = colorAleatorio
+                        luzData.luz.Brightness = math.random(5, 10)
+                    else
+                        luzData.luz.Brightness = 0
+                    end
+                end
+                
+                -- Rayos de luz
+                if math.random() > 0.8 then
+                    local rayo = Instance.new("Part")
+                    rayo.Size = Vector3.new(0.5, 0.5, 30)
+                    rayo.Position = posicionBola
+                    rayo.Anchored = true
+                    rayo.CanCollide = false
+                    rayo.Color = Color3.fromHSV(math.random(), 1, 1)
+                    rayo.Material = Enum.Material.Neon
+                    rayo.Transparency = 0.3
+                    rayo.Parent = bola
+                    
+                    rayo.CFrame = CFrame.new(posicionBola, posicionBola + Vector3.new(
+                        math.random(-20, 20),
+                        math.random(-10, -20),
+                        math.random(-20, 20)
+                    ))
+                    
+                    game:GetService("Debris"):AddItem(rayo, 0.5)
+                end
+            end
+            
+            wait(0.1)
+        end
+    end)
+    
+    print("✅ Bola de discoteca completa OK")
     return bola
 end
 
