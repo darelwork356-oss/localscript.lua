@@ -155,18 +155,18 @@ local function CrearPalmeraCubana(posicion)
         end
     end
     
-    -- HOJAS SIMPLES (8 hojas)
+    -- HOJAS ENDEREZADAS (8 hojas)
     local alturaCopa = segmentosTronco * alturaPorSegmento
     local posicionCopa = posicion + Vector3.new(0, alturaCopa, 0)
     
     for i = 1, 8 do
         local angulo = (i - 1) * 45 -- 8 hojas = 45 grados cada una
         
-        -- Hoja completa
+        -- Hoja completa (más enderezada)
         local hoja = Instance.new("Part")
         hoja.Size = Vector3.new(6, 0.3, 1.5)
         hoja.CFrame = CFrame.new(posicionCopa) 
-            * CFrame.Angles(math.rad(-30), math.rad(angulo), 0)
+            * CFrame.Angles(math.rad(-15), math.rad(angulo), 0)
             * CFrame.new(3, 0, 0)
         hoja.Anchored = true
         hoja.Color = Color3.fromRGB(50, 150, 70)
@@ -400,28 +400,49 @@ local function CrearCalle()
         CrearPalmeraCubana(pos)
     end
     
-    -- Bancos cubanos
-    print("🪑 Agregando bancos típicos...")
-    for i = 1, 6 do
-        local x = math.random(-40, 40)
-        local z = math.random(-100, 100)
-        
+    -- Bancos cubanos (mejor organizados)
+    print("🪑 Agregando bancos organizados...")
+    local posicionesBancos = {
+        {pos = Vector3.new(-35, 0, 50), rot = 0},    -- Mirando al escenario
+        {pos = Vector3.new(35, 0, 50), rot = 0},     -- Mirando al escenario
+        {pos = Vector3.new(-35, 0, 80), rot = 0},    -- Mirando al escenario
+        {pos = Vector3.new(35, 0, 80), rot = 0},     -- Mirando al escenario
+        {pos = Vector3.new(-20, 0, 120), rot = 90},  -- Mirando al centro
+        {pos = Vector3.new(20, 0, 120), rot = -90}   -- Mirando al centro
+    }
+    
+    for _, bancoData in ipairs(posicionesBancos) do
         local banco = Instance.new("Seat")
         banco.Size = Vector3.new(6, 1, 2)
-        banco.Position = Vector3.new(x, 1.5, z)
+        banco.Position = bancoData.pos + Vector3.new(0, 1.5, 0)
         banco.Anchored = true
         banco.Color = Color3.fromRGB(180, 120, 80)
         banco.Material = Enum.Material.SmoothPlastic
         banco.Parent = CalleFolder
         
+        -- Rotar banco según orientación
+        banco.CFrame = CFrame.new(banco.Position) * CFrame.Angles(0, math.rad(bancoData.rot), 0)
+        
         -- Respaldo
         local respaldo = Instance.new("Part")
         respaldo.Size = Vector3.new(6, 2, 0.3)
-        respaldo.Position = Vector3.new(x, 2.5, z + 0.85)
         respaldo.Anchored = true
         respaldo.Color = Color3.fromRGB(180, 120, 80)
         respaldo.Material = Enum.Material.SmoothPlastic
         respaldo.Parent = CalleFolder
+        
+        -- Posicionar respaldo según rotación
+        if bancoData.rot == 0 then
+            respaldo.Position = banco.Position + Vector3.new(0, 1, 1.15)
+        elseif bancoData.rot == 90 then
+            respaldo.Position = banco.Position + Vector3.new(1.15, 1, 0)
+            respaldo.Size = Vector3.new(0.3, 2, 6)
+        else -- -90
+            respaldo.Position = banco.Position + Vector3.new(-1.15, 1, 0)
+            respaldo.Size = Vector3.new(0.3, 2, 6)
+        end
+        
+        respaldo.CFrame = CFrame.new(respaldo.Position) * CFrame.Angles(0, math.rad(bancoData.rot), 0)
     end
     
     print("✅ Calle cubana auténtica completada")
@@ -1003,6 +1024,23 @@ local function CrearMesas()
             respaldo.Color = Color3.fromRGB(130, 85, 60)
             respaldo.Material = Enum.Material.SmoothPlastic
             respaldo.Parent = MueblesFolder
+            
+            -- Patas de la silla (4 patas)
+            for j = 1, 4 do
+                local pata = Instance.new("Part")
+                pata.Size = Vector3.new(0.2, 1.5, 0.2)
+                
+                local offsetPata = Vector3.new(
+                    (j <= 2) and -0.8 or 0.8,
+                    -1.25,
+                    (j % 2 == 1) and -0.8 or 0.8
+                )
+                pata.Position = seat.Position + offsetPata
+                pata.Anchored = true
+                pata.Color = Color3.fromRGB(100, 65, 40)
+                pata.Material = Enum.Material.SmoothPlastic
+                pata.Parent = MueblesFolder
+            end
         end
     end
     
@@ -1226,11 +1264,11 @@ local function CrearEscenario()
         end
     end
     
-    -- ESCALERAS DE ACCESO AL ESCENARIO (centro frontal)
+    -- ESCALERAS DE ACCESO AL ESCENARIO (bien orientadas)
     for i = 1, 5 do
         local escalon = Instance.new("Part")
         escalon.Size = Vector3.new(12, 1, 3)
-        escalon.Position = posEsc + Vector3.new(0, -6 + (i * 1), -15 - (i * 2))
+        escalon.Position = posEsc + Vector3.new(0, -6 + (i * 1), -15 + (i * 2))
         escalon.Anchored = true
         escalon.Color = Color3.fromRGB(60, 60, 70)
         escalon.Material = Enum.Material.SmoothPlastic
