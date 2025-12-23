@@ -828,8 +828,8 @@ local function startVecnaClockScene()
     
     print("🎬 FASE 3: ✅ LUCES PARPADEANDO - CÁMARA MOSTRANDO EL TECHO")
     
-    -- ✅ CÁMARA MIRANDO ARRIBA AL TECHO Y LUCES
-    print("📹 CÁMARA MOSTRANDO LUCES DEL TECHO")
+    -- ✅ CÁMARA 1: MIRANDO ARRIBA AL TECHO Y LUCES
+    print("📹 CÁMARA 1: Luces del techo desde abajo")
     local ceilingCam = Vector3.new(0, 6, 30)
     TweenService:Create(cam, TweenInfo.new(2), {
         CFrame = CFrame.new(ceilingCam, Vector3.new(0, 15, 40)),
@@ -845,13 +845,19 @@ local function startVecnaClockScene()
             for _, lightData in ipairs(lights) do
                 lightData.light.Enabled = not lightData.light.Enabled
                 lightData.fixture.Transparency = lightData.light.Enabled and 0.15 or 0.98
-                -- Sonido por cada luz que parpadea
                 if lightData.light.Enabled then
                     playAudio("LightFlicker"..flicker.."_".._, soundIds.lightFlicker, 0.3, false, lightData.fixture)
                 end
             end
             task.wait(0.07)
         end
+        
+        -- CÁMARA 2: Vista lateral del pasillo con luces
+        print("📹 CÁMARA 2: Lateral del pasillo")
+        TweenService:Create(cam, TweenInfo.new(2), {
+            CFrame = CFrame.new(Vector3.new(-20, 8, 0), Vector3.new(0, 12, 0)),
+            FieldOfView = 70
+        }):Play()
         
         task.wait(0.5)
         
@@ -864,11 +870,17 @@ local function startVecnaClockScene()
             for _, lightData in ipairs(lights) do
                 lightData.light.Enabled = true
                 lightData.fixture.Transparency = 0.15
-                -- Sonido por cada luz que se enciende
                 playAudio("LightOn"..flicker.."_".._, soundIds.lightFlicker, 0.2, false, lightData.fixture)
             end
             task.wait(0.2)
         end
+        
+        -- CÁMARA 3: Vista frontal del pasillo
+        print("📹 CÁMARA 3: Frontal del pasillo")
+        TweenService:Create(cam, TweenInfo.new(2), {
+            CFrame = CFrame.new(Vector3.new(0, 8, -40), Vector3.new(0, 10, 20)),
+            FieldOfView = 65
+        }):Play()
         
         task.wait(1)
         
@@ -880,7 +892,6 @@ local function startVecnaClockScene()
                 task.wait(0.03)
                 lightData.light.Enabled = true
                 lightData.fixture.Transparency = 0.15
-                -- Sonido por cada parpadeo individual
                 playAudio("LightMini"..i.."_"..mini, soundIds.lightFlicker, 0.15, false, lightData.fixture)
                 task.wait(0.03)
             end
@@ -900,7 +911,7 @@ local function startVecnaClockScene()
     
     print("🎬 FASE 4: RELOJ APARECE")
     
-    local clockPosition = Vector3.new(0, 0.5, 74)
+    local clockPosition = Vector3.new(0, 0.5, 73.5)
     local clockModel, clockFace, hourHand, minuteHand, clockLight, clockLight2, darkParticles, darkAura = createVecnaGrandfatherClock(clockPosition)
     
     for _, part in pairs(clockModel:GetDescendants()) do
