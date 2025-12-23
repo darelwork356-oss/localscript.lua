@@ -14,13 +14,13 @@ terrain:Clear()
 print("💧 Creando océano infinito...")
 
 terrain:FillRegion(
-    Region3.new(Vector3.new(-2000, 50, -2000), Vector3.new(2000, 100, 2000)):ExpandToGrid(4),
+    Region3.new(Vector3.new(-2000, 0, -2000), Vector3.new(2000, 50, 2000)):ExpandToGrid(4),
     4,
     Enum.Material.Water
 )
 
 terrain:FillRegion(
-    Region3.new(Vector3.new(-2000, -50, -2000), Vector3.new(2000, 0, 2000)):ExpandToGrid(4),
+    Region3.new(Vector3.new(-2000, -20, -2000), Vector3.new(2000, 0, 2000)):ExpandToGrid(4),
     4,
     Enum.Material.Sand
 )
@@ -39,17 +39,21 @@ raftFolder.Parent = workspace
 local raftBase = Instance.new("Part")
 raftBase.Name = "RaftBase"
 raftBase.Size = Vector3.new(30, 3, 30)
-raftBase.Position = Vector3.new(0, 101, 0)
+raftBase.Position = Vector3.new(0, 51, 0)
 raftBase.Anchored = true
-raftBase.Material = Enum.Material.Wood
+raftBase.Material = Enum.Material.WoodPlanks
 raftBase.Color = Color3.fromRGB(139, 90, 43)
 raftBase.Parent = raftFolder
 
-for i = 1, 3 do
+local baseMesh = Instance.new("BlockMesh")
+baseMesh.Scale = Vector3.new(1, 0.3, 1)
+baseMesh.Parent = raftBase
+
+for i = 1, 6 do
     for j = 1, 2 do
         local log = Instance.new("Part")
-        log.Size = Vector3.new(8, 2, 28)
-        log.Position = raftBase.Position + Vector3.new(-10 + i*10, -2, -14 + j*28)
+        log.Size = Vector3.new(3, 3, 28)
+        log.Position = raftBase.Position + Vector3.new(-15 + i*5, -2, -14 + j*28)
         log.Anchored = true
         log.Material = Enum.Material.Wood
         log.Color = Color3.fromRGB(101, 67, 33)
@@ -58,18 +62,23 @@ for i = 1, 3 do
         log.Parent = raftFolder
         
         local mesh = Instance.new("CylinderMesh")
+        mesh.Scale = Vector3.new(1.2, 1, 1.2)
         mesh.Parent = log
     end
 end
 
-for i = 1, 10 do
+for i = 1, 12 do
     local plank = Instance.new("Part")
-    plank.Size = Vector3.new(30, 0.8, 2.5)
-    plank.Position = raftBase.Position + Vector3.new(0, 2, -12 + i*2.5)
+    plank.Size = Vector3.new(30, 0.5, 2.3)
+    plank.Position = raftBase.Position + Vector3.new(0, 2, -13.5 + i*2.3)
     plank.Anchored = true
     plank.Material = Enum.Material.WoodPlanks
     plank.Color = Color3.fromRGB(160, 120, 80)
     plank.Parent = raftFolder
+    
+    local plankMesh = Instance.new("BlockMesh")
+    plankMesh.Scale = Vector3.new(1, 1, 0.95)
+    plankMesh.Parent = plank
 end
 
 for i = 1, 4 do
@@ -154,7 +163,7 @@ spawn.TopSurface = Enum.SurfaceType.Smooth
 spawn.Transparency = 0.3
 spawn.Parent = raftFolder
 
-print("✅ Balsa épica creada en Y=101")
+print("✅ Balsa épica creada en Y=51")
 
 -- ========================================
 -- ALGAS RECOLECTABLES
@@ -180,7 +189,7 @@ for i = 1, 1000 do
         local algaeBase = Instance.new("Part")
         algaeBase.Name = "AlgaeBase"
         algaeBase.Size = Vector3.new(3, 4, 3)
-        algaeBase.Position = Vector3.new(x, 5, z)
+        algaeBase.Position = Vector3.new(x, 10, z)
         algaeBase.Anchored = true
         algaeBase.Material = Enum.Material.Neon
         algaeBase.Color = baseColor
@@ -208,7 +217,7 @@ for i = 1, 1000 do
             segment.Size = Vector3.new(1.5, 4, 0.5)
             segment.Position = Vector3.new(
                 x + math.sin(seg * 0.6) * (seg * 0.5),
-                5 + seg * 4,
+                10 + seg * 4,
                 z + math.cos(seg * 0.6) * (seg * 0.5)
             )
             segment.Anchored = true
@@ -348,7 +357,7 @@ decorFolder.Parent = workspace
 for i = 1, 50 do
     local buoy = Instance.new("Part")
     buoy.Size = Vector3.new(3, 5, 3)
-    buoy.Position = Vector3.new(math.random(-1500, 1500), 98, math.random(-1500, 1500))
+    buoy.Position = Vector3.new(math.random(-1500, 1500), 48, math.random(-1500, 1500))
     buoy.Anchored = true
     buoy.Material = Enum.Material.SmoothPlastic
     buoy.Color = Color3.fromRGB(255, 100, 50)
@@ -365,7 +374,7 @@ end
 for i = 1, 20 do
     local platform = Instance.new("Part")
     platform.Size = Vector3.new(15, 2, 15)
-    platform.Position = Vector3.new(math.random(-1500, 1500), 100, math.random(-1500, 1500))
+    platform.Position = Vector3.new(math.random(-1500, 1500), 50, math.random(-1500, 1500))
     platform.Anchored = true
     platform.Material = Enum.Material.Metal
     platform.Color = Color3.fromRGB(150, 150, 150)
@@ -375,7 +384,7 @@ end
 for i = 1, 15 do
     local wreck = Instance.new("Part")
     wreck.Size = Vector3.new(20, 10, 30)
-    wreck.Position = Vector3.new(math.random(-1500, 1500), 20, math.random(-1500, 1500))
+    wreck.Position = Vector3.new(math.random(-1500, 1500), -5, math.random(-1500, 1500))
     wreck.Anchored = true
     wreck.Material = Enum.Material.CorrodedMetal
     wreck.Color = Color3.fromRGB(100, 80, 60)
@@ -405,7 +414,7 @@ for i = 1, 30 do
     local body = Instance.new("Part")
     body.Name = "Body"
     body.Size = Vector3.new(4, 3, 12)
-    body.Position = Vector3.new(x, 60, z)
+    body.Position = Vector3.new(x, 25, z)
     body.Anchored = false
     body.Material = Enum.Material.SmoothPlastic
     body.Color = Color3.fromRGB(70, 80, 90)
@@ -565,7 +574,7 @@ print("")
 print("🎉 ═══════════════════════════════════════")
 print("🧜♀️ MAKO MERMAIDS - SUPERVIVENCIA")
 print("═══════════════════════════════════════")
-print("🛟 Balsa: 30x30 studs en Y=101")
+print("🛟 Balsa: 30x30 studs en Y=51")
 print("🌿 Algas: 1000 recolectables")
 print("🏊 Velocidad: 25 studs/s (+10 cada 10 algas)")
 print("🏗️ Decoración: 50 boyas, 20 plataformas, 15 naufragios")
