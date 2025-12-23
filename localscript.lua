@@ -656,10 +656,9 @@ local function createGroundCrack(startPos, endPos, width, depth)
     registerEffect(crack)
     applyStudsToAllFaces(crack, Color3.fromRGB(30, 30, 35))
     
-    -- ✅ LUZ ROJA BRILLANTE EN CADA GRIETA
     local crackGlow = Instance.new("PointLight")
-    crackGlow.Brightness = 4  -- MUY BRILLANTE
-    crackGlow.Range = 25
+    crackGlow.Brightness = 2
+    crackGlow.Range = 15
     crackGlow.Color = Color3.fromRGB(255, 70, 70)
     crackGlow.Shadows = false
     crackGlow.Parent = crack
@@ -1045,44 +1044,44 @@ local function startVecnaClockScene()
     
     task.wait(2)
     
-    print("💥 GRÁFICOS MASIVOS")
+    print("💥 GRÁFICOS")
     
-    for i = 1, 80 do
+    for i = 1, 20 do
         local vfxPart = Instance.new("Part")
-        vfxPart.Size = Vector3.new(4, 4, 4)
+        vfxPart.Size = Vector3.new(2, 2, 2)
         vfxPart.Position = clockPosition + Vector3.new(
-            math.random(-30, 30),
-            math.random(-12, 18),
-            math.random(-12, 12)
+            math.random(-15, 15),
+            math.random(-5, 10),
+            math.random(-8, 8)
         )
         vfxPart.Anchored = true
         vfxPart.CanCollide = false
         vfxPart.Material = Enum.Material.Plastic
-        vfxPart.Color = Color3.fromRGB(200, 50, 50)
-        vfxPart.Transparency = 0.2
+        vfxPart.Color = Color3.fromRGB(150, 30, 30)
+        vfxPart.Transparency = 0.4
         vfxPart.Parent = workspace
         registerEffect(vfxPart)
-        applyStudsToAllFaces(vfxPart, Color3.fromRGB(200, 50, 50))
+        applyStudsToAllFaces(vfxPart, Color3.fromRGB(150, 30, 30))
         
         local vfxLight = Instance.new("PointLight")
-        vfxLight.Brightness = 4
-        vfxLight.Range = 20
-        vfxLight.Color = Color3.fromRGB(255, 60, 60)
+        vfxLight.Brightness = 2
+        vfxLight.Range = 12
+        vfxLight.Color = Color3.fromRGB(255, 50, 50)
         vfxLight.Parent = vfxPart
         
-        TweenService:Create(vfxPart, TweenInfo.new(3.5), {
-            Size = Vector3.new(15, 15, 15),
+        TweenService:Create(vfxPart, TweenInfo.new(2.5), {
+            Size = Vector3.new(8, 8, 8),
             Transparency = 1
         }):Play()
-        Debris:AddItem(vfxPart, 4)
+        Debris:AddItem(vfxPart, 3)
     end
     
     local bigFlash = Instance.new("Frame", screenGui)
     bigFlash.Size = UDim2.fromScale(1, 1)
-    bigFlash.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    bigFlash.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     bigFlash.ZIndex = 150
-    TweenService:Create(bigFlash, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
-    Debris:AddItem(bigFlash, 1.5)
+    TweenService:Create(bigFlash, TweenInfo.new(0.8), {BackgroundTransparency = 1}):Play()
+    Debris:AddItem(bigFlash, 1)
     
     task.wait(1.5)
     
@@ -1112,30 +1111,30 @@ local function startVecnaClockScene()
     local crackOrigin = Vector3.new(0, 0.5, 68)
     
     task.spawn(function()
-        for angle = 0, 360, 20 do
+        for angle = 0, 360, 30 do
             local rad = math.rad(angle)
             local endPos = crackOrigin + Vector3.new(
-                math.cos(rad) * 50,
+                math.cos(rad) * 25,
                 0,
-                math.sin(rad) * 50
+                math.sin(rad) * 25
             )
-            createGroundCrack(crackOrigin, endPos, 1.2, 3)
-            task.wait(0.12)
+            createGroundCrack(crackOrigin, endPos, 0.8, 2)
+            task.wait(0.15)
         end
         
-        for i = 1, 40 do
+        for i = 1, 15 do
             local startPos = crackOrigin + Vector3.new(
-                math.random(-30, 30),
+                math.random(-15, 15),
                 0,
-                math.random(-30, 30)
+                math.random(-15, 15)
             )
             local endPos = startPos + Vector3.new(
-                math.random(-20, 20),
+                math.random(-10, 10),
                 0,
-                math.random(-20, 20)
+                math.random(-10, 10)
             )
-            createGroundCrack(startPos, endPos, 0.8, 2.5)
-            task.wait(0.06)
+            createGroundCrack(startPos, endPos, 0.6, 1.5)
+            task.wait(0.08)
         end
     end)
     
