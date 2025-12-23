@@ -962,7 +962,7 @@ local function startVecnaClockScene()
     root.Anchored = false
     hum.WalkSpeed = 4
     
-    local walkToClockTarget = Vector3.new(0, 1.5, 62)
+    local walkToClockTarget = Vector3.new(0, 1.5, 65)
     hum:MoveTo(walkToClockTarget)
     
     followConnection = RunService.RenderStepped:Connect(function()
@@ -980,7 +980,12 @@ local function startVecnaClockScene()
         end
     end)
     
-    task.wait(4)
+    -- Esperar hasta que llegue cerca del reloj
+    repeat
+        task.wait(0.1)
+    until not root or not root.Parent or (root.Position - walkToClockTarget).Magnitude < 3
+    
+    task.wait(0.5)
     
     hum.WalkSpeed = 0
     root.Anchored = true
