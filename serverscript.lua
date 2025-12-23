@@ -428,8 +428,194 @@ local function CrearCalle()
 end
 
 -- ============================================
--- SALON CUBANO CON ENTRADA ABIERTA
+-- BOLA DE DISCOTECA
 -- ============================================
+
+local function CrearBolaDiscoteca()
+    print("🩩 Creando bola de discoteca...")
+    
+    local posicionBola = Vector3.new(0, 25, 220)
+    
+    -- BOLA PRINCIPAL
+    local bola = Instance.new("Part")
+    bola.Name = "BolaDiscoteca"
+    bola.Size = Vector3.new(8, 8, 8)
+    bola.Position = posicionBola
+    bola.Anchored = true
+    bola.Color = Color3.fromRGB(200, 200, 200)
+    bola.Material = Enum.Material.Neon
+    bola.Transparency = 0.1
+    bola.Parent = SalonFolder
+    
+    local bolaMesh = Instance.new("SpecialMesh")
+    bolaMesh.MeshType = Enum.MeshType.Sphere
+    bolaMesh.Parent = bola
+    
+    -- ESPEJOS EN LA BOLA (32 espejos)
+    local espejos = {}
+    for i = 1, 32 do
+        local espejo = Instance.new("Part")
+        espejo.Size = Vector3.new(0.8, 0.8, 0.1)
+        espejo.Anchored = true
+        espejo.Color = Color3.fromRGB(255, 255, 255)
+        espejo.Material = Enum.Material.Neon
+        espejo.Transparency = 0.3
+        espejo.Parent = bola
+        
+        -- Posicionar espejos alrededor de la bola
+        local angulo = (i - 1) * (360 / 32)
+        local altura = math.sin(math.rad(angulo * 2)) * 2
+        espejo.Position = posicionBola + Vector3.new(
+            math.cos(math.rad(angulo)) * 4.2,
+            altura,
+            math.sin(math.rad(angulo)) * 4.2
+        )
+        
+        table.insert(espejos, espejo)
+    end
+    
+    -- CADENA DE SUSPENSION
+    local cadena = Instance.new("Part")
+    cadena.Size = Vector3.new(0.3, 5, 0.3)
+    cadena.Position = posicionBola + Vector3.new(0, 6.5, 0)
+    cadena.Anchored = true
+    cadena.Color = Color3.fromRGB(60, 60, 70)
+    cadena.Material = Enum.Material.SmoothPlastic
+    cadena.Parent = bola
+    
+    -- LUCES DE DISCOTECA (12 focos)
+    local luces = {}
+    for i = 1, 12 do
+        local luz = Instance.new("Part")
+        luz.Size = Vector3.new(2, 2, 2)
+        luz.Anchored = true
+        luz.Color = COLORES_CUBANOS.Blanco
+        luz.Material = Enum.Material.Neon
+        luz.Transparency = 0.5
+        luz.Parent = bola
+        
+        local angulo = (i - 1) * 30
+        luz.Position = posicionBola + Vector3.new(
+            math.cos(math.rad(angulo)) * 12,
+            math.random(-3, 3),
+            math.sin(math.rad(angulo)) * 12
+        )
+        
+        local pointLight = Instance.new("PointLight")
+        pointLight.Brightness = 0
+        pointLight.Range = 50
+        pointLight.Parent = luz
+        
+        table.insert(luces, {parte = luz, luz = pointLight})
+    end
+    
+    -- SISTEMA DE CONTROL
+    local bolaActiva = false
+    local anguloRotacion = 0
+    
+    -- CICLO DE ENCENDIDO/APAGADO (1 minuto encendida, 1 minuto apagada)
+    spawn(function()
+        while true do
+            -- ENCENDER (1 minuto)
+            bolaActiva = true
+            print("🎆 Bola de discoteca ENCENDIDA")
+            
+            -- Apagar luces del salón
+            for _, obj in pairs(SalonFolder:GetChildren()) do
+                if obj:FindFirstChild("PointLight") then
+                    obj.PointLight.Brightness = 0
+                end
+            end
+            
+            wait(60) -- 1 minuto encendida
+            
+            -- APAGAR (1 minuto)
+            bolaActiva = false
+            print("🌑 Bola de discoteca APAGADA")
+            
+            -- Encender luces del salón
+            for _, obj in pairs(SalonFolder:GetChildren()) do
+                if obj:FindFirstChild("PointLight") then
+                    obj.PointLight.Brightness = 3
+                end
+            end
+            
+            -- Apagar luces de discoteca
+            for _, luzData in pairs(luces) do
+                luzData.parte.Color = COLORES_CUBANOS.Blanco
+                luzData.luz.Brightness = 0
+            end
+            
+            wait(60) -- 1 minuto apagada
+        end
+    end)
+    
+    -- ANIMACION DE ROTACION Y EFECTOS
+    spawn(function()
+        while true do
+            if bolaActiva then
+                -- Rotar bola
+                anguloRotacion = anguloRotacion + 2
+                bola.CFrame = CFrame.new(posicionBola) * CFrame.Angles(0, math.rad(anguloRotacion), 0)
+                
+                -- Actualizar espejos
+                for i, espejo in pairs(espejos) do
+                    local angulo = (i - 1) * (360 / 32) + anguloRotacion
+                    local altura = math.sin(math.rad(angulo * 2)) * 2
+                    espejo.Position = posicionBola + Vector3.new(
+                        math.cos(math.rad(angulo)) * 4.2,
+                        altura,
+                        math.sin(math.rad(angulo)) * 4.2
+                    )
+                    
+                    -- Efecto de brillo en espejos
+                    espejo.Color = Color3.fromHSV((anguloRotacion + i * 10) % 360 / 360, 0.8, 1)
+                end
+                
+                -- Efectos de luces aleatorias
+                for _, luzData in pairs(luces) do
+                    if math.random() > 0.7 then
+                        local colores = {COLORES_CUBANOS.Rojo, COLORES_CUBANOS.Verde, COLORES_CUBANOS.Azul, COLORES_CUBANOS.Rosa, COLORES_CUBANOS.Amarillo}
+                        local colorAleatorio = colores[math.random(1, #colores)]
+                        
+                        luzData.parte.Color = colorAleatorio
+                        luzData.luz.Color = colorAleatorio
+                        luzData.luz.Brightness = math.random(5, 10)
+                    else
+                        luzData.luz.Brightness = 0
+                    end
+                end
+                
+                -- Rayos de luz desde la bola
+                if math.random() > 0.8 then
+                    local rayo = Instance.new("Part")
+                    rayo.Size = Vector3.new(0.5, 0.5, 30)
+                    rayo.Position = posicionBola
+                    rayo.Anchored = true
+                    rayo.CanCollide = false
+                    rayo.Color = Color3.fromHSV(math.random(), 1, 1)
+                    rayo.Material = Enum.Material.Neon
+                    rayo.Transparency = 0.3
+                    rayo.Parent = bola
+                    
+                    rayo.CFrame = CFrame.new(posicionBola, posicionBola + Vector3.new(
+                        math.random(-20, 20),
+                        math.random(-10, -20),
+                        math.random(-20, 20)
+                    ))
+                    
+                    -- Eliminar rayo después de 0.5 segundos
+                    game:GetService("Debris"):AddItem(rayo, 0.5)
+                end
+            end
+            
+            wait(0.1)
+        end
+    end)
+    
+    print("✅ Bola de discoteca completada")
+    return bola
+end
 
 local function CrearSalon()
     print("🎉 Creando salón cubano con entrada abierta...")
@@ -1321,6 +1507,7 @@ ConfigurarIluminacion()
 CrearBase()
 CrearCalle()
 CrearSalon()
+local bolaDiscoteca = CrearBolaDiscoteca()
 CrearMesas()
 CrearBar()
 local escenario = CrearEscenario()
