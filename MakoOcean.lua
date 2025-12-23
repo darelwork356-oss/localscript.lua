@@ -1,5 +1,5 @@
 --[[
-🧜♀️ MAKO MERMAIDS - OCÉANO
+🧜♀️ MAKO MERMAIDS - OCÉANO REAL
 Colocar en: ServerScriptService
 ]]
 
@@ -7,407 +7,248 @@ local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
 
-print("🌊 Iniciando creación del océano de Mako...")
+print("🌊 Creando océano REAL de Mako Mermaids...")
 
--- Carpeta principal
-local oceanFolder = Instance.new("Folder")
-oceanFolder.Name = "MakoOcean"
-oceanFolder.Parent = workspace
+local terrain = workspace.Terrain
 
 -- ========================================
--- CONFIGURAR ILUMINACIÓN SUBMARINA
+-- LIMPIAR TERRAIN
 -- ========================================
-local function setupLighting()
-    print("💡 Configurando iluminación submarina...")
+terrain:Clear()
+
+-- ========================================
+-- CREAR AGUA REAL CON TERRAIN
+-- ========================================
+local function createRealWater()
+    print("💧 Generando agua REAL con Terrain...")
     
-    Lighting.Ambient = Color3.fromRGB(50, 120, 180)
-    Lighting.Brightness = 2
-    Lighting.ColorShift_Top = Color3.fromRGB(100, 180, 255)
-    Lighting.OutdoorAmbient = Color3.fromRGB(70, 140, 200)
-    Lighting.FogEnd = 300
-    Lighting.FogColor = Color3.fromRGB(30, 100, 150)
+    -- Región de agua (200x200x60 studs)
+    local waterRegion = Region3.new(
+        Vector3.new(-100, -60, -100),
+        Vector3.new(100, 0, 100)
+    ):ExpandToGrid(4)
     
-    -- Atmósfera submarina
-    local atmosphere = Instance.new("Atmosphere")
-    atmosphere.Density = 0.4
-    atmosphere.Offset = 0.3
-    atmosphere.Color = Color3.fromRGB(100, 180, 255)
-    atmosphere.Decay = Color3.fromRGB(100, 150, 200)
-    atmosphere.Glare = 0.5
-    atmosphere.Haze = 2
-    atmosphere.Parent = Lighting
+    terrain:FillRegion(waterRegion, 4, Enum.Material.Water)
     
-    -- Sol para rayos de luz
-    local sun = Instance.new("SunRaysEffect")
-    sun.Intensity = 0.15
-    sun.Spread = 0.1
-    sun.Parent = Lighting
+    -- Configurar propiedades del agua
+    terrain.WaterWaveSize = 0.3
+    terrain.WaterWaveSpeed = 15
+    terrain.WaterReflectance = 0.8
+    terrain.WaterTransparency = 0.3
+    
+    print("✅ Agua real creada")
 end
 
 -- ========================================
--- CREAR SUELO MARINO
+-- CREAR SUELO MARINO CON TERRAIN
 -- ========================================
 local function createOceanFloor()
-    print("🏖️ Creando suelo marino...")
+    print("🏖️ Generando suelo marino...")
     
-    -- Suelo principal de arena
-    local floor = Instance.new("Part")
-    floor.Name = "OceanFloor"
-    floor.Size = Vector3.new(500, 5, 500)
-    floor.Position = Vector3.new(0, -50, 0)
-    floor.Anchored = true
-    floor.Material = Enum.Material.Sand
-    floor.Color = Color3.fromRGB(220, 200, 160)
-    floor.Parent = oceanFolder
+    -- Suelo de arena
+    local floorRegion = Region3.new(
+        Vector3.new(-100, -65, -100),
+        Vector3.new(100, -60, 100)
+    ):ExpandToGrid(4)
     
-    -- Capas de arena con diferentes tonos
-    for i = 1, 30 do
-        local sandPatch = Instance.new("Part")
-        sandPatch.Size = Vector3.new(
-            math.random(20, 50),
-            0.5,
-            math.random(20, 50)
-        )
-        sandPatch.Position = Vector3.new(
-            math.random(-240, 240),
-            -47,
-            math.random(-240, 240)
-        )
-        sandPatch.Anchored = true
-        sandPatch.Material = Enum.Material.Sand
-        sandPatch.Color = Color3.fromRGB(
-            math.random(200, 230),
-            math.random(180, 210),
-            math.random(140, 170)
-        )
-        sandPatch.Parent = floor
-    end
+    terrain:FillRegion(floorRegion, 4, Enum.Material.Sand)
     
     -- Rocas en el suelo
-    for i = 1, 50 do
-        local rock = Instance.new("Part")
-        rock.Size = Vector3.new(
+    for i = 1, 30 do
+        local rockPos = Vector3.new(
+            math.random(-90, 90),
+            -60,
+            math.random(-90, 90)
+        )
+        local rockSize = Vector3.new(
             math.random(3, 8),
-            math.random(2, 6),
+            math.random(2, 5),
             math.random(3, 8)
         )
-        rock.Position = Vector3.new(
-            math.random(-230, 230),
-            -46,
-            math.random(-230, 230)
-        )
-        rock.Anchored = true
-        rock.Material = Enum.Material.Rock
-        rock.Color = Color3.fromRGB(
-            math.random(80, 120),
-            math.random(80, 120),
-            math.random(80, 120)
-        )
-        rock.Orientation = Vector3.new(
-            math.random(-15, 15),
-            math.random(0, 360),
-            math.random(-15, 15)
-        )
-        rock.Parent = floor
-    end
-    
-    return floor
-end
-
--- ========================================
--- CREAR AGUA DEL OCÉANO
--- ========================================
-local function createWater()
-    print("💧 Creando agua del océano...")
-    
-    -- Agua principal
-    local water = Instance.new("Part")
-    water.Name = "Water"
-    water.Size = Vector3.new(500, 80, 500)
-    water.Position = Vector3.new(0, -10, 0)
-    water.Anchored = true
-    water.CanCollide = false
-    water.Material = Enum.Material.Water
-    water.Color = Color3.fromRGB(50, 150, 200)
-    water.Transparency = 0.4
-    water.Reflectance = 0.3
-    water.Parent = oceanFolder
-    
-    -- Partículas de burbujas
-    for i = 1, 20 do
-        local bubbleEmitter = Instance.new("Part")
-        bubbleEmitter.Size = Vector3.new(1, 1, 1)
-        bubbleEmitter.Position = Vector3.new(
-            math.random(-200, 200),
-            -45,
-            math.random(-200, 200)
-        )
-        bubbleEmitter.Anchored = true
-        bubbleEmitter.Transparency = 1
-        bubbleEmitter.CanCollide = false
-        bubbleEmitter.Parent = water
+        local rockRegion = Region3.new(
+            rockPos - rockSize/2,
+            rockPos + rockSize/2
+        ):ExpandToGrid(4)
         
-        local bubbles = Instance.new("ParticleEmitter")
-        bubbles.Texture = "rbxasset://textures/particles/smoke_main.dds"
-        bubbles.Rate = 5
-        bubbles.Lifetime = NumberRange.new(3, 5)
-        bubbles.Speed = NumberRange.new(2, 4)
-        bubbles.SpreadAngle = Vector2.new(30, 30)
-        bubbles.Size = NumberSequence.new({
-            NumberSequenceKeypoint.new(0, 0.5),
-            NumberSequenceKeypoint.new(0.5, 1),
-            NumberSequenceKeypoint.new(1, 0)
-        })
-        bubbles.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0, 0.5),
-            NumberSequenceKeypoint.new(1, 1)
-        })
-        bubbles.Color = ColorSequence.new(Color3.fromRGB(200, 230, 255))
-        bubbles.LightEmission = 0.5
-        bubbles.Parent = bubbleEmitter
+        terrain:FillRegion(rockRegion, 4, Enum.Material.Rock)
     end
     
-    return water
+    print("✅ Suelo marino creado")
 end
 
 -- ========================================
--- CREAR CORALES
+-- CONFIGURAR ILUMINACIÓN
 -- ========================================
+local function setupLighting()
+    print("💡 Configurando iluminación...")
+    
+    Lighting.Ambient = Color3.fromRGB(70, 140, 200)
+    Lighting.Brightness = 2.5
+    Lighting.ColorShift_Top = Color3.fromRGB(120, 180, 255)
+    Lighting.OutdoorAmbient = Color3.fromRGB(80, 150, 210)
+    Lighting.FogEnd = 250
+    Lighting.FogColor = Color3.fromRGB(40, 120, 180)
+    Lighting.ClockTime = 14
+    
+    -- Atmósfera
+    local atmos = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
+    atmos.Density = 0.35
+    atmos.Offset = 0.25
+    atmos.Color = Color3.fromRGB(120, 180, 255)
+    atmos.Decay = Color3.fromRGB(100, 160, 220)
+    atmos.Glare = 0.4
+    atmos.Haze = 1.8
+    atmos.Parent = Lighting
+    
+    -- Rayos de sol
+    local sun = Lighting:FindFirstChildOfClass("SunRaysEffect") or Instance.new("SunRaysEffect")
+    sun.Intensity = 0.12
+    sun.Spread = 0.08
+    sun.Parent = Lighting
+    
+    print("✅ Iluminación configurada")
+end
+
+-- ========================================
+-- CREAR CORALES DETALLADOS
+-- ========================================
+local function createCoral(position, color)
+    local coral = Instance.new("Model")
+    coral.Name = "Coral"
+    
+    -- Base del coral
+    local base = Instance.new("Part")
+    base.Size = Vector3.new(2, 3, 2)
+    base.Position = position
+    base.Anchored = true
+    base.Material = Enum.Material.Cobblestone
+    base.Color = color
+    base.Parent = coral
+    
+    -- Ramas
+    for i = 1, 5 do
+        local branch = Instance.new("Part")
+        branch.Size = Vector3.new(0.8, 2, 0.8)
+        branch.Position = base.Position + Vector3.new(
+            math.random(-10, 10) / 10,
+            1.5,
+            math.random(-10, 10) / 10
+        )
+        branch.Anchored = true
+        branch.Material = Enum.Material.Cobblestone
+        branch.Color = color
+        branch.Orientation = Vector3.new(
+            math.random(-20, 20),
+            math.random(0, 360),
+            math.random(-20, 20)
+        )
+        branch.Parent = coral
+    end
+    
+    -- Luz
+    local light = Instance.new("PointLight")
+    light.Brightness = 0.8
+    light.Range = 12
+    light.Color = color
+    light.Parent = base
+    
+    coral.Parent = workspace
+    return coral
+end
+
 local function createCorals()
     print("🪸 Creando corales...")
     
-    local coralColors = {
-        Color3.fromRGB(255, 100, 150),  -- Rosa
-        Color3.fromRGB(150, 100, 255),  -- Morado
-        Color3.fromRGB(255, 150, 100),  -- Naranja
-        Color3.fromRGB(100, 255, 200),  -- Turquesa
-        Color3.fromRGB(255, 200, 100)   -- Amarillo
+    local colors = {
+        Color3.fromRGB(255, 120, 180),
+        Color3.fromRGB(180, 120, 255),
+        Color3.fromRGB(255, 180, 120),
+        Color3.fromRGB(120, 255, 220),
+        Color3.fromRGB(255, 220, 120)
     }
     
-    for i = 1, 40 do
-        local coralBase = Instance.new("Part")
-        coralBase.Size = Vector3.new(
-            math.random(2, 4),
-            math.random(3, 6),
-            math.random(2, 4)
+    for i = 1, 25 do
+        local pos = Vector3.new(
+            math.random(-85, 85),
+            -58,
+            math.random(-85, 85)
         )
-        coralBase.Position = Vector3.new(
-            math.random(-220, 220),
-            -45,
-            math.random(-220, 220)
-        )
-        coralBase.Anchored = true
-        coralBase.Material = Enum.Material.Cobblestone
-        coralBase.Color = coralColors[math.random(1, #coralColors)]
-        coralBase.Parent = oceanFolder
-        
-        -- Ramas del coral
-        for j = 1, math.random(3, 6) do
-            local branch = Instance.new("Part")
-            branch.Size = Vector3.new(
-                math.random(5, 15) / 10,
-                math.random(10, 25) / 10,
-                math.random(5, 15) / 10
-            )
-            branch.Position = coralBase.Position + Vector3.new(
-                math.random(-15, 15) / 10,
-                math.random(10, 30) / 10,
-                math.random(-15, 15) / 10
-            )
-            branch.Anchored = true
-            branch.Material = Enum.Material.Cobblestone
-            branch.Color = coralBase.Color
-            branch.Orientation = Vector3.new(
-                math.random(-30, 30),
-                math.random(0, 360),
-                math.random(-30, 30)
-            )
-            branch.Parent = coralBase
-        end
-        
-        -- Luz del coral
-        local coralLight = Instance.new("PointLight")
-        coralLight.Brightness = 1
-        coralLight.Range = 10
-        coralLight.Color = coralBase.Color
-        coralLight.Parent = coralBase
+        createCoral(pos, colors[math.random(1, #colors)])
     end
+    
+    print("✅ Corales creados")
 end
 
 -- ========================================
 -- CREAR PLANTAS MARINAS
 -- ========================================
-local function createSeaPlants()
+local function createSeaweed(position)
+    local seaweed = Instance.new("Part")
+    seaweed.Size = Vector3.new(0.5, 6, 0.5)
+    seaweed.Position = position
+    seaweed.Anchored = true
+    seaweed.Material = Enum.Material.Grass
+    seaweed.Color = Color3.fromRGB(60, 180, 100)
+    seaweed.Parent = workspace
+    
+    -- Animación
+    task.spawn(function()
+        while seaweed.Parent do
+            local tween = TweenService:Create(
+                seaweed,
+                TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                {Orientation = Vector3.new(math.random(-15, 15), 0, math.random(-15, 15))}
+            )
+            tween:Play()
+            wait(3)
+        end
+    end)
+    
+    return seaweed
+end
+
+local function createSeaweeds()
     print("🌿 Creando plantas marinas...")
     
-    for i = 1, 60 do
-        local plant = Instance.new("Part")
-        plant.Size = Vector3.new(
-            math.random(3, 8) / 10,
-            math.random(4, 10),
-            math.random(3, 8) / 10
+    for i = 1, 40 do
+        local pos = Vector3.new(
+            math.random(-85, 85),
+            -58,
+            math.random(-85, 85)
         )
-        plant.Position = Vector3.new(
-            math.random(-230, 230),
-            -45,
-            math.random(-230, 230)
-        )
-        plant.Anchored = true
-        plant.Material = Enum.Material.Grass
-        plant.Color = Color3.fromRGB(
-            math.random(50, 100),
-            math.random(150, 200),
-            math.random(80, 130)
-        )
-        plant.Orientation = Vector3.new(
-            math.random(-10, 10),
-            math.random(0, 360),
-            math.random(-10, 10)
-        )
-        plant.Parent = oceanFolder
-        
-        -- Animación de movimiento
-        local tween = TweenService:Create(
-            plant,
-            TweenInfo.new(
-                math.random(20, 40) / 10,
-                Enum.EasingStyle.Sine,
-                Enum.EasingDirection.InOut,
-                -1,
-                true
-            ),
-            {
-                Orientation = plant.Orientation + Vector3.new(
-                    math.random(-15, 15),
-                    0,
-                    math.random(-15, 15)
-                )
-            }
-        )
-        tween:Play()
+        createSeaweed(pos)
     end
+    
+    print("✅ Plantas creadas")
 end
 
 -- ========================================
--- CREAR RAYOS DE LUZ SUBMARINOS
+-- CREAR PLATAFORMA DE SPAWN
 -- ========================================
-local function createLightRays()
-    print("☀️ Creando rayos de luz...")
+local function createSpawnPlatform()
+    print("🏊 Creando plataforma de spawn...")
     
-    for i = 1, 15 do
-        local lightRay = Instance.new("Part")
-        lightRay.Size = Vector3.new(
-            math.random(5, 15),
-            60,
-            math.random(5, 15)
-        )
-        lightRay.Position = Vector3.new(
-            math.random(-200, 200),
-            -20,
-            math.random(-200, 200)
-        )
-        lightRay.Anchored = true
-        lightRay.CanCollide = false
-        lightRay.Material = Enum.Material.Neon
-        lightRay.Color = Color3.fromRGB(150, 200, 255)
-        lightRay.Transparency = 0.7
-        lightRay.Orientation = Vector3.new(
-            math.random(-10, 10),
-            math.random(0, 360),
-            math.random(-10, 10)
-        )
-        lightRay.Parent = oceanFolder
-        
-        -- Animación de brillo
-        local tween = TweenService:Create(
-            lightRay,
-            TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-            {Transparency = 0.9}
-        )
-        tween:Play()
-    end
-end
-
--- ========================================
--- CREAR PECES DECORATIVOS
--- ========================================
-local function createFish()
-    print("🐠 Creando peces...")
+    local platform = Instance.new("Part")
+    platform.Name = "SpawnPlatform"
+    platform.Size = Vector3.new(25, 2, 25)
+    platform.Position = Vector3.new(0, 5, 0)
+    platform.Anchored = true
+    platform.Material = Enum.Material.Wood
+    platform.Color = Color3.fromRGB(160, 130, 90)
+    platform.Parent = workspace
     
-    local fishColors = {
-        Color3.fromRGB(255, 150, 0),    -- Naranja
-        Color3.fromRGB(255, 255, 0),    -- Amarillo
-        Color3.fromRGB(0, 200, 255),    -- Azul
-        Color3.fromRGB(255, 100, 200),  -- Rosa
-        Color3.fromRGB(150, 255, 150)   -- Verde
-    }
-    
-    for i = 1, 30 do
-        local fish = Instance.new("Part")
-        fish.Size = Vector3.new(1.5, 0.8, 0.5)
-        fish.Position = Vector3.new(
-            math.random(-200, 200),
-            math.random(-40, -10),
-            math.random(-200, 200)
-        )
-        fish.Anchored = false
-        fish.Material = Enum.Material.SmoothPlastic
-        fish.Color = fishColors[math.random(1, #fishColors)]
-        fish.Shape = Enum.PartType.Ball
-        fish.Parent = oceanFolder
-        
-        -- BodyVelocity para movimiento
-        local bodyVel = Instance.new("BodyVelocity")
-        bodyVel.Velocity = Vector3.new(
-            math.random(-5, 5),
-            math.random(-2, 2),
-            math.random(-5, 5)
-        )
-        bodyVel.MaxForce = Vector3.new(4000, 4000, 4000)
-        bodyVel.Parent = fish
-        
-        -- Cambiar dirección aleatoriamente
-        task.spawn(function()
-            while fish.Parent do
-                wait(math.random(3, 8))
-                if bodyVel and bodyVel.Parent then
-                    bodyVel.Velocity = Vector3.new(
-                        math.random(-5, 5),
-                        math.random(-2, 2),
-                        math.random(-5, 5)
-                    )
-                end
-            end
-        end)
-    end
-end
-
--- ========================================
--- CREAR ZONA DE SPAWN
--- ========================================
-local function createSpawnZone()
-    print("🏊 Creando zona de spawn...")
-    
-    local spawnPlatform = Instance.new("Part")
-    spawnPlatform.Name = "SpawnPlatform"
-    spawnPlatform.Size = Vector3.new(30, 1, 30)
-    spawnPlatform.Position = Vector3.new(0, 5, 0)
-    spawnPlatform.Anchored = true
-    spawnPlatform.Material = Enum.Material.Wood
-    spawnPlatform.Color = Color3.fromRGB(150, 120, 80)
-    spawnPlatform.Parent = oceanFolder
-    
-    -- Borde brillante
+    -- Borde
     local border = Instance.new("Part")
-    border.Size = Vector3.new(31, 0.5, 31)
-    border.Position = spawnPlatform.Position + Vector3.new(0, -0.3, 0)
+    border.Size = Vector3.new(26, 0.5, 26)
+    border.Position = platform.Position + Vector3.new(0, -0.8, 0)
     border.Anchored = true
     border.Material = Enum.Material.Neon
-    border.Color = Color3.fromRGB(100, 200, 255)
-    border.Transparency = 0.3
-    border.Parent = spawnPlatform
+    border.Color = Color3.fromRGB(120, 200, 255)
+    border.Transparency = 0.2
+    border.Parent = platform
     
-    return spawnPlatform
+    print("✅ Plataforma creada")
+    return platform
 end
 
 -- ========================================
@@ -418,23 +259,21 @@ local spawnPlatform = nil
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
         wait(0.5)
-        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-        if humanoidRootPart and spawnPlatform then
-            humanoidRootPart.CFrame = CFrame.new(spawnPlatform.Position + Vector3.new(0, 3, 0))
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if hrp and spawnPlatform then
+            hrp.CFrame = CFrame.new(spawnPlatform.Position + Vector3.new(0, 4, 0))
         end
     end)
 end)
 
 -- ========================================
--- INICIALIZAR OCÉANO
+-- INICIALIZAR
 -- ========================================
-setupLighting()
+createRealWater()
 createOceanFloor()
-createWater()
+setupLighting()
 createCorals()
-createSeaPlants()
-createLightRays()
-createFish()
-spawnPlatform = createSpawnZone()
+createSeaweeds()
+spawnPlatform = createSpawnPlatform()
 
-print("✅ Océano de Mako creado completamente!")
+print("✅ Océano REAL de Mako Mermaids completado!")
