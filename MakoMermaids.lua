@@ -14,7 +14,7 @@ terrain:Clear()
 print("💧 Creando océano infinito...")
 
 terrain:FillRegion(
-    Region3.new(Vector3.new(-2000, 0, -2000), Vector3.new(2000, 80, 2000)):ExpandToGrid(4),
+    Region3.new(Vector3.new(-2000, 50, -2000), Vector3.new(2000, 100, 2000)):ExpandToGrid(4),
     4,
     Enum.Material.Water
 )
@@ -40,7 +40,7 @@ raftFolder.Parent = workspace
 local raftBase = Instance.new("Part")
 raftBase.Name = "RaftBase"
 raftBase.Size = Vector3.new(30, 3, 30)
-raftBase.Position = Vector3.new(0, 81, 0)
+raftBase.Position = Vector3.new(0, 101, 0)
 raftBase.Anchored = true
 raftBase.Material = Enum.Material.Wood
 raftBase.Color = Color3.fromRGB(139, 90, 43)
@@ -185,7 +185,7 @@ spawn.TopSurface = Enum.SurfaceType.Smooth
 spawn.Transparency = 0.3
 spawn.Parent = raftFolder
 
-print("✅ Balsa épica creada en Y=81")
+print("✅ Balsa épica creada en Y=101")
 
 -- ========================================
 -- ALGAS RECOLECTABLES (1000 algas)
@@ -402,7 +402,7 @@ print("")
 print("🎉 ═══════════════════════════════════════")
 print("🧜♀️ MAKO MERMAIDS - SUPERVIVENCIA")
 print("═══════════════════════════════════════")
-print("🛟 Balsa épica: 30x30 studs en Y=81")
+print("🛟 Balsa épica: 30x30 studs en Y=101")
 print("🌿 Algas: 1000 recolectables")
 print("🏊 Velocidad nado: 25 studs/s")
 print("🚀 +10 velocidad cada 10 algas")
